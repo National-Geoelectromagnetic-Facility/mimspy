@@ -1,0 +1,5729 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>950</width>
+    <height>630</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>.SF NS Text</family>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QFrame" name="frame">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>35</y>
+      <width>875</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QToolButton" name="tb_metadata">
+     <property name="geometry">
+      <rect>
+       <x>350</x>
+       <y>0</y>
+       <width>175</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="text">
+      <string>MetaData/
+GPS Control</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QToolButton" name="tb_datadisplay">
+     <property name="geometry">
+      <rect>
+       <x>175</x>
+       <y>0</y>
+       <width>175</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="text">
+      <string>Data Display/
+Gain Control</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QToolButton" name="tb_startend">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>175</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="text">
+      <string>Start/End Run</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QToolButton" name="tb_engineer">
+     <property name="geometry">
+      <rect>
+       <x>700</x>
+       <y>0</y>
+       <width>175</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="text">
+      <string>Engineering Mode</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QToolButton" name="tb_sitereport">
+     <property name="geometry">
+      <rect>
+       <x>525</x>
+       <y>0</y>
+       <width>175</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="text">
+      <string>Site Report</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QStackedWidget" name="stackedWidget">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>75</y>
+      <width>950</width>
+      <height>530</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>950</width>
+      <height>530</height>
+     </size>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="stackStartEndUI">
+     <widget class="Line" name="line_3">
+      <property name="geometry">
+       <rect>
+        <x>475</x>
+        <y>5</y>
+        <width>3</width>
+        <height>515</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+     </widget>
+     <widget class="QFrame" name="frame_34">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>485</x>
+        <y>218</y>
+        <width>451</width>
+        <height>302</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QTableWidget" name="tablewidget_microsdfiles">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>60</y>
+         <width>311</width>
+         <height>131</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QLabel" name="label_62">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>5</y>
+        <width>475</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>18</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Start Run Procedure</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_63">
+      <property name="geometry">
+       <rect>
+        <x>475</x>
+        <y>5</y>
+        <width>475</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>18</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>End Run Procedure</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QFrame" name="frame_35">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>50</y>
+        <width>455</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QToolButton" name="tb_shortcycle_2">
+       <property name="geometry">
+        <rect>
+         <x>323</x>
+         <y>5</y>
+         <width>58</width>
+         <height>35</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>13</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="statusTip">
+        <string/>
+       </property>
+       <property name="text">
+        <string>Short
+Cycle</string>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+       <property name="autoExclusive">
+        <bool>true</bool>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_21">
+       <property name="geometry">
+        <rect>
+         <x>5</x>
+         <y>5</y>
+         <width>313</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Short Cycle the GPS. Completes in ~3 min from GPS Lock.</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_short_cycle_led_2">
+       <property name="geometry">
+        <rect>
+         <x>392</x>
+         <y>8</y>
+         <width>58</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Black = Idle
+Red = Obaining Lock
+Yellow = Recieving
+Green = Complete</string>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="frame_36">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>120</y>
+        <width>455</width>
+        <height>73</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QLabel" name="label_23">
+       <property name="geometry">
+        <rect>
+         <x>5</x>
+         <y>10</y>
+         <width>313</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Is magnetometer ready to record or still slewing?</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_mag_north_led">
+       <property name="geometry">
+        <rect>
+         <x>392</x>
+         <y>39</y>
+         <width>58</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Yellow = The East-West field (Hy) is greater than +-100nT
+Green = Ready to record</string>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_mag_ready_led">
+       <property name="geometry">
+        <rect>
+         <x>392</x>
+         <y>5</y>
+         <width>58</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Red = Magnetometer is still slewing
+Green = Magnetometer is read to record</string>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_4">
+       <property name="geometry">
+        <rect>
+         <x>325</x>
+         <y>10</y>
+         <width>59</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>14</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Ready?</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_68">
+       <property name="geometry">
+        <rect>
+         <x>325</x>
+         <y>45</y>
+         <width>59</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>14</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>North?</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_24">
+       <property name="geometry">
+        <rect>
+         <x>5</x>
+         <y>45</y>
+         <width>301</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Is magnetometer facing north (Hy &lt; +/- 100 nT)?</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QLabel" name="label_20">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>141</width>
+        <height>18</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Step 1: Short Cycle</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_22">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>100</y>
+        <width>168</width>
+        <height>18</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Step 2: Magnetometer</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      </property>
+     </widget>
+     <widget class="QFrame" name="frame_37">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>218</y>
+        <width>455</width>
+        <height>73</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QLabel" name="label_25">
+       <property name="geometry">
+        <rect>
+         <x>5</x>
+         <y>5</y>
+         <width>311</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>If yellow, input is below +/- 16 mV and low gain.  Refer to 'Data Display' to check requirments if High Gain is an option. Gain Control located on the Data Display/Gain Control tab.</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_ex_spec_led">
+       <property name="geometry">
+        <rect>
+         <x>392</x>
+         <y>5</y>
+         <width>58</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_ey_spec_led">
+       <property name="geometry">
+        <rect>
+         <x>392</x>
+         <y>39</y>
+         <width>58</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_69">
+       <property name="geometry">
+        <rect>
+         <x>325</x>
+         <y>10</y>
+         <width>71</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>14</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Ex Spec?</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_70">
+       <property name="geometry">
+        <rect>
+         <x>325</x>
+         <y>45</y>
+         <width>71</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>14</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Ey Spec?</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QLabel" name="label_27">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>198</y>
+        <width>221</width>
+        <height>18</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Step 3: Electric Channel Gain</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_28">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>296</y>
+        <width>141</width>
+        <height>18</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Step 4: Metadata</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      </property>
+     </widget>
+     <widget class="QFrame" name="frame_38">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>316</y>
+        <width>455</width>
+        <height>39</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QLabel" name="label_29">
+       <property name="geometry">
+        <rect>
+         <x>5</x>
+         <y>3</y>
+         <width>313</width>
+         <height>33</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Check MetaData tab information.  Missing information will be filled with default values.</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_metadata_led">
+       <property name="geometry">
+        <rect>
+         <x>392</x>
+         <y>5</y>
+         <width>58</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Black = No Information
+Yellow = Partial Information
+Green = Complete Information</string>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QLabel" name="label_26">
+      <property name="geometry">
+       <rect>
+        <x>485</x>
+        <y>30</y>
+        <width>141</width>
+        <height>18</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Step 1: Short Cycle</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      </property>
+     </widget>
+     <widget class="QFrame" name="frame_39">
+      <property name="geometry">
+       <rect>
+        <x>485</x>
+        <y>50</y>
+        <width>455</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QToolButton" name="tb_shortcycle_4">
+       <property name="geometry">
+        <rect>
+         <x>323</x>
+         <y>5</y>
+         <width>58</width>
+         <height>35</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>13</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="statusTip">
+        <string/>
+       </property>
+       <property name="text">
+        <string>Short
+Cycle</string>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+       <property name="autoExclusive">
+        <bool>true</bool>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_30">
+       <property name="geometry">
+        <rect>
+         <x>5</x>
+         <y>5</y>
+         <width>313</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Short Cycle the GPS. Completes in ~3 min from GPS Lock.</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_short_cycle_led_4">
+       <property name="geometry">
+        <rect>
+         <x>392</x>
+         <y>8</y>
+         <width>58</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Black = Idle
+Red = Obaining Lock
+Yellow = Recieving
+Green = Complete</string>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="frame_40">
+      <property name="geometry">
+       <rect>
+        <x>485</x>
+        <y>120</y>
+        <width>455</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QLabel" name="label_end_run_led">
+       <property name="geometry">
+        <rect>
+         <x>389</x>
+         <y>5</y>
+         <width>61</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+      <widget class="QToolButton" name="tb_end_run">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>369</width>
+         <height>51</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>13</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="statusTip">
+        <string/>
+       </property>
+       <property name="text">
+        <string>End
+Run</string>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+       <property name="autoExclusive">
+        <bool>true</bool>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QLabel" name="label_65">
+      <property name="geometry">
+       <rect>
+        <x>485</x>
+        <y>100</y>
+        <width>168</width>
+        <height>18</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Step 2: End Run</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_66">
+      <property name="geometry">
+       <rect>
+        <x>485</x>
+        <y>198</y>
+        <width>168</width>
+        <height>18</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Step 3: Download Data</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      </property>
+     </widget>
+     <widget class="QFrame" name="frame_41">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>380</y>
+        <width>455</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QLabel" name="label_start_run_led">
+       <property name="geometry">
+        <rect>
+         <x>389</x>
+         <y>5</y>
+         <width>61</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Black = Not Recording Data
+Green = Recording Data</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+      <widget class="QToolButton" name="tb_start_run">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>369</width>
+         <height>51</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>13</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="statusTip">
+        <string/>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <property name="text">
+        <string>Start
+Run</string>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+       <property name="autoExclusive">
+        <bool>true</bool>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QLabel" name="label_67">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>360</y>
+        <width>168</width>
+        <height>18</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Step 5: Start Run</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_31">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>456</y>
+        <width>141</width>
+        <height>18</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Step 6: Short Cycle</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      </property>
+     </widget>
+     <widget class="QFrame" name="frame_42">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>475</y>
+        <width>455</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QToolButton" name="tb_shortcycle_3">
+       <property name="geometry">
+        <rect>
+         <x>323</x>
+         <y>5</y>
+         <width>58</width>
+         <height>35</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>13</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="statusTip">
+        <string/>
+       </property>
+       <property name="text">
+        <string>Short
+Cycle</string>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+       <property name="autoExclusive">
+        <bool>true</bool>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_64">
+       <property name="geometry">
+        <rect>
+         <x>5</x>
+         <y>5</y>
+         <width>313</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Short Cycle the GPS. Completes in ~3 min from GPS Lock.</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_short_cycle_led_3">
+       <property name="geometry">
+        <rect>
+         <x>392</x>
+         <y>8</y>
+         <width>58</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Black = Idle
+Red = Obaining Lock
+Yellow = Recieving
+Green = Complete</string>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="stackDataUI">
+     <widget class="QFrame" name="frame_20">
+      <property name="geometry">
+       <rect>
+        <x>850</x>
+        <y>10</y>
+        <width>91</width>
+        <height>510</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QFrame" name="frame_24">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>91</width>
+         <height>167</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Panel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <widget class="QWidget" name="verticalLayoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>91</width>
+          <height>167</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <property name="spacing">
+          <number>-1</number>
+         </property>
+         <property name="leftMargin">
+          <number>5</number>
+         </property>
+         <property name="topMargin">
+          <number>29</number>
+         </property>
+         <property name="rightMargin">
+          <number>5</number>
+         </property>
+         <property name="bottomMargin">
+          <number>29</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label_93">
+           <property name="font">
+            <font>
+             <pointsize>17</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Hx (nT):</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="le_hx">
+           <property name="font">
+            <font>
+             <pointsize>13</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLineEdit#le_hx {background-color: rgb(255, 246, 131);}
+
+
+
+</string>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_91">
+           <property name="font">
+            <font>
+             <pointsize>17</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Ey (mV):</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="le_ey">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLineEdit#le_ey {background-color: rgb(255, 246, 131);}
+
+
+
+</string>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QFrame" name="frame_25">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>172</y>
+         <width>91</width>
+         <height>167</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Panel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <widget class="QWidget" name="verticalLayoutWidget_2">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>91</width>
+          <height>167</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="spacing">
+          <number>-1</number>
+         </property>
+         <property name="leftMargin">
+          <number>5</number>
+         </property>
+         <property name="topMargin">
+          <number>29</number>
+         </property>
+         <property name="rightMargin">
+          <number>5</number>
+         </property>
+         <property name="bottomMargin">
+          <number>29</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label_96">
+           <property name="font">
+            <font>
+             <pointsize>17</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Hy (nT):</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="le_hy">
+           <property name="font">
+            <font>
+             <pointsize>13</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLineEdit#le_hy {background-color: rgb(255, 246, 131);}
+
+
+
+</string>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_92">
+           <property name="font">
+            <font>
+             <pointsize>17</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Ex (mV):</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="le_ex">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLineEdit#le_ex {background-color: rgb(255, 246, 131);}
+
+
+
+</string>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QFrame" name="frame_26">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>344</y>
+         <width>91</width>
+         <height>166</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Panel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <widget class="QWidget" name="verticalLayoutWidget_3">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>91</width>
+          <height>167</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <property name="spacing">
+          <number>-1</number>
+         </property>
+         <property name="leftMargin">
+          <number>5</number>
+         </property>
+         <property name="topMargin">
+          <number>58</number>
+         </property>
+         <property name="rightMargin">
+          <number>5</number>
+         </property>
+         <property name="bottomMargin">
+          <number>60</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label_97">
+           <property name="font">
+            <font>
+             <pointsize>17</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Hz (nT):</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="le_hz">
+           <property name="font">
+            <font>
+             <pointsize>13</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLineEdit#le_hz {background-color: rgb(255, 246, 131);}
+
+
+
+</string>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="frame_21">
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>10</y>
+        <width>539</width>
+        <height>510</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QFrame" name="frame_27">
+       <property name="geometry">
+        <rect>
+         <x>5</x>
+         <y>0</y>
+         <width>531</width>
+         <height>167</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Panel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <widget class="QFrame" name="f_hx">
+        <property name="geometry">
+         <rect>
+          <x>5</x>
+          <y>5</y>
+          <width>20</width>
+          <height>157</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QHBoxLayout" name="horlayout_hx_label">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+        </layout>
+       </widget>
+       <widget class="QFrame" name="f_ey">
+        <property name="geometry">
+         <rect>
+          <x>506</x>
+          <y>5</y>
+          <width>20</width>
+          <height>157</height>
+         </rect>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QHBoxLayout" name="horlayout_ey_label">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+        </layout>
+       </widget>
+       <widget class="QFrame" name="frame_43">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>5</y>
+          <width>471</width>
+          <height>157</height>
+         </rect>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <widget class="QFrame" name="f_hx_ey_graph">
+         <property name="geometry">
+          <rect>
+           <x>-15</x>
+           <y>-15</y>
+           <width>500</width>
+           <height>225</height>
+          </rect>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QHBoxLayout" name="layout_hx_ey">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+         </layout>
+        </widget>
+       </widget>
+      </widget>
+      <widget class="QFrame" name="frame_28">
+       <property name="geometry">
+        <rect>
+         <x>5</x>
+         <y>172</y>
+         <width>531</width>
+         <height>167</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Panel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <widget class="QFrame" name="f_hy">
+        <property name="geometry">
+         <rect>
+          <x>5</x>
+          <y>5</y>
+          <width>20</width>
+          <height>157</height>
+         </rect>
+        </property>
+        <property name="toolTipDuration">
+         <number>-6</number>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QHBoxLayout" name="horlayout_hy_label">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+        </layout>
+       </widget>
+       <widget class="QFrame" name="f_ex">
+        <property name="geometry">
+         <rect>
+          <x>506</x>
+          <y>5</y>
+          <width>20</width>
+          <height>157</height>
+         </rect>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QHBoxLayout" name="horlayout_ex_label">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+        </layout>
+       </widget>
+       <widget class="QFrame" name="frame_44">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>5</y>
+          <width>471</width>
+          <height>157</height>
+         </rect>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <widget class="QFrame" name="f_hy_ex_graph">
+         <property name="geometry">
+          <rect>
+           <x>-15</x>
+           <y>-15</y>
+           <width>500</width>
+           <height>225</height>
+          </rect>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QHBoxLayout" name="layout_hy_ex">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+         </layout>
+        </widget>
+       </widget>
+      </widget>
+      <widget class="QFrame" name="frame_29">
+       <property name="geometry">
+        <rect>
+         <x>5</x>
+         <y>344</y>
+         <width>531</width>
+         <height>166</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Panel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <widget class="QFrame" name="f_hz">
+        <property name="geometry">
+         <rect>
+          <x>5</x>
+          <y>5</y>
+          <width>20</width>
+          <height>157</height>
+         </rect>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QHBoxLayout" name="horlayout_hz_label">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+        </layout>
+       </widget>
+       <widget class="QFrame" name="frame_45">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>5</y>
+          <width>471</width>
+          <height>157</height>
+         </rect>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <widget class="QFrame" name="f_hz_graph">
+         <property name="geometry">
+          <rect>
+           <x>-15</x>
+           <y>-15</y>
+           <width>500</width>
+           <height>200</height>
+          </rect>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QHBoxLayout" name="layout_hz">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+         </layout>
+        </widget>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="frame_5">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>299</width>
+        <height>510</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QFrame" name="frame_22">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>299</width>
+         <height>339</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Panel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <widget class="QLabel" name="label_95">
+        <property name="geometry">
+         <rect>
+          <x>5</x>
+          <y>5</y>
+          <width>291</width>
+          <height>170</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt; font-weight:600;&quot;&gt;Electric Dipole Gain Settings Guidelines&lt;/span&gt;&lt;/p&gt;&lt;p&gt;X:LOW Y:LOW...................is the default setting.&lt;/p&gt;&lt;p&gt;LOW GAIN...........................provides good data.&lt;/p&gt;&lt;p&gt;HIGH GAIN................provides higher resolution.&lt;/p&gt;&lt;p&gt;Use &lt;span style=&quot; color:#ff0000;&quot;&gt;HIGH GAIN ONLY IF&lt;/span&gt; an electric channel has &lt;span style=&quot; color:#ff0000;&quot;&gt;less than +/-16 mVDC and &amp;lt;2kOhm resistance&lt;/span&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="Line" name="line">
+        <property name="geometry">
+         <rect>
+          <x>5</x>
+          <y>180</y>
+          <width>289</width>
+          <height>3</height>
+         </rect>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_gain_xlyl_led">
+        <property name="geometry">
+         <rect>
+          <x>84</x>
+          <y>195</y>
+          <width>61</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+       <widget class="QToolButton" name="tb_gain_xlyl">
+        <property name="geometry">
+         <rect>
+          <x>5</x>
+          <y>195</y>
+          <width>74</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="statusTip">
+         <string/>
+        </property>
+        <property name="text">
+         <string>Ex: LOW
+Ey: LOW</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>true</bool>
+        </property>
+        <property name="autoRaise">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QToolButton" name="tb_gain_xhyl">
+        <property name="geometry">
+         <rect>
+          <x>5</x>
+          <y>266</y>
+          <width>74</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="statusTip">
+         <string/>
+        </property>
+        <property name="text">
+         <string>Ex: HIGH
+Ey: LOW</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>true</bool>
+        </property>
+        <property name="autoRaise">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_gain_xhyl_led">
+        <property name="geometry">
+         <rect>
+          <x>84</x>
+          <y>266</y>
+          <width>61</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+       <widget class="QToolButton" name="tb_gain_xlyh">
+        <property name="geometry">
+         <rect>
+          <x>155</x>
+          <y>195</y>
+          <width>73</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="statusTip">
+         <string/>
+        </property>
+        <property name="text">
+         <string>Ex: LOW
+Ey: HIGH</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>true</bool>
+        </property>
+        <property name="autoRaise">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_gain_xlyh_led">
+        <property name="geometry">
+         <rect>
+          <x>233</x>
+          <y>195</y>
+          <width>61</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+       <widget class="QToolButton" name="tb_gain_xhyh">
+        <property name="geometry">
+         <rect>
+          <x>155</x>
+          <y>266</y>
+          <width>73</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="statusTip">
+         <string/>
+        </property>
+        <property name="text">
+         <string>Ex: HIGH
+Ey: HIGH</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>true</bool>
+        </property>
+        <property name="autoRaise">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_gain_xhyh_led">
+        <property name="geometry">
+         <rect>
+          <x>233</x>
+          <y>266</y>
+          <width>61</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+       <widget class="Line" name="line_2">
+        <property name="geometry">
+         <rect>
+          <x>149</x>
+          <y>195</y>
+          <width>3</width>
+          <height>132</height>
+         </rect>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QFrame" name="frame_23">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>344</y>
+         <width>299</width>
+         <height>166</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Panel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <widget class="QToolButton" name="tb_mag_light">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>279</width>
+          <height>68</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="statusTip">
+         <string/>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>MAG
+LIGHT</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>false</bool>
+        </property>
+        <property name="autoRaise">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QToolButton" name="tb_nims_leds">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>88</y>
+          <width>279</width>
+          <height>68</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="statusTip">
+         <string/>
+        </property>
+        <property name="text">
+         <string>NIMS
+LEDS</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>true</bool>
+        </property>
+        <property name="autoRaise">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="stackMetadataUI">
+     <widget class="Line" name="line_10">
+      <property name="geometry">
+       <rect>
+        <x>5</x>
+        <y>43</y>
+        <width>940</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_56">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>950</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt; color:#ff0000;&quot;&gt;All data runs require a header file containing metadata.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      </property>
+      <property name="margin">
+       <number>0</number>
+      </property>
+      <property name="indent">
+       <number>-1</number>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_57">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>23</y>
+        <width>950</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt; color:#ff0000;&quot;&gt;There is no other way to identify a data file.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+     <widget class="QFrame" name="frame_2">
+      <property name="geometry">
+       <rect>
+        <x>5</x>
+        <y>60</y>
+        <width>240</width>
+        <height>272</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <property name="lineWidth">
+       <number>1</number>
+      </property>
+      <property name="midLineWidth">
+       <number>1</number>
+      </property>
+      <widget class="QLabel" name="label_38">
+       <property name="geometry">
+        <rect>
+         <x>52</x>
+         <y>240</y>
+         <width>50</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>MAG ID</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_40">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>85</y>
+         <width>100</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>State/Province</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_43">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>49</x>
+         <y>209</y>
+         <width>53</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;NIMS ID&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_37">
+       <property name="geometry">
+        <rect>
+         <x>49</x>
+         <y>116</y>
+         <width>53</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Country</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="le_site_name">
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>54</y>
+         <width>119</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>13</pointsize>
+        </font>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="le_operator">
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>178</y>
+         <width>119</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_42">
+       <property name="geometry">
+        <rect>
+         <x>58</x>
+         <y>147</y>
+         <width>44</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Run ID</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_39">
+       <property name="geometry">
+        <rect>
+         <x>36</x>
+         <y>54</y>
+         <width>66</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Site Name</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="le_state_province">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>85</y>
+         <width>119</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="le_nims_id">
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>209</y>
+         <width>119</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_41">
+       <property name="geometry">
+        <rect>
+         <x>44</x>
+         <y>178</y>
+         <width>58</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Operator</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="le_run_id">
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>147</y>
+         <width>119</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="le_country">
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>116</y>
+         <width>119</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="le_mag_id">
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>240</y>
+         <width>119</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="le_filename">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>23</y>
+         <width>119</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>13</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLineEdit#le_filename {background-color: rgb(104, 104, 104);}
+</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_58">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>36</x>
+         <y>23</y>
+         <width>66</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>File Name</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>5</y>
+         <width>240</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>18</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>General Information</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="frame_6">
+      <property name="geometry">
+       <rect>
+        <x>252</x>
+        <y>60</y>
+        <width>450</width>
+        <height>272</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QLabel" name="label_45">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>5</y>
+         <width>450</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>18</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Electrode Metadata</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QFrame" name="frame_7">
+       <property name="geometry">
+        <rect>
+         <x>5</x>
+         <y>25</y>
+         <width>217</width>
+         <height>80</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+       <widget class="QLabel" name="label_49">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>217</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+          <underline>true</underline>
+         </font>
+        </property>
+        <property name="text">
+         <string>N-S Dipole (Ex)</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+       <widget class="QWidget" name="formLayoutWidget_2">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>201</width>
+          <height>54</height>
+         </rect>
+        </property>
+        <layout class="QFormLayout" name="formLayout_2">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_52">
+           <property name="toolTip">
+            <string>Length of NS electrode line in meters</string>
+           </property>
+           <property name="text">
+            <string>Length (m)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="le_ns_dipole_length">
+           <property name="toolTip">
+            <string>Length of NS electrode line in meters</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_53">
+           <property name="text">
+            <string>Heading (deg E mag N)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="le_ns_dipole_heading"/>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QFrame" name="frame_8">
+       <property name="geometry">
+        <rect>
+         <x>5</x>
+         <y>105</y>
+         <width>191</width>
+         <height>161</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <widget class="QWidget" name="formLayoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>171</width>
+          <height>147</height>
+         </rect>
+        </property>
+        <layout class="QFormLayout" name="formLayout">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_55">
+           <property name="text">
+            <string>N Electrode ID</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="le_n_electrode_id"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_50">
+           <property name="text">
+            <string>S Electrode ID</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="le_s_electrode_id"/>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_44">
+           <property name="text">
+            <string>E Electrode ID</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLineEdit" name="le_e_electrode_id"/>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_54">
+           <property name="text">
+            <string>W Electrode ID</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLineEdit" name="le_w_electrode_id"/>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="label_51">
+           <property name="text">
+            <string>GND Electrode</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QLineEdit" name="le_gnd_electrode_id"/>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QFrame" name="frame_9">
+       <property name="geometry">
+        <rect>
+         <x>227</x>
+         <y>25</y>
+         <width>217</width>
+         <height>80</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <widget class="QLabel" name="label_46">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>217</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+          <underline>true</underline>
+         </font>
+        </property>
+        <property name="text">
+         <string>E-W Dipole (Ey)</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+       <widget class="QWidget" name="formLayoutWidget_3">
+        <property name="geometry">
+         <rect>
+          <x>9</x>
+          <y>19</y>
+          <width>201</width>
+          <height>54</height>
+         </rect>
+        </property>
+        <layout class="QFormLayout" name="formLayout_3">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_47">
+           <property name="toolTip">
+            <string>Length of EW electrode line in meters</string>
+           </property>
+           <property name="text">
+            <string>Length (m)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="le_ew_dipole_length">
+           <property name="toolTip">
+            <string>Length of EW electrode line in meters</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_48">
+           <property name="text">
+            <string>Heading (deg E mag N)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="le_ew_dipole_heading"/>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QFrame" name="frame_10">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>201</x>
+         <y>105</y>
+         <width>244</width>
+         <height>161</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <widget class="QLabel" name="label_94">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>244</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+          <underline>true</underline>
+         </font>
+        </property>
+        <property name="text">
+         <string>Survey Layout</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+       <widget class="QWidget" name="horizontalLayoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>9</x>
+          <y>20</y>
+          <width>231</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QRadioButton" name="rb_x_layout">
+           <property name="text">
+            <string>X</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="rb_l_layout">
+           <property name="text">
+            <string>L</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="rb_t_layout">
+           <property name="text">
+            <string>T</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QLabel" name="label_north">
+        <property name="geometry">
+         <rect>
+          <x>9</x>
+          <y>53</y>
+          <width>46</width>
+          <height>101</height>
+         </rect>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="le_survey">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>60</x>
+          <y>50</y>
+          <width>179</width>
+          <height>106</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel#le_survey {background-color: rgb(104, 104, 104);}
+
+
+</string>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="frame_4">
+      <property name="geometry">
+       <rect>
+        <x>707</x>
+        <y>337</y>
+        <width>238</width>
+        <height>186</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QWidget" name="formLayoutWidget_4">
+       <property name="geometry">
+        <rect>
+         <x>9</x>
+         <y>29</y>
+         <width>221</width>
+         <height>158</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_4">
+        <property name="verticalSpacing">
+         <number>-1</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_34">
+          <property name="font">
+           <font>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Most Recent  GPS  
+Time Stamp (UTC)</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="le_gps_time">
+          <property name="font">
+           <font>
+            <pointsize>13</pointsize>
+           </font>
+          </property>
+          <property name="focusPolicy">
+           <enum>Qt::NoFocus</enum>
+          </property>
+          <property name="contextMenuPolicy">
+           <enum>Qt::NoContextMenu</enum>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLineEdit#le_gps_time {background-color: rgb(255, 246, 131);}
+
+
+
+</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_33">
+          <property name="text">
+           <string>Date (dd/mm/yy)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="le_gps_date">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="focusPolicy">
+           <enum>Qt::NoFocus</enum>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLineEdit#le_gps_date {background-color: rgb(255, 246, 131);}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="dragEnabled">
+           <bool>true</bool>
+          </property>
+          <property name="readOnly">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_35">
+          <property name="text">
+           <string>Latitude (dd)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="le_gps_lat">
+          <property name="focusPolicy">
+           <enum>Qt::NoFocus</enum>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLineEdit#le_gps_lat {background-color: rgb(255, 246, 131);}
+</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_36">
+          <property name="text">
+           <string>Longitude (dd)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLineEdit" name="le_gps_lon">
+          <property name="focusPolicy">
+           <enum>Qt::NoFocus</enum>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLineEdit#le_gps_lon {background-color: rgb(255, 246, 131);}</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_32">
+          <property name="text">
+           <string>Altitude (m)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QLineEdit" name="le_gps_alt">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="focusPolicy">
+           <enum>Qt::NoFocus</enum>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">
+QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="frame">
+           <bool>true</bool>
+          </property>
+          <property name="placeholderText">
+           <string/>
+          </property>
+          <property name="clearButtonEnabled">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QLabel" name="label_59">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>5</y>
+         <width>238</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>18</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>GPS Metadata</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="frame_11">
+      <property name="geometry">
+       <rect>
+        <x>5</x>
+        <y>337</y>
+        <width>240</width>
+        <height>186</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QTextEdit" name="te_comments">
+       <property name="geometry">
+        <rect>
+         <x>5</x>
+         <y>25</y>
+         <width>230</width>
+         <height>156</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>150 Characters Max</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="l_comments_md">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>5</y>
+         <width>240</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>18</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Field Crew Comments</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="frame_12">
+      <property name="geometry">
+       <rect>
+        <x>707</x>
+        <y>60</y>
+        <width>238</width>
+        <height>272</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QLabel" name="label_60">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>5</y>
+         <width>238</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>18</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>GPS Control</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="le_gps_status_byte_m">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>240</y>
+         <width>71</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>13</pointsize>
+        </font>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+       <property name="contextMenuPolicy">
+        <enum>Qt::NoContextMenu</enum>
+       </property>
+       <property name="toolTip">
+        <string>Codes: C7 = GPS Short Cycling, A3 = Receiving GPS Almanac</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLineEdit#le_gps_status_byte_m {background-color: rgb(255, 246, 131);}
+
+
+
+</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_61">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>240</y>
+         <width>111</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Codes: C7 = GPS Short Cycling, A3 = Receiving GPS Almanac</string>
+       </property>
+       <property name="text">
+        <string>GPS Status Byte</string>
+       </property>
+      </widget>
+      <widget class="QFrame" name="frame_14">
+       <property name="geometry">
+        <rect>
+         <x>5</x>
+         <y>40</y>
+         <width>228</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <widget class="QToolButton" name="tb_shortcycle">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>141</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="statusTip">
+         <string/>
+        </property>
+        <property name="text">
+         <string>Short Cycle</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>true</bool>
+        </property>
+        <property name="autoRaise">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_short_cycle_led">
+        <property name="geometry">
+         <rect>
+          <x>155</x>
+          <y>0</y>
+          <width>61</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QFrame" name="frame_15">
+       <property name="geometry">
+        <rect>
+         <x>5</x>
+         <y>120</y>
+         <width>228</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <widget class="QToolButton" name="tb_almanac">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>141</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS ALMANAC will acquire the current set of active local satellites.&lt;/p&gt;&lt;p&gt;For use after distant travel or after &lt;span style=&quot; color:#ff0000;&quot;&gt;30-45 minutes&lt;/span&gt; to complete during which time the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Almanac</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>true</bool>
+        </property>
+        <property name="autoRaise">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_almanac_led">
+        <property name="geometry">
+         <rect>
+          <x>155</x>
+          <y>0</y>
+          <width>61</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="frame_13">
+      <property name="geometry">
+       <rect>
+        <x>252</x>
+        <y>337</y>
+        <width>450</width>
+        <height>186</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QTextEdit" name="te_gps_metadata_string">
+       <property name="geometry">
+        <rect>
+         <x>5</x>
+         <y>20</y>
+         <width>440</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QTextEdit#te_gps_metadata_string {background-color: rgb(255, 246, 131);}\n\n\n\n</string>
+       </property>
+       <property name="documentTitle">
+        <string/>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QTextEdit" name="te_gps_string_m">
+       <property name="geometry">
+        <rect>
+         <x>5</x>
+         <y>88</y>
+         <width>440</width>
+         <height>91</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QTextEdit#te_gps_string_m {background-color: rgb(255, 246, 131);}\n\n\n\n</string>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_8">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>5</y>
+         <width>450</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>14</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>GPS data that will populate the header file if metadata is updated</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_9">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>70</y>
+         <width>450</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>14</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>GPS Data (displayed during Acquisition)</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="stackSiteReportUI">
+     <widget class="QFrame" name="frame_47">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>40</y>
+        <width>911</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <property name="spacing">
+        <number>1</number>
+       </property>
+       <property name="leftMargin">
+        <number>5</number>
+       </property>
+       <property name="topMargin">
+        <number>5</number>
+       </property>
+       <property name="rightMargin">
+        <number>5</number>
+       </property>
+       <property name="bottomMargin">
+        <number>5</number>
+       </property>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <property name="spacing">
+          <number>5</number>
+         </property>
+         <item>
+          <layout class="QFormLayout" name="formLayout_14">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_123">
+             <property name="text">
+              <string>Run ID:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="le_run_id_sr">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>21</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QFormLayout" name="formLayout_15">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_124">
+             <property name="text">
+              <string>Site Name:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="le_site_name_sr">
+             <property name="minimumSize">
+              <size>
+               <width>204</width>
+               <height>21</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QFormLayout" name="formLayout_16">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_125">
+             <property name="text">
+              <string>State/Province:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="le_state_province_sr">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>21</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QFormLayout" name="formLayout_20">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_127">
+             <property name="text">
+              <string>Country:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="le_country_sr">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>21</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QFormLayout" name="formLayout_13">
+         <property name="horizontalSpacing">
+          <number>8</number>
+         </property>
+         <property name="verticalSpacing">
+          <number>-1</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_122">
+           <property name="minimumSize">
+            <size>
+             <width>41</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Crew:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="le_crew">
+           <property name="minimumSize">
+            <size>
+             <width>836</width>
+             <height>21</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QLabel" name="label_6">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>420</y>
+        <width>84</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Comments:</string>
+      </property>
+     </widget>
+     <widget class="QFrame" name="frame_31">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>110</y>
+        <width>175</width>
+        <height>131</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_18">
+       <property name="leftMargin">
+        <number>5</number>
+       </property>
+       <property name="topMargin">
+        <number>5</number>
+       </property>
+       <property name="rightMargin">
+        <number>5</number>
+       </property>
+       <property name="bottomMargin">
+        <number>5</number>
+       </property>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_17">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label_118">
+           <property name="font">
+            <font>
+             <pointsize>16</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>GPS:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QFormLayout" name="formLayout_10">
+           <property name="verticalSpacing">
+            <number>5</number>
+           </property>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_115">
+             <property name="text">
+              <string>Lat:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_116">
+             <property name="text">
+              <string>Long:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_117">
+             <property name="text">
+              <string>Alt:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_113">
+             <property name="font">
+              <font>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Decl:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="le_gps_lat_sr">
+             <property name="minimumSize">
+              <size>
+               <width>50</width>
+               <height>21</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>21</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="le_gps_lon_sr">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>21</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="le_gps_alt_sr">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>21</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLineEdit" name="le_gps_dec_sr">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>21</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QFrame" name="frame_32">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>110</y>
+        <width>168</width>
+        <height>191</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_10">
+       <property name="leftMargin">
+        <number>5</number>
+       </property>
+       <property name="topMargin">
+        <number>5</number>
+       </property>
+       <property name="rightMargin">
+        <number>5</number>
+       </property>
+       <property name="bottomMargin">
+        <number>5</number>
+       </property>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_9">
+         <item>
+          <widget class="QLabel" name="label_85">
+           <property name="font">
+            <font>
+             <pointsize>16</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Meta:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QFormLayout" name="formLayout_5">
+           <property name="verticalSpacing">
+            <number>5</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_71">
+             <property name="text">
+              <string>NIMS ID:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="le_nims_id_sr">
+             <property name="minimumSize">
+              <size>
+               <width>50</width>
+               <height>21</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>21</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_12">
+             <property name="text">
+              <string>Mag ID:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="le_mag_id_sr">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>21</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_72">
+             <property name="text">
+              <string>N Elect. ID:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="le_n_electrode_id_sr">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>21</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_73">
+             <property name="text">
+              <string>S Elect. ID:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="le_s_electrode_id_sr">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>21</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_74">
+             <property name="text">
+              <string>E Elect. ID:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLineEdit" name="le_e_electrode_id_sr">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>21</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_75">
+             <property name="text">
+              <string>W Elect. ID:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLineEdit" name="le_w_electrode_id_sr">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>21</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>10</y>
+        <width>899</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_9">
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt; font-weight:600;&quot;&gt;Status:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="cb_status">
+         <item>
+          <property name="text">
+           <string>Install</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Check</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Extract</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFrame" name="frame_30">
+         <property name="minimumSize">
+          <size>
+           <width>719</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Plain</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QTextEdit" name="te_comments_sr">
+      <property name="geometry">
+       <rect>
+        <x>110</x>
+        <y>420</y>
+        <width>821</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>330</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="QFrame" name="frame_46">
+      <property name="geometry">
+       <rect>
+        <x>508</x>
+        <y>372</y>
+        <width>84</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="tb_generate_report_sr">
+      <property name="geometry">
+       <rect>
+        <x>599</x>
+        <y>471</y>
+        <width>271</width>
+        <height>50</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>220</width>
+        <height>50</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>24</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Generate Report</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_87">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>471</y>
+        <width>111</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Save Directory:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="le_change_directory_sr">
+      <property name="geometry">
+       <rect>
+        <x>142</x>
+        <y>495</y>
+        <width>449</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>440</width>
+        <height>21</height>
+       </size>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="tb_change_directory_sr">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>495</y>
+        <width>115</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Change Directory</string>
+      </property>
+     </widget>
+     <widget class="QFrame" name="frame_33">
+      <property name="geometry">
+       <rect>
+        <x>368</x>
+        <y>110</y>
+        <width>562</width>
+        <height>301</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_16">
+       <property name="leftMargin">
+        <number>5</number>
+       </property>
+       <property name="topMargin">
+        <number>5</number>
+       </property>
+       <property name="rightMargin">
+        <number>5</number>
+       </property>
+       <property name="bottomMargin">
+        <number>5</number>
+       </property>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_15">
+         <item>
+          <widget class="QLabel" name="label_86">
+           <property name="font">
+            <font>
+             <pointsize>16</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Electrode Parameters:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_7">
+             <item>
+              <widget class="QLabel" name="label_84">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>17</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>14</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Prior to Installation:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="verticalLayout_4">
+               <item>
+                <widget class="QLabel" name="label_80">
+                 <property name="font">
+                  <font>
+                   <underline>true</underline>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Resistance (ohms):</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QFormLayout" name="formLayout_6">
+                 <property name="rightMargin">
+                  <number>4</number>
+                 </property>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_76">
+                   <property name="text">
+                    <string>S- to N+:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLineEdit" name="le_pre_e_ns_r_sr">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>21</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_77">
+                   <property name="text">
+                    <string>N- to S+:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLineEdit" name="le_pre_e_sn_r_sr">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>21</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_78">
+                   <property name="text">
+                    <string>W- to E+:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QLineEdit" name="le_pre_e_ew_r_sr">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>21</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="label_79">
+                   <property name="text">
+                    <string>E- to W+:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QLineEdit" name="le_pre_e_we_r_sr">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>21</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="Line" name="line_4">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="verticalLayout_6">
+               <item>
+                <widget class="QLabel" name="label_81">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>16</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <underline>true</underline>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Voltage (mV):</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QFormLayout" name="formLayout_7">
+                 <property name="rightMargin">
+                  <number>4</number>
+                 </property>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_82">
+                   <property name="text">
+                    <string>(S- to N+) DVC:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLineEdit" name="le_pre_e_ns_v_sr">
+                   <property name="minimumSize">
+                    <size>
+                     <width>50</width>
+                     <height>21</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_83">
+                   <property name="text">
+                    <string>(W- to E+) DVC:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLineEdit" name="le_pre_e_ew_v_sr">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>21</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="Line" name="line_5">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_14">
+             <item>
+              <widget class="QLabel" name="label_104">
+               <property name="font">
+                <font>
+                 <pointsize>14</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>At Installation:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_7">
+               <item>
+                <layout class="QVBoxLayout" name="verticalLayout_12">
+                 <item>
+                  <widget class="QLabel" name="label_89">
+                   <property name="font">
+                    <font>
+                     <underline>true</underline>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Resistance (ohms):</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <layout class="QFormLayout" name="formLayout_8">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_88">
+                     <property name="text">
+                      <string>S- to N+:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QLineEdit" name="le_e_ns_r_sr">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>21</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_103">
+                     <property name="text">
+                      <string>S- to S+:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QLineEdit" name="le_e_sn_r_sr">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>21</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_102">
+                     <property name="text">
+                      <string>W- to E+:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QLineEdit" name="le_e_ew_r_sr">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>21</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="label_101">
+                     <property name="text">
+                      <string>E- to W+:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QLineEdit" name="le_e_we_r_sr">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>21</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="QLabel" name="label_100">
+                     <property name="text">
+                      <string>G- to N+:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="1">
+                    <widget class="QLineEdit" name="le_e_ng_r_sr">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>21</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="0">
+                    <widget class="QLabel" name="label_99">
+                     <property name="text">
+                      <string>N- to G+:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="1">
+                    <widget class="QLineEdit" name="le_e_gn_r_sr">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>21</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="6" column="0">
+                    <widget class="QLabel" name="label_98">
+                     <property name="text">
+                      <string>Ex Gain- to GPS+</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="6" column="1">
+                    <widget class="QLineEdit" name="le_ex_gps_sr">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>21</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="7" column="0">
+                    <widget class="QLabel" name="label_90">
+                     <property name="text">
+                      <string>Ey Gain- to GPS+</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="7" column="1">
+                    <widget class="QLineEdit" name="le_ey_gps_sr">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>21</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QVBoxLayout" name="verticalLayout_8">
+                 <item>
+                  <widget class="QLabel" name="label_112">
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>16</height>
+                    </size>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <underline>true</underline>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Voltage (mV):</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <layout class="QFormLayout" name="formLayout_18">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_105">
+                     <property name="text">
+                      <string>(S- to N+) DVC:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QLineEdit" name="le_e_ns_vdc_sr">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>21</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_106">
+                     <property name="text">
+                      <string>(W- to E+) DVC:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QLineEdit" name="le_e_ew_vdc_sr">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>21</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_107">
+                     <property name="text">
+                      <string>(G- to N+) DVC:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QLineEdit" name="le_e_ng_vdc_sr">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>21</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <layout class="QFormLayout" name="formLayout_19">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_108">
+                     <property name="text">
+                      <string>(S- to N+) AVC:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QLineEdit" name="le_e_ns_vac_sr">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>21</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_109">
+                     <property name="text">
+                      <string>(W- to E+) AVC:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QLineEdit" name="le_e_ew_vac_sr">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>21</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_110">
+                     <property name="text">
+                      <string>(G- to N+) AVC:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QLineEdit" name="le_e_ng_vac_sr">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>21</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_13"/>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QFrame" name="frame_48">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>310</y>
+        <width>341</width>
+        <height>101</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_11">
+       <property name="leftMargin">
+        <number>5</number>
+       </property>
+       <property name="topMargin">
+        <number>5</number>
+       </property>
+       <property name="rightMargin">
+        <number>5</number>
+       </property>
+       <property name="bottomMargin">
+        <number>5</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="label_126">
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Timing:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QFormLayout" name="formLayout_11">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_121">
+           <property name="text">
+            <string>Last Time Stamp for run x:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="le_last_time_stamp_sr">
+           <property name="minimumSize">
+            <size>
+             <width>153</width>
+             <height>21</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_120">
+           <property name="text">
+            <string>First Time Stamp for run x:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="le_first_time_stamp_sr">
+           <property name="minimumSize">
+            <size>
+             <width>153</width>
+             <height>21</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QFrame" name="frame_49">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>245</y>
+        <width>175</width>
+        <height>54</height>
+       </rect>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>175</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_19">
+       <property name="spacing">
+        <number>2</number>
+       </property>
+       <property name="leftMargin">
+        <number>5</number>
+       </property>
+       <property name="topMargin">
+        <number>2</number>
+       </property>
+       <property name="rightMargin">
+        <number>5</number>
+       </property>
+       <property name="bottomMargin">
+        <number>2</number>
+       </property>
+       <item>
+        <layout class="QFormLayout" name="formLayout_17">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_114">
+           <property name="text">
+            <string>Battery (V):</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="le_battery_voltage_sr">
+           <property name="minimumSize">
+            <size>
+             <width>21</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label_119">
+           <property name="text">
+            <string>Ex Gain:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="le_ex_gain_sr">
+           <property name="minimumSize">
+            <size>
+             <width>21</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gain can either be H/h or L\l.&lt;/p&gt;&lt;p&gt;No other values accepted.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_128">
+           <property name="text">
+            <string>Ey Gain:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="le_ey_gain_sr">
+           <property name="minimumSize">
+            <size>
+             <width>21</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Gain can either be H/h or Ll.
+No other values accepted.</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QLabel" name="label_check_sr">
+      <property name="geometry">
+       <rect>
+        <x>879</x>
+        <y>471</y>
+        <width>50</width>
+        <height>50</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLineEdit#label_icon {background-color: rgb(255, 246, 131);}</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+     <zorder>layoutWidget</zorder>
+     <zorder>te_comments_sr</zorder>
+     <zorder>frame_46</zorder>
+     <zorder>tb_generate_report_sr</zorder>
+     <zorder>label_87</zorder>
+     <zorder>le_change_directory_sr</zorder>
+     <zorder>tb_change_directory_sr</zorder>
+     <zorder>frame_33</zorder>
+     <zorder>frame_47</zorder>
+     <zorder>label_6</zorder>
+     <zorder>frame_31</zorder>
+     <zorder>frame_32</zorder>
+     <zorder>frame_48</zorder>
+     <zorder>frame_49</zorder>
+     <zorder>label_check_sr</zorder>
+    </widget>
+    <widget class="QWidget" name="stackEngineerUI">
+     <widget class="QTextEdit" name="te_filteredhexdata">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>190</y>
+        <width>850</width>
+        <height>100</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QTextEdit#te_filteredhexdata {background-color: rgb(255, 246, 131);}
+
+
+
+</string>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="te_rawhex">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>325</y>
+        <width>850</width>
+        <height>100</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QTextEdit#te_rawhex {background-color: rgb(255, 246, 131);}
+
+
+
+</string>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="te_gps_string_e">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>460</y>
+        <width>850</width>
+        <height>55</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QTextEdit#te_gps_string_e {background-color: rgb(255, 246, 131);}
+
+
+
+</string>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QFrame" name="frame_19">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>15</y>
+        <width>850</width>
+        <height>144</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QLabel" name="label_19">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>830</width>
+         <height>123</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>13</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;EGINEERING MODE reveals the binary data packet streaming from the NIMS each second.&lt;/p&gt;&lt;p&gt;Each 25-byte data packet has the same order of bytes, numbered 0 through 24, beginning with a h01 and ending with a h04. ('h' means Hex display)&lt;/p&gt;&lt;p&gt;ENGINEERING MODE  enables the User to bypass the filters of the GUI and see the NIMS communication directly.  It can be helpful.&lt;/p&gt;&lt;p&gt;Frequently used bytes are displayed separately but can still be found in the original 25-byte packet.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>435</y>
+        <width>850</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>23</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>GPS SHORT CYCLE DATA FEED</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_13">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>298</y>
+        <width>181</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>23</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>RAW PORT DATA</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_15">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>165</y>
+        <width>261</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>23</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>FILTERED HEX PACKETS</string>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="te_bytesread">
+      <property name="geometry">
+       <rect>
+        <x>450</x>
+        <y>295</y>
+        <width>41</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QTextEdit#te_bytesread {background-color: rgb(255, 246, 131);}
+
+
+
+</string>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="te_magstatus">
+      <property name="geometry">
+       <rect>
+        <x>660</x>
+        <y>295</y>
+        <width>41</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QTextEdit#te_magstatus {background-color: rgb(255, 246, 131);}
+
+
+
+</string>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="te_gps_status_byte_e">
+      <property name="geometry">
+       <rect>
+        <x>860</x>
+        <y>295</y>
+        <width>41</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>Codes: C7 = GPS Short Cycling, A3 = Receiving GPS Almanac</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QTextEdit#te_gps_status_byte_e {background-color: rgb(255, 246, 131);}
+
+
+
+</string>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_16">
+      <property name="geometry">
+       <rect>
+        <x>312</x>
+        <y>298</y>
+        <width>135</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>23</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>BYTES READ</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_17">
+      <property name="geometry">
+       <rect>
+        <x>514</x>
+        <y>298</y>
+        <width>143</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>23</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>MAG STATUS</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_18">
+      <property name="geometry">
+       <rect>
+        <x>722</x>
+        <y>298</y>
+        <width>135</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>23</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>GPS STATUS</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="tb_record_raw">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>295</y>
+        <width>80</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Record</string>
+      </property>
+      <property name="checkable">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="stackConnectionUI">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <widget class="QLabel" name="label_14">
+      <property name="geometry">
+       <rect>
+        <x>570</x>
+        <y>100</y>
+        <width>191</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&lt;a href=&quot;http://www.onlinewebfonts.com&quot;&gt;oNline Web Fonts&lt;/a&gt;</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="frame_3">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>875</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QComboBox" name="cb_connection">
+     <property name="geometry">
+      <rect>
+       <x>110</x>
+       <y>0</y>
+       <width>250</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="editable">
+      <bool>false</bool>
+     </property>
+     <property name="currentText">
+      <string/>
+     </property>
+     <property name="maxVisibleItems">
+      <number>20</number>
+     </property>
+     <property name="insertPolicy">
+      <enum>QComboBox::InsertAlphabetically</enum>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToMinimumContentsLength</enum>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_7">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>0</y>
+       <width>100</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Connection:</string>
+     </property>
+    </widget>
+    <widget class="QWidget" name="horizontalLayoutWidget_2">
+     <property name="geometry">
+      <rect>
+       <x>370</x>
+       <y>0</y>
+       <width>501</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QFrame" name="frame_18">
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <widget class="QLabel" name="label_connection_led">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>3</y>
+           <width>58</width>
+           <height>29</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+        <widget class="QComboBox" name="cb_speed">
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>4</y>
+           <width>91</width>
+           <height>26</height>
+          </rect>
+         </property>
+         <property name="currentText">
+          <string/>
+         </property>
+        </widget>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="frame_17">
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <widget class="QLabel" name="label_packets_led">
+         <property name="geometry">
+          <rect>
+           <x>100</x>
+           <y>3</y>
+           <width>58</width>
+           <height>29</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_10">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>3</y>
+           <width>71</width>
+           <height>29</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Packets:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="frame_16">
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <widget class="QLabel" name="label_11">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>3</y>
+           <width>68</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Receive:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_receiving_led">
+         <property name="geometry">
+          <rect>
+           <x>100</x>
+           <y>3</y>
+           <width>58</width>
+           <height>29</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="frame_icon">
+    <property name="geometry">
+     <rect>
+      <x>875</x>
+      <y>0</y>
+      <width>75</width>
+      <height>75</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QFrameEdit#frame_icon {background-color: rgb(255, 246, 131);}</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="label_icon">
+     <property name="geometry">
+      <rect>
+       <x>1</x>
+       <y>1</y>
+       <width>70</width>
+       <height>70</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>true</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLineEdit#label_icon {background-color: rgb(255, 246, 131);}</string>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>950</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <tabstops>
+  <tabstop>tb_shortcycle_2</tabstop>
+  <tabstop>le_filename</tabstop>
+  <tabstop>le_site_name</tabstop>
+  <tabstop>le_state_province</tabstop>
+  <tabstop>le_country</tabstop>
+  <tabstop>le_run_id</tabstop>
+  <tabstop>le_operator</tabstop>
+  <tabstop>le_nims_id</tabstop>
+  <tabstop>le_mag_id</tabstop>
+  <tabstop>le_ns_dipole_length</tabstop>
+  <tabstop>le_ns_dipole_heading</tabstop>
+  <tabstop>le_ew_dipole_length</tabstop>
+  <tabstop>le_ew_dipole_heading</tabstop>
+  <tabstop>le_n_electrode_id</tabstop>
+  <tabstop>le_s_electrode_id</tabstop>
+  <tabstop>le_e_electrode_id</tabstop>
+  <tabstop>le_w_electrode_id</tabstop>
+  <tabstop>le_gnd_electrode_id</tabstop>
+  <tabstop>rb_x_layout</tabstop>
+  <tabstop>rb_l_layout</tabstop>
+  <tabstop>rb_t_layout</tabstop>
+  <tabstop>te_comments</tabstop>
+  <tabstop>cb_status</tabstop>
+  <tabstop>le_run_id_sr</tabstop>
+  <tabstop>le_site_name_sr</tabstop>
+  <tabstop>le_state_province_sr</tabstop>
+  <tabstop>le_country_sr</tabstop>
+  <tabstop>le_crew</tabstop>
+  <tabstop>le_nims_id_sr</tabstop>
+  <tabstop>le_mag_id_sr</tabstop>
+  <tabstop>le_n_electrode_id_sr</tabstop>
+  <tabstop>le_s_electrode_id_sr</tabstop>
+  <tabstop>le_e_electrode_id_sr</tabstop>
+  <tabstop>le_w_electrode_id_sr</tabstop>
+  <tabstop>le_gps_lat_sr</tabstop>
+  <tabstop>le_gps_lon_sr</tabstop>
+  <tabstop>le_gps_alt_sr</tabstop>
+  <tabstop>le_gps_dec_sr</tabstop>
+  <tabstop>le_battery_voltage_sr</tabstop>
+  <tabstop>le_ex_gain_sr</tabstop>
+  <tabstop>le_ey_gain_sr</tabstop>
+  <tabstop>le_last_time_stamp_sr</tabstop>
+  <tabstop>le_first_time_stamp_sr</tabstop>
+  <tabstop>le_pre_e_ns_r_sr</tabstop>
+  <tabstop>le_pre_e_sn_r_sr</tabstop>
+  <tabstop>le_pre_e_ew_r_sr</tabstop>
+  <tabstop>le_pre_e_we_r_sr</tabstop>
+  <tabstop>le_pre_e_ns_v_sr</tabstop>
+  <tabstop>le_pre_e_ew_v_sr</tabstop>
+  <tabstop>le_e_ns_r_sr</tabstop>
+  <tabstop>le_e_sn_r_sr</tabstop>
+  <tabstop>le_e_ew_r_sr</tabstop>
+  <tabstop>le_e_we_r_sr</tabstop>
+  <tabstop>le_e_ng_r_sr</tabstop>
+  <tabstop>le_e_gn_r_sr</tabstop>
+  <tabstop>le_ex_gps_sr</tabstop>
+  <tabstop>le_ey_gps_sr</tabstop>
+  <tabstop>le_e_ns_vdc_sr</tabstop>
+  <tabstop>le_e_ew_vdc_sr</tabstop>
+  <tabstop>le_e_ng_vdc_sr</tabstop>
+  <tabstop>le_e_ns_vac_sr</tabstop>
+  <tabstop>le_e_ew_vac_sr</tabstop>
+  <tabstop>le_e_ng_vac_sr</tabstop>
+  <tabstop>te_comments_sr</tabstop>
+  <tabstop>tb_generate_report_sr</tabstop>
+  <tabstop>le_hx</tabstop>
+  <tabstop>le_hy</tabstop>
+  <tabstop>tb_gain_xlyl</tabstop>
+  <tabstop>tb_gain_xhyl</tabstop>
+  <tabstop>tb_gain_xlyh</tabstop>
+  <tabstop>tb_gain_xhyh</tabstop>
+  <tabstop>le_change_directory_sr</tabstop>
+  <tabstop>tb_nims_leds</tabstop>
+  <tabstop>tb_almanac</tabstop>
+  <tabstop>tb_change_directory_sr</tabstop>
+  <tabstop>tb_shortcycle</tabstop>
+  <tabstop>tb_shortcycle_3</tabstop>
+  <tabstop>le_ex</tabstop>
+  <tabstop>tb_mag_light</tabstop>
+  <tabstop>te_gps_metadata_string</tabstop>
+  <tabstop>le_hz</tabstop>
+  <tabstop>le_ey</tabstop>
+  <tabstop>tablewidget_microsdfiles</tabstop>
+  <tabstop>tb_shortcycle_4</tabstop>
+  <tabstop>te_filteredhexdata</tabstop>
+  <tabstop>te_rawhex</tabstop>
+  <tabstop>te_gps_string_e</tabstop>
+  <tabstop>te_bytesread</tabstop>
+  <tabstop>te_magstatus</tabstop>
+  <tabstop>cb_connection</tabstop>
+  <tabstop>te_gps_status_byte_e</tabstop>
+  <tabstop>cb_speed</tabstop>
+  <tabstop>te_gps_string_m</tabstop>
+  <tabstop>tb_end_run</tabstop>
+  <tabstop>tb_start_run</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../icns/NGF_logo_sqr.qrc"/>
+  <include location="../icns/icons.qrc"/>
+ </resources>
+ <connections/>
+</ui>
