@@ -18,11 +18,13 @@ import os
 import sys
 import nims
 import time
+import json
 import serial
 import struct
 import logging
 import traceback
 from re import search
+from cmd import Cmd
 from pathlib import Path
 from datetime import datetime
 from time import gmtime, strftime
@@ -36,10 +38,12 @@ from __init__ import __program__
 
 from pyserial import list_ports
 
+from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import Qt, QSettings
 from PyQt5.QtCore import QThread, pyqtSignal, QTimer
 from PyQt5.QtChart import QChart, QChartView, QLineSeries, QValueAxis
-from PyQt5.QtWidgets import QMainWindow, QApplication, QAction, QWidget, QFileDialog
+from PyQt5.QtWidgets import (QMainWindow, QApplication, QAction, QWidget,
+                             QFileDialog, QTableWidgetItem)
 from PyQt5.QtGui import QPixmap, QPainter, QFont
 from PyQt5.uic import loadUi
 
@@ -69,9 +73,11 @@ class MainWindow(QMainWindow):
         # serial port
         self.port = serial.Serial()
 
+        self.cmd = Cmd(self.port)
+
         # variable initialization
         self.packet = b''
-        self.board = nims.MINERVA
+        self.board = nims.ATHENA
         self.scstate = nims.INITIAL
         self.gpsstate = nims.GPSINITIAL
         self.gpsstring = ''
@@ -133,6 +139,12 @@ class MainWindow(QMainWindow):
         viewMenu.addAction(backTab)
         viewMenu.addAction(forwardTab)
 
+        # -------------------------Background----------------------------------
+        # get the status
+        self._status_timer = QTimer()
+        self._status_timer.timeout.connect(lambda: self._send_status())
+        self._send_status()
+
         # -------------------------Tab Control----------------------------------
         self.displayindex = TABSTARTENDRUN
 
@@ -161,7 +173,7 @@ class MainWindow(QMainWindow):
 
         # initialize the port read thread
         self.readport = PortRead(qport=self.port)
-        self.readport.serdata.connect(self.parse_packet)
+        self.readport.serdata.connect(self.data_in)
 
         # set up current port speed
         self.change_speed_list()
@@ -243,7 +255,38 @@ class MainWindow(QMainWindow):
         self.tb_start_run.clicked.connect(self.start_run)
         self.tb_end_run.clicked.connect(self.end_run)
 
-        # Check if currently recording
+        # TODO: test table
+        header = self.tw_datafiles.horizontalHeader()
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
+        self.tw_datafiles.setRowCount(30)
+        f01 = QTableWidgetItem("data.bin")
+        f01.setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
+        f02 = QTableWidgetItem("84.32 MB")
+        f02.setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
+        f03 = QTableWidgetItem("No")
+        f03.setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
+        self.tw_datafiles.setItem(0, 1, f01)
+        self.tw_datafiles.setItem(0, 2, f02)
+        self.tw_datafiles.setItem(0, 3, f03)
+        f11 = QTableWidgetItem("MB0301a.bin")
+        f11.setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
+        f12 = QTableWidgetItem("34.65 kB")
+        f12.setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
+        f13 = QTableWidgetItem("Yes")
+        f13.setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
+        self.tw_datafiles.setItem(1, 1, f11)
+        self.tw_datafiles.setItem(1, 2, f12)
+        self.tw_datafiles.setItem(1, 3, f13)
+        for row in range(4):
+            for col in [0]:
+                chkBoxItem = QTableWidgetItem()
+                chkBoxItem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                chkBoxItem.setCheckState(QtCore.Qt.Unchecked)
+                self.tw_datafiles.setItem(row, col, chkBoxItem)
+        # Get NIMS status
         self.check_if_recording()
 
         # -------------------------Data Display---------------------------------
@@ -424,6 +467,14 @@ class MainWindow(QMainWindow):
             else:
                 self.displayindex += 1
             self.display(self.displayindex)
+
+    # -------------------------Background---------------------------------------
+    def _send_status(self):
+        self._status_timer.start(10000)
+        self.cmd.send_cmd(self.cmd.usd.clss, self.cmd.usd.id.list,
+                          self.cmd.null)
+        self.cmd.send_cmd(self.cmd.bat.clss, self.cmd.bat.id.voltage,
+                          self.cmd.null)
 
     # -------------------------Connection---------------------------------------
     def connection_change(self, i):
@@ -1013,15 +1064,14 @@ class MainWindow(QMainWindow):
             print(f'Send Command: \t{bytes.fromhex(nims.SHORTCYCLE)}')
             self.send_byte(bytes.fromhex(nims.SHORTCYCLE))
         else:
-            self.send_byte(bytes.fromhex(nims.SENDNIMS))
-            self.send_byte(bytes.fromhex(nims.SHORTCYCLE))
+            self.cmd.send_cmd(self.cmd.nim.clss, self.cmd.nim.id.shortcycle,
+                              self.cmd.null)
 
     def send_almanac(self):
         if self.board == nims.MINERVA:
             print(f'Send Command: \t{bytes.fromhex(nims.ALMANAC)}')
             self.send_byte(bytes.fromhex(nims.ALMANAC))
         else:
-            self.send_byte(bytes.fromhex(nims.SENDNIMS))
             self.send_byte(bytes.fromhex(nims.ALMANAC))
 
     # -------------------------Data Display-------------------------------------
@@ -1047,8 +1097,8 @@ class MainWindow(QMainWindow):
             print(f'Send Command: \t{bytes.fromhex(nims.GAINXLYL)}')
             self.send_byte(bytes.fromhex(nims.GAINXLYL))
         else:
-            self.send_byte(bytes.fromhex(nims.SENDNIMS))
-            self.send_byte(bytes.fromhex(nims.GAINXLYL))
+            self.cmd.send_cmd(self.cmd.nim.clss, self.cmd.nim.id.gain,
+                              self.cmd.nim.payload.xlyl)
 
     def send_gain_xhyl(self):
         # send low gain command first
@@ -1060,10 +1110,9 @@ class MainWindow(QMainWindow):
             print(f'Send Command: \t{bytes.fromhex(nims.GAINXHYL)}')
             self.send_byte(bytes.fromhex(nims.GAINXHYL))
         else:
-            # send the command to forward to NIMS
-            self.send_byte(bytes.fromhex(nims.SENDNIMS))
             # send gain command
-            self.send_byte(bytes.fromhex(nims.GAINXHYL))
+            self.cmd.send_cmd(self.cmd.nim.clss, self.cmd.nim.id.gain,
+                              self.cmd.nim.payload.xhyl)
 
     def send_gain_xlyh(self):
         # send low gain command first
@@ -1075,10 +1124,9 @@ class MainWindow(QMainWindow):
             print(f'Send Command: \t{bytes.fromhex(nims.GAINXLYH)}')
             self.send_byte(bytes.fromhex(nims.GAINXLYH))
         else:
-            # send the command to forward to NIMS
-            self.send_byte(bytes.fromhex(nims.SENDNIMS))
             # send gain command
-            self.send_byte(bytes.fromhex(nims.GAINXLYH))
+            self.cmd.send_cmd(self.cmd.nim.clss, self.cmd.nim.id.gain,
+                              self.cmd.nim.payload.xlyh)
 
     def send_gain_xhyh(self):
         # send low gain command first
@@ -1090,10 +1138,9 @@ class MainWindow(QMainWindow):
             print(f'Send Command: \t{bytes.fromhex(nims.GAINXHYH)}')
             self.send_byte(bytes.fromhex(nims.GAINXHYH))
         else:
-            # send the command to forward to NIMS
-            self.send_byte(bytes.fromhex(nims.SENDNIMS))
             # send gain command
-            self.send_byte(bytes.fromhex(nims.GAINXHYH))
+            self.cmd.send_cmd(self.cmd.nim.clss, self.cmd.nim.id.gain,
+                              self.cmd.nim.payload.xhyh)
 
     def send_mag_light(self, checked):
         if self.board == nims.MINERVA:
@@ -1106,18 +1153,17 @@ class MainWindow(QMainWindow):
         else:
             if checked:
                 # send mag light turn on command
-                self.send_byte(bytes.fromhex(nims.MAGLIGHTON))
+                self.cmd.send_cmd(self.cmd.mag.clss, self.cmd.mag.id.light,
+                                  self.cmd.mag.payload.on)
             else:
                 # send mag light turn off command
-                self.send_byte(bytes.fromhex(nims.MAGLIGHTOFF))
+                self.cmd.send_cmd(self.cmd.mag.clss, self.cmd.mag.id.light,
+                                  self.cmd.mag.payload.off)
 
     def send_nims_leds(self):
         # send the nims command
         if self.board == nims.MINERVA:
             print(f'Send Command: \t{bytes.fromhex(nims.NIMSLEDS)}')
-            self.send_byte(bytes.fromhex(nims.NIMSLEDS))
-        else:
-            self.send_byte(bytes.fromhex(nims.SENDNIMS))
             self.send_byte(bytes.fromhex(nims.NIMSLEDS))
 
     def update_graphs(self):
@@ -1152,7 +1198,7 @@ class MainWindow(QMainWindow):
 
     # -------------------------Start/End Run------------------------------------
     def check_if_recording(self):
-        if self.board == nims.OWL:
+        if self.board == nims.ATHENA:
             pass
             # TODO: send recording command
 
@@ -1228,7 +1274,7 @@ class MainWindow(QMainWindow):
         else:
             self.label_end_run_led.setPixmap(self.pxmprndblack)
 
-    def update_ready_led(self):
+    def update_ready_led(self, status):
         status = self.packet[nims.STATUSSRT:nims.STATUSSTP].hex()
         if status == nims.MAGREADY:
             self.set_mag_ready_led(nims.MAGREADY)
@@ -1247,9 +1293,9 @@ class MainWindow(QMainWindow):
         else:
             self.set_mag_north_led(False)
 
-    def update_e_spec_leds(self):
+    def update_e_spec_leds(self, packet):
         mvoltcutoff = 16
-        gain = self.packet[nims.STATUSSRT:nims.STATUSSTP]
+        gain = packet[nims.STATUSSRT:nims.STATUSSTP]
 
         if self.graphdata.ex[-1] >= mvoltcutoff:
             self.set_ex_spec_led(True)
@@ -1308,7 +1354,7 @@ class MainWindow(QMainWindow):
         # compile the metadata
         self.metadata.make_header()
         # stop recieving packets
-        self.readport.stop()
+        # self.readport.stop()
 
         # start the run
         if self.board == nims.MINERVA:
@@ -1323,15 +1369,24 @@ class MainWindow(QMainWindow):
             print(f'Send Command: \t{bytes.fromhex(nims.HEADER)}')
             self.send_byte(bytes.fromhex(nims.HEADER))
         else:
-            self.send_file_name()
-            sleep(0.15)
-            self.send_file_header()
-            sleep(0.15)
-            self.send_byte(bytes.fromhex(nims.RECORD))
+            self.cmd.send_cmd(self.cmd.usd.clss, self.cmd.usd.id.start,
+                              self._start_recoding_frame())
+            # self.send_file_name()
+            # sleep(0.15)
+            # self.send_file_header()
+            # sleep(0.15)
+            # self.send_byte(bytes.fromhex(nims.RECORD))
 
         # Clear the packet and start reading from the port
         self.packet = b''
-        self.readport.start()
+        # self.readport.start()
+
+    def _start_recoding_frame(self):
+        fname = self.get_file_name()
+        header = self.metadata.fileheader
+
+        return json.dumps({'File_Name': fname,
+                           'Header': header}).encode('utf-8')
 
     def send_file_name(self):
         self.send_byte(bytes.fromhex(nims.FLENAME))
@@ -1357,9 +1412,13 @@ class MainWindow(QMainWindow):
     def end_run(self):
         # toggle start run/end run leds
         self.set_end_run_led(True)
-        # send end run command
-        print(f'Send Command: \t{bytes.fromhex(nims.ENDREC)}')
-        self.send_byte(bytes.fromhex(nims.ENDREC))
+        if self.board == nims.MINERVA:
+            # send end run command
+            print(f'Send Command: \t{bytes.fromhex(nims.ENDREC)}')
+            self.send_byte(bytes.fromhex(nims.ENDREC))
+        else:
+            self.cmd.send_cmd(self.cmd.usd.clss, self.cmd.usd.id.stop,
+                              self.cmd.null)
 
     # -------------------------Site Report--------------------------------------
     def status_change(self):
@@ -1534,6 +1593,10 @@ class MainWindow(QMainWindow):
     def update_gps_dec_sr(self):
         self.sr.dec = self.le_gps_dec_sr.text()
 
+    def _set_bat_volt_sr(self, data):
+        volt = json.loads(data)['Voltage']
+        self.le_battery_voltage_sr.setText(str(volt) + ' V')
+
     def update_batt_volt_sr(self):
         self.sr.battery = self.le_battery_voltage_sr.text()
 
@@ -1692,9 +1755,10 @@ class MainWindow(QMainWindow):
     def update_hex_data(self, packet):
         text = self.te_rawhex.toPlainText()
         # print(len(text))
-        if len(text) >= 100:
-            text = f'{text[-98:]} '
-        self.te_rawhex.setText(f'{text}\t{packet}')
+        if len(text) >= 256:
+            text = text[text.index('\\xb5') + 1:]
+            text = text[text.index('\\xb5'):]
+        self.te_rawhex.setText(text + packet)
 
     def record_raw_data(self):
         """Record the port data since opening.
@@ -1724,11 +1788,10 @@ class MainWindow(QMainWindow):
     def update_filtered_data(self, packet):
         self.te_filteredhexdata.setText(packet)
 
-    def update_bytes_read(self):
-        self.te_bytesread.setText(str(len(self.packet)))
+    def update_bytes_read(self, p_len):
+        self.te_bytesread.setText(str(p_len))
 
-    def update_mag_status(self):
-        value = self.packet[nims.STATUSSRT:nims.STATUSSTP].hex().upper()
+    def update_mag_status(self, value):
         # update the mag status byte
         self.te_magstatus.setText(value)
 
@@ -1750,76 +1813,102 @@ class MainWindow(QMainWindow):
 
     # -------------------------Processing---------------------------------------
 
-    def parse_packet(self, data):
+    def data_in(self, data):
         self.set_receiving_led(True)
         self.receiving_led_timer.stop()
         self.receiving_led_timer.start(250)
         # save data to variable
         self.portdata += data
         # TODO: raw
-        self.update_hex_data(data.hex().upper())
+        self.update_hex_data(data.decode('utf-8', "backslashreplace"))
+        # self.update_hex_data(data.hex().upper())
         # if len(self.packet) > 4:
         #     print(len(self.packet))
         #     print(2*(int(self.packet[2:4], 16)-1))
         # print(data)
+        (cmd, data) = self.cmd.process(data)
 
+        if cmd is None:
+            return
+        elif cmd.clss == self.cmd.nim.clss:
+            self._process_nim(cmd.id, data)
+        elif cmd.clss == self.cmd.usd.clss:
+            self._process_usd(cmd.id, data)
+        elif cmd.clss == self.cmd.bat.clss:
+            self._process_bat(cmd.id, data)
         # print(self.packet)
-        if len(self.packet) == 0 and data == bytes.fromhex(nims.SOH):
-            try:
-                self.packet = b''.join([self.packet, data])
-            except TypeError:
-                self.set_packets_led(False)
-                pass
-        elif len(self.packet) != 0:
-            try:
-                self.packet = b''.join([self.packet, data])
-            except TypeError:
-                pass
-            # self.packet += data
-            if (len(self.packet) == int(self.packet[1:2].hex(), 16)) and data == bytes.fromhex(nims.EOH):
-                # change packets led to valid
-                self.set_packets_led(True)
-                # set the variant label
-                # self.update_variant()
-                # process the data packet
-                self.process_packet()
-            elif len(self.packet) > int(self.packet[1:2].hex(), 16):
-                # change packets led to valid
-                self.set_packets_led(False)
-                self.packet = b''
+        # if len(self.packet) == 0 and data == bytes.fromhex(nims.SOH):
+        #     try:
+        #         self.packet = b''.join([self.packet, data])
+        #     except TypeError:
+        #         self.set_packets_led(False)
+        #         pass
+        # elif len(self.packet) != 0:
+        #     try:
+        #         self.packet = b''.join([self.packet, data])
+        #     except TypeError:
+        #         pass
+        #     # self.packet += data
+        #     if (len(self.packet) == int(self.packet[1:2].hex(), 16)) and data == bytes.fromhex(nims.EOH):
+        #         # change packets led to valid
+        #         self.set_packets_led(True)
+        #         # set the variant label
+        #         # self.update_variant()
+        #         # process the data packet
+        #         self.process_packet()
+        #     elif len(self.packet) > int(self.packet[1:2].hex(), 16):
+        #         # change packets led to valid
+        #         self.set_packets_led(False)
+        #         self.packet = b''
 
+        # else:
+        #     self.set_packets_led(False)
+        #     # handle command
+        #     pass
+
+    def _process_nim(self, _id, data):
+        if _id == self.cmd.nim.id.packet:
+            # change packets led to valid
+            self.set_packets_led(True)
+            self._process_packet(data[1:])
         else:
+            # change packets led to valid
             self.set_packets_led(False)
-            # handle command
-            pass
 
-    def process_packet(self):
+    def _process_usd(self, _id, data):
+        print(_id, data)
+
+    def _process_bat(self, _id, data):
+        if _id == self.cmd.bat.id.voltage:
+            self._set_bat_volt_sr(data)
+
+    def _process_packet(self, packet):
         # convert from bytes to upper case hex
-        packet = self.packet.hex().upper()
+        hex_pac = packet.hex().upper()
         # reformat packet bytes
-        packet = '\t'.join([packet[i:i + 2] for i in range(0, len(packet), 2)])
+        hex_pac = '\t'.join([hex_pac[i:i + 2] for i in range(0, len(hex_pac), 2)])
 
         # update data values
-        self.update_data()
+        self.update_data(packet)
 
         # update gui
         # self.update_hex_data(packet)
-        self.update_filtered_data(packet)
+        self.update_filtered_data(hex_pac)
         self.update_graphs()
         self.update_sensor_values()
-        self.update_bytes_read()
-        self.update_h()
-        self.update_e()
-        self.update_gps()
+        self.update_bytes_read(len(packet))
+        self.update_h(packet)
+        self.update_e(packet)
+        self.update_gps(packet)
         # clear packets
-        self.packet = b''
+        # self.packet = b''
 
-    def update_data(self):
-        hx = self.packet[nims.HXSTART:nims.HXSTOP]
-        hy = self.packet[nims.HYSTART:nims.HYSTOP]
-        hz = self.packet[nims.HZSTART:nims.HZSTOP]
-        ex = self.packet[nims.EXSTART:nims.EXSTOP]
-        ey = self.packet[nims.EYSTART:nims.EYSTOP]
+    def update_data(self, packet):
+        hx = packet[nims.HXSTART:nims.HXSTOP]
+        hy = packet[nims.HYSTART:nims.HYSTOP]
+        hz = packet[nims.HZSTART:nims.HZSTOP]
+        ex = packet[nims.EXSTART:nims.EXSTOP]
+        ey = packet[nims.EYSTART:nims.EYSTOP]
 
         self.graphdata.update_hx(byte_to_int(hx) * nims.HCONVERSION)
         self.graphdata.update_hy(byte_to_int(hy) * nims.HCONVERSION)
@@ -1827,11 +1916,11 @@ class MainWindow(QMainWindow):
         self.graphdata.update_ex(byte_to_int(ex) * nims.ECONVERSION)
         self.graphdata.update_ey(byte_to_int(ey) * nims.ECONVERSION)
 
-    def update_gps(self):
+    def update_gps(self, packet):
         # get the binary value
-        binvalue = self.packet[nims.GPSSRT:nims.GPSSTP]
+        binvalue = packet[nims.GPSSRT:nims.GPSSTP]
         # get the gps value and cast as uppercase hex
-        value = self.packet[nims.GPSSRT:nims.GPSSTP].hex().upper()
+        value = packet[nims.GPSSRT:nims.GPSSTP].hex().upper()
         # update the GPS value in metadata
         self.update_gps_value_m(value)
         # update the GPS value in engineering
@@ -1948,21 +2037,23 @@ class MainWindow(QMainWindow):
         self.clear_gps_string_e()
         self.clear_gps_string_m()
 
-    def update_e(self):
+    def update_e(self, packet):
         # parse the gain byte
-        gain = self.packet[nims.GAINSRT:nims.GAINSTP].hex().upper()
+        gain = packet[nims.GAINSRT:nims.GAINSTP].hex().upper()
         # Update gain lights on Data display
         self.set_gain_leds(gain)
         # Update E gain spec leds on Start/End Run
-        self.update_e_spec_leds()
+        self.update_e_spec_leds(packet)
 
-    def update_h(self):
+    def update_h(self, packet):
         # Update 'Data Display' components
+        status = packet[nims.STATUSSRT:nims.STATUSSTP].hex()
+        value = packet[nims.STATUSSRT:nims.STATUSSTP].hex().upper()
         # Update 'Start/End Run' components
-        self.update_ready_led()
+        self.update_ready_led(status)
         self.update_north_led()
         # Update 'Endineering' components
-        self.update_mag_status()
+        self.update_mag_status(value)
 
     def send_byte(self, cmd):
         if self.port.is_open:
@@ -2593,11 +2684,11 @@ def log_except_hook(*exc_info):
 
 def main(argv):
     # redirect the errors to write them to a file
-    global errflepth
-    home = str(Path.home())
-    errflepth = os.path.join(
-        home, 'Dropbox/Air2-Air3-DropBox/surveys/Earthscope/nimspy_logs/NIMSpy.log')
-    sys.excepthook = log_except_hook
+    # global errflepth
+    # home = str(Path.home())
+    # errflepth = os.path.join(
+    #     home, 'Dropbox/Air2-Air3-DropBox/surveys/Earthscope/nimspy_logs/NIMSpy.log')
+    # sys.excepthook = log_except_hook
     # start the app
     app = QApplication(sys.argv)
     widget = MainWindow()

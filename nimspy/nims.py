@@ -120,7 +120,7 @@ Byte 125-130        Ex, Ey, sample 8 twos compliment, MSB - LSB
 Byte 131    h'04    EOH - End of Packet
 """
 MINERVA = 0
-OWL = 1
+ATHENA = 1
 
 INITIAL = 0
 

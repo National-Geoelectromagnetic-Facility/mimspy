@@ -265,17 +265,88 @@ Gain Control</string>
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <widget class="QTableWidget" name="tablewidget_microsdfiles">
+      <widget class="QTableWidget" name="tw_datafiles">
        <property name="enabled">
         <bool>true</bool>
        </property>
        <property name="geometry">
         <rect>
-         <x>130</x>
-         <y>60</y>
-         <width>311</width>
-         <height>131</height>
+         <x>10</x>
+         <y>10</y>
+         <width>431</width>
+         <height>221</height>
         </rect>
+       </property>
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="rowCount">
+        <number>0</number>
+       </property>
+       <property name="columnCount">
+        <number>4</number>
+       </property>
+       <column>
+        <property name="text">
+         <string/>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>File Name</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>File Size</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Recording</string>
+        </property>
+       </column>
+      </widget>
+      <widget class="QToolButton" name="tb_download">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>240</y>
+         <width>431</width>
+         <height>51</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>17</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="statusTip">
+        <string/>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <property name="text">
+        <string>Dowload File</string>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>16</width>
+         <height>23</height>
+        </size>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+       <property name="autoExclusive">
+        <bool>true</bool>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
        </property>
       </widget>
      </widget>
@@ -2513,7 +2584,7 @@ LEDS</string>
       </widget>
       <widget class="QLineEdit" name="le_filename">
        <property name="enabled">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
        <property name="geometry">
         <rect>
@@ -2529,8 +2600,7 @@ LEDS</string>
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">QLineEdit#le_filename {background-color: rgb(104, 104, 104);}
-</string>
+        <string notr="true"/>
        </property>
       </widget>
       <widget class="QLabel" name="label_58">
@@ -5042,7 +5112,8 @@ No other values accepted.</string>
       </property>
       <property name="font">
        <font>
-        <pointsize>15</pointsize>
+        <family>Monaco</family>
+        <pointsize>13</pointsize>
         <weight>50</weight>
         <bold>false</bold>
        </font>
@@ -5707,7 +5778,7 @@ No other values accepted.</string>
   <tabstop>te_gps_metadata_string</tabstop>
   <tabstop>le_hz</tabstop>
   <tabstop>le_ey</tabstop>
-  <tabstop>tablewidget_microsdfiles</tabstop>
+  <tabstop>tw_datafiles</tabstop>
   <tabstop>tb_shortcycle_4</tabstop>
   <tabstop>te_filteredhexdata</tabstop>
   <tabstop>te_rawhex</tabstop>
