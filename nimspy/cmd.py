@@ -38,7 +38,6 @@ class Cmd:
 
     def __init__(self, port):
         self.null = b'\x00'
-        self.sync = b'\xB5\x21'
         self.port = port
         self.parse = Parsecmd()
 
@@ -64,55 +63,16 @@ class Cmd:
         self.mag = Cmd(clss=b'\x03', id=magid, payload=magpl)
         # uSD Card command(s)
         Usdid = namedtuple("Usdid", ["start", "stop", "list", "download",
-                                     "append", "delete"])
+                                     "append", "delete", "state"])
         Usdpl = namedtuple("Usdpl", ["null"])
         usdid = Usdid(start=b'\x01', stop=b'\x02', list=b'\x03',
-                      download=b'\x04', append=b'\x05', delete=b'\x06')
+                      download=b'\x04', append=b'\x05', delete=b'\x06',
+                      state=b'\x08')
         usdpl = Usdpl(null=b'\x00')
         self.usd = Cmd(clss=b'\x04', id=usdid, payload=usdpl)
 
     def process(self, data):
         return self.parse.process(data)
-
-    def send_cmd(self, _class, _id, payload):
-        frame = self._compile_frame(_class, _id, payload)
-        print(frame.hex().upper())
-        if self.port.is_open:
-            for i in range(0, len(frame), 1024):
-                print(frame[i:i + 1024])
-                self.port.write(frame[i:i + 1024])
-                sleep(0.05)
-
-    def _compile_frame(self, _class, _id, payload):
-        """Compiler command frame with checksum.
-
-        Args:
-            _class (bytes): Cmd class identifier
-            _id (bytes): Subclass identifier
-            payload (bytes): Variable number of bytes to send
-
-        Returns:
-            bytes: Athena cmd frame
-        """
-        ck_a = 0
-        ck_b = 0
-
-        frame = _class + _id + self._get_length(len(payload)) + payload
-
-        # Compute the checksum.
-        for i in range(len(frame)):
-            j = int.from_bytes(frame[i:i + 1], 'big')
-            ck_a += j
-            ck_b += ck_a
-
-        return self.sync + frame + bytes([ck_a & 255]) + bytes([ck_b & 255])
-
-    def _get_length(self, payload_length):
-        _len = bytes([int(payload_length / 256), payload_length % 256])
-        if len(_len) == 1:
-            return b'\x00' + _len
-        else:
-            return _len
 
 
 class Parsecmd:
@@ -142,10 +102,11 @@ class Parsecmd:
     def process(self, byte):
         null = (None, None)
 
-        if byte == self._sync_a:
-            self._temp = self._parse
-            self._parse = self._check_sync
-            return null
+        if self._parse is not self._checksum_receive_b:
+            if byte == self._sync_a:
+                self._temp = self._parse
+                self._parse = self._check_sync
+                return null
 
         cmd = self._parse(byte)
 
@@ -155,13 +116,17 @@ class Parsecmd:
         return cmd
 
     def _check_sync(self, byte):
-        if byte == self._sync_b:
+        try:
+            if byte == self._sync_b:
+                self._clear()
+                self._parse = self._cmd_receive
+            else:
+                self._parse = self._temp
+                self._parse(self._sync_a)
+                return self._parse(byte)
+        except RecursionError:
             self._clear()
-            self._parse = self._cmd_receive
-        else:
-            self._parse = self._temp
-            self._parse(self._sync_a)
-            self._parse(self._sync_b)
+            self._parse = self._null
 
     def _cmd_receive(self, byte):
         self._cmd[self._i:self._i + 1] = byte

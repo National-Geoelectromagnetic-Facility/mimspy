@@ -25,9 +25,12 @@ import logging
 import traceback
 from re import search
 from cmd import Cmd
+from portio import PortMonitor, PortRead, PortWrite
+from portio.pyserial import list_ports
 from pathlib import Path
 from datetime import datetime
 from time import gmtime, strftime
+from collections import namedtuple
 
 from time import sleep
 
@@ -36,11 +39,11 @@ from time import sleep
 from __init__ import __version__
 from __init__ import __program__
 
-from pyserial import list_ports
+# from pyserial import list_ports
 
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import Qt, QSettings
-from PyQt5.QtCore import QThread, pyqtSignal, QTimer
+from PyQt5.QtCore import QThreadPool, QThread, QMutex, pyqtSignal, QTimer
 from PyQt5.QtChart import QChart, QChartView, QLineSeries, QValueAxis
 from PyQt5.QtWidgets import (QMainWindow, QApplication, QAction, QWidget,
                              QFileDialog, QTableWidgetItem)
@@ -83,6 +86,8 @@ class MainWindow(QMainWindow):
         self.gpsstring = ''
 
         self.portdata = b''
+        self.threadpool = QThreadPool()
+        self.mutex = QMutex()
         # LED Instantiations
         # round leds
         self.ledblack = os.path.join('img', 'black_led_61_61.png')
@@ -255,38 +260,10 @@ class MainWindow(QMainWindow):
         self.tb_start_run.clicked.connect(self.start_run)
         self.tb_end_run.clicked.connect(self.end_run)
 
-        # TODO: test table
-        header = self.tw_datafiles.horizontalHeader()
-        header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
-        header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
-        self.tw_datafiles.setRowCount(30)
-        f01 = QTableWidgetItem("data.bin")
-        f01.setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
-        f02 = QTableWidgetItem("84.32 MB")
-        f02.setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
-        f03 = QTableWidgetItem("No")
-        f03.setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
-        self.tw_datafiles.setItem(0, 1, f01)
-        self.tw_datafiles.setItem(0, 2, f02)
-        self.tw_datafiles.setItem(0, 3, f03)
-        f11 = QTableWidgetItem("MB0301a.bin")
-        f11.setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
-        f12 = QTableWidgetItem("34.65 kB")
-        f12.setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
-        f13 = QTableWidgetItem("Yes")
-        f13.setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
-        self.tw_datafiles.setItem(1, 1, f11)
-        self.tw_datafiles.setItem(1, 2, f12)
-        self.tw_datafiles.setItem(1, 3, f13)
-        for row in range(4):
-            for col in [0]:
-                chkBoxItem = QTableWidgetItem()
-                chkBoxItem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-                chkBoxItem.setCheckState(QtCore.Qt.Unchecked)
-                self.tw_datafiles.setItem(row, col, chkBoxItem)
-        # Get NIMS status
+        # File table
+        self._init_file_table()
+
+        # TODO: Get NIMS status
         self.check_if_recording()
 
         # -------------------------Data Display---------------------------------
@@ -469,12 +446,14 @@ class MainWindow(QMainWindow):
             self.display(self.displayindex)
 
     # -------------------------Background---------------------------------------
-    def _send_status(self):
-        self._status_timer.start(10000)
-        self.cmd.send_cmd(self.cmd.usd.clss, self.cmd.usd.id.list,
-                          self.cmd.null)
-        self.cmd.send_cmd(self.cmd.bat.clss, self.cmd.bat.id.voltage,
-                          self.cmd.null)
+    def _send_status(self, t=10000):
+        self._status_timer.start(t)
+        self._send_cmd(self.cmd.usd.clss, self.cmd.usd.id.list,
+                       self.cmd.null)
+        self._send_cmd(self.cmd.usd.clss, self.cmd.usd.id.state,
+                       self.cmd.null)
+        self._send_cmd(self.cmd.bat.clss, self.cmd.bat.id.voltage,
+                       self.cmd.null)
 
     # -------------------------Connection---------------------------------------
     def connection_change(self, i):
@@ -516,6 +495,7 @@ class MainWindow(QMainWindow):
         self.set_receiving_led(False)
 
         print(f'Port Open: \t{self.port.is_open}')
+        self._send_status()
 
     def set_connection_led(self, state):
         if state is True:
@@ -1064,14 +1044,12 @@ class MainWindow(QMainWindow):
             print(f'Send Command: \t{bytes.fromhex(nims.SHORTCYCLE)}')
             self.send_byte(bytes.fromhex(nims.SHORTCYCLE))
         else:
-            self.cmd.send_cmd(self.cmd.nim.clss, self.cmd.nim.id.shortcycle,
-                              self.cmd.null)
+            self._send_cmd(self.cmd.nim.clss, self.cmd.nim.id.shortcycle,
+                           self.cmd.null)
 
     def send_almanac(self):
         if self.board == nims.MINERVA:
             print(f'Send Command: \t{bytes.fromhex(nims.ALMANAC)}')
-            self.send_byte(bytes.fromhex(nims.ALMANAC))
-        else:
             self.send_byte(bytes.fromhex(nims.ALMANAC))
 
     # -------------------------Data Display-------------------------------------
@@ -1097,8 +1075,8 @@ class MainWindow(QMainWindow):
             print(f'Send Command: \t{bytes.fromhex(nims.GAINXLYL)}')
             self.send_byte(bytes.fromhex(nims.GAINXLYL))
         else:
-            self.cmd.send_cmd(self.cmd.nim.clss, self.cmd.nim.id.gain,
-                              self.cmd.nim.payload.xlyl)
+            self._send_cmd(self.cmd.nim.clss, self.cmd.nim.id.gain,
+                           self.cmd.nim.payload.xlyl)
 
     def send_gain_xhyl(self):
         # send low gain command first
@@ -1111,8 +1089,8 @@ class MainWindow(QMainWindow):
             self.send_byte(bytes.fromhex(nims.GAINXHYL))
         else:
             # send gain command
-            self.cmd.send_cmd(self.cmd.nim.clss, self.cmd.nim.id.gain,
-                              self.cmd.nim.payload.xhyl)
+            self._send_cmd(self.cmd.nim.clss, self.cmd.nim.id.gain,
+                           self.cmd.nim.payload.xhyl)
 
     def send_gain_xlyh(self):
         # send low gain command first
@@ -1125,8 +1103,8 @@ class MainWindow(QMainWindow):
             self.send_byte(bytes.fromhex(nims.GAINXLYH))
         else:
             # send gain command
-            self.cmd.send_cmd(self.cmd.nim.clss, self.cmd.nim.id.gain,
-                              self.cmd.nim.payload.xlyh)
+            self._send_cmd(self.cmd.nim.clss, self.cmd.nim.id.gain,
+                           self.cmd.nim.payload.xlyh)
 
     def send_gain_xhyh(self):
         # send low gain command first
@@ -1139,8 +1117,8 @@ class MainWindow(QMainWindow):
             self.send_byte(bytes.fromhex(nims.GAINXHYH))
         else:
             # send gain command
-            self.cmd.send_cmd(self.cmd.nim.clss, self.cmd.nim.id.gain,
-                              self.cmd.nim.payload.xhyh)
+            self._send_cmd(self.cmd.nim.clss, self.cmd.nim.id.gain,
+                           self.cmd.nim.payload.xhyh)
 
     def send_mag_light(self, checked):
         if self.board == nims.MINERVA:
@@ -1153,12 +1131,12 @@ class MainWindow(QMainWindow):
         else:
             if checked:
                 # send mag light turn on command
-                self.cmd.send_cmd(self.cmd.mag.clss, self.cmd.mag.id.light,
-                                  self.cmd.mag.payload.on)
+                self._send_cmd(self.cmd.mag.clss, self.cmd.mag.id.light,
+                               self.cmd.mag.payload.on)
             else:
                 # send mag light turn off command
-                self.cmd.send_cmd(self.cmd.mag.clss, self.cmd.mag.id.light,
-                                  self.cmd.mag.payload.off)
+                self._send_cmd(self.cmd.mag.clss, self.cmd.mag.id.light,
+                               self.cmd.mag.payload.off)
 
     def send_nims_leds(self):
         # send the nims command
@@ -1347,8 +1325,6 @@ class MainWindow(QMainWindow):
             self.set_metadata_led(nims.METACOMPLETE)
 
     def start_run(self):
-        # turn on the start run led
-        self.set_start_run_led(True)
         # pull the current time from the computer
         self.metadata.set_head_comp_time()
         # compile the metadata
@@ -1369,17 +1345,12 @@ class MainWindow(QMainWindow):
             print(f'Send Command: \t{bytes.fromhex(nims.HEADER)}')
             self.send_byte(bytes.fromhex(nims.HEADER))
         else:
-            self.cmd.send_cmd(self.cmd.usd.clss, self.cmd.usd.id.start,
-                              self._start_recoding_frame())
-            # self.send_file_name()
-            # sleep(0.15)
-            # self.send_file_header()
-            # sleep(0.15)
-            # self.send_byte(bytes.fromhex(nims.RECORD))
+            self._send_cmd(self.cmd.usd.clss, self.cmd.usd.id.start,
+                           self._start_recoding_frame())
 
         # Clear the packet and start reading from the port
         self.packet = b''
-        # self.readport.start()
+        self._send_status()
 
     def _start_recoding_frame(self):
         fname = self.get_file_name()
@@ -1410,15 +1381,21 @@ class MainWindow(QMainWindow):
         self.send_byte(bytes.fromhex(nims.HEADER))
 
     def end_run(self):
-        # toggle start run/end run leds
-        self.set_end_run_led(True)
         if self.board == nims.MINERVA:
             # send end run command
             print(f'Send Command: \t{bytes.fromhex(nims.ENDREC)}')
             self.send_byte(bytes.fromhex(nims.ENDREC))
         else:
-            self.cmd.send_cmd(self.cmd.usd.clss, self.cmd.usd.id.stop,
-                              self.cmd.null)
+            self._send_cmd(self.cmd.usd.clss, self.cmd.usd.id.stop,
+                           self.cmd.null)
+        self._send_status()
+
+    def _init_file_table(self):
+        header = self.tw_datafiles.horizontalHeader()
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
 
     # -------------------------Site Report--------------------------------------
     def status_change(self):
@@ -1754,10 +1731,13 @@ class MainWindow(QMainWindow):
 
     def update_hex_data(self, packet):
         text = self.te_rawhex.toPlainText()
-        # print(len(text))
+        # print(text + packet)
         if len(text) >= 256:
-            text = text[text.index('\\xb5') + 1:]
-            text = text[text.index('\\xb5'):]
+            try:
+                text = text[text.index('\\xb5') + 1:]
+                text = text[text.index('\\xb5'):]
+            except ValueError:
+                pass
         self.te_rawhex.setText(text + packet)
 
     def record_raw_data(self):
@@ -1876,7 +1856,12 @@ class MainWindow(QMainWindow):
             self.set_packets_led(False)
 
     def _process_usd(self, _id, data):
-        print(_id, data)
+        if _id == self.cmd.usd.id.list:
+            self._update_file_list(data)
+        elif _id == self.cmd.usd.id.state:
+            self._update_file_list_state(data)
+        elif _id == self.cmd.usd.id.download:
+            print(_id, data[:1], data[1:])
 
     def _process_bat(self, _id, data):
         if _id == self.cmd.bat.id.voltage:
@@ -1980,38 +1965,6 @@ class MainWindow(QMainWindow):
                 self.set_short_cycle_led_start_end(nims.GPSRECEIVED)
                 # parse the data
                 self.parse_gps_packet()
-            # # update gps string until get to a unicode error
-            # try:
-            #     # update gps string convert from binary to unicode value
-            #     # TODO: add ignore here
-            #     self.gpsstring += binvalue.decode('utf-8')
-            #     print(self.gpsstring)
-            #     # update status byte labels
-            #     self.update_gps_string_m()
-            #     self.update_gps_string_e()
-            # except UnicodeDecodeError:
-            #     # set the gps state
-            #     self.gpsstate = nims.GPSRECEIVED
-            #     # set the leds in 'metadata'
-            #     self.set_short_cycle_led_metadata(nims.GPSRECEIVED)
-            #     self.set_almanac_led(False)
-            #     # set the leds in 'Start/End Run'
-            #     self.set_short_cycle_led_start_end(nims.GPSRECEIVED)
-            #     # parse the string into gps sentences
-            #     gpssentences = self.gpsstring.split("\n")
-            #     # split the sentences in lists
-            #     gprmc = gpssentences[0].split(',')
-            #     gpgga = gpssentences[1].split(',')
-            #     # format the lists into readable gps string
-            #     self.update_gps_metadata_string(gprmc, gpgga)
-            #     # update gps fields on 'Metadata' tab
-            #     self.update_gps_time()
-            #     self.update_gps_date()
-            #     self.update_gps_lat()
-            #     self.update_gps_lon()
-            #     self.update_gps_alt()
-            #     self.clear_gps_string_e()
-            #     self.clear_gps_string_m()
 
     def parse_gps_packet(self):
         print("Finished recieving GPS Data")
@@ -2055,76 +2008,83 @@ class MainWindow(QMainWindow):
         # Update 'Endineering' components
         self.update_mag_status(value)
 
+    def _update_file_list(self, data):
+        table_files = []
+        new_table_files = []
+        file_dic = json.loads(data)
+
+        num_rows = self.tw_datafiles.rowCount()
+
+        for i in range(num_rows):
+            fn = self.tw_datafiles.item(i, 1).text()
+            table_files.append(fn)
+
+        for f in file_dic.keys():
+            try:
+                i = table_files.index(f)
+            except ValueError:
+                i = self.tw_datafiles.rowCount()
+                self.tw_datafiles.insertRow(i)
+                # Add check box
+                chkBoxItem = QTableWidgetItem()
+                chkBoxItem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                chkBoxItem.setCheckState(QtCore.Qt.Unchecked)
+                self.tw_datafiles.setItem(i, 0, chkBoxItem)
+                # Add file name
+                self._insert_table_data(i, 1, f)
+                # Add Recording Status
+                self._insert_table_data(i, 3, "No")
+
+            # Add/change file Size
+            self._insert_table_data(i, 2, self._convert_file_sizes(file_dic[f]))
+
+    def _update_file_list_state(self, data):
+        table_files = []
+        state_dic = json.loads(data)
+
+        num_rows = self.tw_datafiles.rowCount()
+
+        for i in range(num_rows):
+            fn = self.tw_datafiles.item(i, 1).text()
+            table_files.append(fn)
+
+        for f in table_files:
+            if f == state_dic['File_Name']:
+                if state_dic['State'] == 'True':
+                    # turn on the start run led
+                    self.set_start_run_led(True)
+                    self._insert_table_data(table_files.index(f), 3, 'Yes')
+                elif state_dic['State'] == 'False':
+                    # toggle start run/end run leds
+                    self.set_end_run_led(True)
+                    self._insert_table_data(table_files.index(f), 3, 'No')
+
+    def _convert_file_sizes(self, sze):
+
+        if sze < 1_024:
+            t = 'B'
+            con = 1.0
+        elif sze < 1_048_576:
+            t = 'KB'
+            con = 1_024.0
+        else:
+            t = 'MB'
+            con = 1_048_576
+
+        return '{:.2f} {}'.format(sze / con, t)
+
+    def _insert_table_data(self, row, col, data):
+        d = QTableWidgetItem(data)
+        d.setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
+        self.tw_datafiles.setItem(row, col, d)
+
     def send_byte(self, cmd):
         if self.port.is_open:
             self.port.write(cmd)
 
-
-class PortRead(QThread):
-    serdata = pyqtSignal(bytes)
-
-    def __init__(self, qport=None):
-        QThread.__init__(self)
-        self.qport = qport
-
-        self.running = False
-
-        # TODO: for testing
-        # -------------------
-        # self.path = '../test/NEL26a_data.nim'
-        # self.path = '../test/NEW_GPS_data.BIN'
-        # self.flepnt = open(self.path, 'rb')
-        # -------------------
-
-    def __del__(self):
-        self.wait()
-
-    def stop(self):
-        # TODO: for testing
-        # -------------------
-        # self.flepnt.close()
-        # -------------------
-        self.running = False
-
-    def run(self):
-        self.running = True
-        while self.running:
-            data = b''
-            # TODO: for testing
-            # -------------------
-            # sleep(0.25)
-            # for i in range(0, 25):
-            #     data = self.flepnt.read(1)
-            #     if data is not b'':
-            #         self.serdata.emit(data)
-            # -------------------
-
-            # read port
-            if self.qport.is_open:
-                try:
-                    data = self.qport.read()
-                except serial.SerialException:
-                    data = b''
-
-            # emit the data
-            if data is not b'':
-                self.serdata.emit(data)
-
-
-class PortMonitor(QThread):
-    pyports = pyqtSignal(list)
-
-    def __init__(self):
-        QThread.__init__(self)
-
-    def __del__(self):
-        self.wait()
-
-    def run(self):
-        while(1):
-            sleep(3)
-            ports = list_ports()
-            self.pyports.emit(ports)
+    def _send_cmd(self, _class, _id, payload):
+        worker = PortWrite(self.port, _class, _id, payload, self.mutex)
+        self.threadpool.start(worker)
 
 
 class VerticalText(QWidget):
