@@ -121,6 +121,7 @@ class PortWrite(QRunnable):
     def run(self):
         frame = self._compile_frame(self._class, self._id, self._payload)
         self.qmutex.lock()
+        print(frame.hex().upper())
         if self.qport.is_open:
             try:
                 for i in range(0, len(frame), 512):

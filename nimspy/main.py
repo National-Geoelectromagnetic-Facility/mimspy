@@ -29,6 +29,7 @@ from portio import PortMonitor, PortRead, PortWrite
 from portio.pyserial import list_ports
 from pathlib import Path
 from datetime import datetime
+from download import DownloadController
 from time import gmtime, strftime
 from collections import namedtuple
 
@@ -88,6 +89,8 @@ class MainWindow(QMainWindow):
         self.portdata = b''
         self.threadpool = QThreadPool()
         self.mutex = QMutex()
+        self._download_controller = DownloadController()
+
         # LED Instantiations
         # round leds
         self.ledblack = os.path.join('img', 'black_led_61_61.png')
@@ -263,8 +266,8 @@ class MainWindow(QMainWindow):
         # File table
         self._init_file_table()
 
-        # TODO: Get NIMS status
-        self.check_if_recording()
+        # Attach download file button
+        self.tb_download.clicked.connect(self._init_download)
 
         # -------------------------Data Display---------------------------------
         # Gain LEDs initialization.
@@ -1175,11 +1178,6 @@ class MainWindow(QMainWindow):
         self.le_ey.setText('%.3f' % (value))
 
     # -------------------------Start/End Run------------------------------------
-    def check_if_recording(self):
-        if self.board == nims.ATHENA:
-            pass
-            # TODO: send recording command
-
     def set_short_cycle_led_start_end(self, state):
         if state == nims.GPSINITIAL:
             self.label_short_cycle_led_2.setPixmap(self.pxmpovlblack)
@@ -1861,7 +1859,7 @@ class MainWindow(QMainWindow):
         elif _id == self.cmd.usd.id.state:
             self._update_file_list_state(data)
         elif _id == self.cmd.usd.id.download:
-            print(_id, data[:1], data[1:])
+            self._download(data)
 
     def _process_bat(self, _id, data):
         if _id == self.cmd.bat.id.voltage:
@@ -2013,6 +2011,8 @@ class MainWindow(QMainWindow):
         new_table_files = []
         file_dic = json.loads(data)
 
+        self._download_controller.card_files(file_dic)
+
         num_rows = self.tw_datafiles.rowCount()
 
         for i in range(num_rows):
@@ -2027,8 +2027,8 @@ class MainWindow(QMainWindow):
                 self.tw_datafiles.insertRow(i)
                 # Add check box
                 chkBoxItem = QTableWidgetItem()
-                chkBoxItem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-                chkBoxItem.setCheckState(QtCore.Qt.Unchecked)
+                chkBoxItem.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
+                chkBoxItem.setCheckState(Qt.Unchecked)
                 self.tw_datafiles.setItem(i, 0, chkBoxItem)
                 # Add file name
                 self._insert_table_data(i, 1, f)
@@ -2077,6 +2077,46 @@ class MainWindow(QMainWindow):
         d = QTableWidgetItem(data)
         d.setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
         self.tw_datafiles.setItem(row, col, d)
+
+    def _init_download(self):
+        fle_list = []
+        # Get the number of filled rows in the table
+        num_rows = self.tw_datafiles.rowCount()
+        # Cycle through the filled rows and get file names
+        for i in range(num_rows):
+            if self.tw_datafiles.item(i, 0).checkState() == Qt.Checked:
+                fle_list.append(self.tw_datafiles.item(i, 1).text())
+        if len(fle_list) > 0:
+            self.hide()
+            savedir = str(QFileDialog.getExistingDirectory(self, "Select Save Directory"))
+            self.show()
+            if savedir != '':
+                self._download_controller.push(fle_list)
+                self._download_controller.save_dir(savedir)
+                self._download(None)
+
+    def _download(self, block):
+        if block == None:
+            self.tb_download.hide()
+            self.pb_download.show()
+
+        (prog, fn, bn) = self._download_controller.file_block(block)
+
+        print(prog)
+        if prog == 100:
+            self.pb_download.setValue(0)
+            self.tb_download.show()
+            self.pb_download.hide()
+        else:
+            self.pb_download.setValue(prog)
+
+        if fn is not None:
+            self._send_cmd(self.cmd.usd.clss, self.cmd.usd.id.dfname,
+                           fn)
+
+        if bn is not None:
+            self._send_cmd(self.cmd.usd.clss, self.cmd.usd.id.download,
+                           bn)
 
     def send_byte(self, cmd):
         if self.port.is_open:
