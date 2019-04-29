@@ -63,11 +63,12 @@ class Cmd:
         self.mag = Cmd(clss=b'\x03', id=magid, payload=magpl)
         # uSD Card command(s)
         Usdid = namedtuple("Usdid", ["start", "stop", "list", "dfname",
-                                     "download", "append", "delete", "state"])
+                                     "download", "downpos", "append",
+                                     "delete", "state"])
         Usdpl = namedtuple("Usdpl", ["null"])
         usdid = Usdid(start=b'\x01', stop=b'\x02', list=b'\x03',
-                      dfname=b'\x04', download=b'\x05', append=b'\x06',
-                      delete=b'\x07', state=b'\x08')
+                      dfname=b'\x04', download=b'\x05', downpos=b'\x06',
+                      append=b'\x07', delete=b'\x08', state=b'\x09')
         usdpl = Usdpl(null=b'\x00')
         self.usd = Cmd(clss=b'\x04', id=usdid, payload=usdpl)
 

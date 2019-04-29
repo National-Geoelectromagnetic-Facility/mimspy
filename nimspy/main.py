@@ -545,7 +545,7 @@ class MainWindow(QMainWindow):
                 self.cb_connection.removeItem(i)
 
     def change_speed_list(self):
-        speeds = ['115200', '19200']
+        speeds = ['460800', '230400', '115200', '19200']
         for s in speeds:
             self.cb_speed.addItem(s)
 
