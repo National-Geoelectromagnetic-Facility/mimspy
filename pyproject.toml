@@ -1,0 +1,33 @@
+[project]
+name = "mimspy"
+version = "0.7.2"
+description = "NGF GUI for Menerva NIMS"
+authors = [
+    { name = "Brady Fry", email = "dev@chaytus.com" }
+]
+dependencies = [
+    "pyside6>=6.8.2",
+    "pyserial>=3.5",
+]
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+
+[tool.rye]
+managed = true
+universal = true
+dev-dependencies = [
+    "ruff>=0.9.4",
+    "dmgbuild>=1.6.4",
+    "pyinstaller>=6.11.1",
+    "click>=8.1.8",
+    "toml>=0.10.2",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.rye.scripts]
+mimspy = "python src/app.py"
+spec = "python pyinstaller.py -s"
+app = "python pyinstaller.py -a"

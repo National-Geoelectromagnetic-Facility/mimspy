@@ -1,0 +1,50 @@
+[project]
+name = "Mimspy"
+macos_icon = "icon/NGF_logo_sqr.icns"
+windows_icon = "icon/NGF_logo_sqr.ico"
+entry_point = "src/app.py"
+
+[arguments]
+base = [
+	"--noconsole",
+]
+
+data = [
+	"--add-data=src/mimspy/img//NGF_logo_75_75.png:img",
+	"--add-data=src/mimspy/img/check_green_50_50.png:img",
+	"--add-data=src/mimspy/img/red_led_61_61.png:img",
+	"--add-data=src/mimspy/img/yellow_led_61_61.png:img",
+	"--add-data=src/mimspy/img/black_led_61_61.png:img",
+	"--add-data=src/mimspy/img//green_led_61_61.png:img",
+	"--add-data=src/mimspy/img/red_oval_58_29.png:img",
+	"--add-data=src/mimspy/img/yellow_oval_58_29.png:img",
+	"--add-data=src/mimspy/img/black_oval_58_29.png:img",
+	"--add-data=src/mimspy/img/green_oval_58_29.png:img",
+	"--add-data=src/mimspy/img/x_red_50_50.png:img",
+]
+
+exclude = [
+    "--exclude-module=FixTk",
+    "--exclude-module=tcl",
+    "--exclude-module=tk",
+    "--exclude-module=_tkinter",
+    "--exclude-module=tkinter",
+    "--exclude-module=Tkinter",
+    "--exclude-module=PyQt5",
+    "--exclude-module=PySide2",
+    "--exclude-module=shiboken2",
+    "--exclude-module=Tkinter",
+]
+
+hidden = [
+	"--hidden-import=ports",
+]
+
+macos = [
+	"--onedir",
+	"--osx-entitlements-file=entitlements.plist",
+]
+
+windows = [
+	"--onefile",
+]
