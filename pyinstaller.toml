@@ -10,17 +10,18 @@ base = [
 ]
 
 data = [
-	"--add-data=src/mimspy/img//NGF_logo_75_75.png:img",
-	"--add-data=src/mimspy/img/check_green_50_50.png:img",
-	"--add-data=src/mimspy/img/red_led_61_61.png:img",
-	"--add-data=src/mimspy/img/yellow_led_61_61.png:img",
-	"--add-data=src/mimspy/img/black_led_61_61.png:img",
-	"--add-data=src/mimspy/img//green_led_61_61.png:img",
-	"--add-data=src/mimspy/img/red_oval_58_29.png:img",
-	"--add-data=src/mimspy/img/yellow_oval_58_29.png:img",
-	"--add-data=src/mimspy/img/black_oval_58_29.png:img",
-	"--add-data=src/mimspy/img/green_oval_58_29.png:img",
-	"--add-data=src/mimspy/img/x_red_50_50.png:img",
+	"--add-data=src/mimspy/icons/NGF_logo_75_75.png:icons",
+	"--add-data=src/mimspy/icons/check_green_50_50.png:icons",
+	"--add-data=src/mimspy/icons/red_led_61_61.png:icons",
+	"--add-data=src/mimspy/icons/yellow_led_61_61.png:icons",
+	"--add-data=src/mimspy/icons/black_led_61_61.png:icons",
+	"--add-data=src/mimspy/icons/green_led_61_61.png:icons",
+	"--add-data=src/mimspy/icons/red_oval_58_29.png:icons",
+	"--add-data=src/mimspy/icons/yellow_oval_58_29.png:icons",
+	"--add-data=src/mimspy/icons/black_oval_58_29.png:icons",
+	"--add-data=src/mimspy/icons/green_oval_58_29.png:icons",
+	"--add-data=src/mimspy/icons/x_red_50_50.png:icons",
+	"--add-data=src/mimspy/icons/NGF_logo_sqr.icns:icons",
 ]
 
 exclude = [

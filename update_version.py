@@ -67,16 +67,10 @@ def add_dmg(name: str) -> None:
 
 
 @click.command()
-@click.option(
-    "-p", "--plist", is_flag=True, help="Update the version number in Info.plist"
-)
-@click.option(
-    "-s", "--spec", is_flag=True, help="Update the version number in spec file"
-)
+@click.option("-p", "--plist", is_flag=True, help="Update the version number in Info.plist")
+@click.option("-s", "--spec", is_flag=True, help="Update the version number in spec file")
 @click.option("-a", "--add", is_flag=True, help="Add version option to spec file")
-@click.option(
-    "-d", "--dmg", is_flag=True, help="Update the version number in the dmg title"
-)
+@click.option("-d", "--dmg", is_flag=True, help="Update the version number in the dmg title")
 def main(plist: bool = False, spec: bool = False, add: bool = False, dmg: bool = False):
     """Update the version number in pyinstaller spec file and Info.plist file."""
     app_name = "Aprespy"

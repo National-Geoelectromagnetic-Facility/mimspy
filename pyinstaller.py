@@ -1,10 +1,11 @@
 """Generate a Application."""
 
-import toml
+import subprocess
 import sys
 from pathlib import Path
+
 import click
-import subprocess
+import toml
 
 from update_version import add_version, update_spec
 
@@ -70,13 +71,8 @@ def generate_spec_file(platform: str, bin_path: Path, config: dict):
     args += config["arguments"]["hidden"]
 
     if platform == "darwin":
-        args.append(
-            "--codesign-identity=Developer ID Application: Brady Fry (LT3LJEF3CS)"
-        )
-        args.append(
-            "--osx-bundle-identifier=com.bradyfry.lt3ljef3cs."
-            + config["project"]["name"]
-        )
+        args.append("--codesign-identity=Developer ID Application: Brady Fry (LT3LJEF3CS)")
+        args.append("--osx-bundle-identifier=com.bradyfry.lt3ljef3cs." + config["project"]["name"])
         args += config["arguments"]["macos"]
     elif platform == "win32":
         args += config["arguments"]["windows"]
