@@ -1,0 +1,195 @@
+# Assemble the Aprespy app for macOS and Windows using PyInstaller
+
+name: PyInstaller Runner
+
+on:
+  push:
+    branches:
+      - "main"
+#    tags:
+#      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+jobs:
+  build-app:
+    name: Build Application
+
+    strategy:
+      matrix:
+        os:
+          - macos-latest
+          - windows-latest
+        python-version:
+          - 3.12
+        architecture:
+          - x64
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up rye
+        uses: eifinger/setup-rye@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.architecture }}
+          enable-cache: true
+
+      - name: Sync Dependencies
+        run: rye sync
+
+#      - name: macOS-Install the Apple signing certificate
+#        if: matrix.os == 'macos-latest'
+#        env:
+#          BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+#          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+#          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+#        run: |
+#          # create variables
+#          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+#          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+#
+#          # import certificate and provisioning profile from secrets
+#          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
+#
+#          # create temporary keychain
+#          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+#          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+#          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+#
+#          # import certificate to keychain
+#          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+#          security list-keychain -d user -s $KEYCHAIN_PATH
+
+      - name: Make spec file
+        run: rye run spec
+
+      - name: Build App
+        run: rye run app
+
+#      - name: macOS-Notarize and Staple app
+#        if: matrix.os == 'macos-latest'
+#        env:
+#          NOTARIZATION_USERNAME: ${{ secrets.NOTARIZATION_USERNAME }}
+#          NOTARIZATION_TEAM_ID: ${{ secrets.NOTARIZATION_TEAM_ID }}
+#          NOTARIZATION_PASSWORD: ${{ secrets.NOTARIZATION_PASSWORD }}
+#        run: |
+#         # Store the notarization credentials so that we can prevent a UI password dialog
+#         # from blocking the CI
+#
+#         echo "Create keychain profile"
+#         xcrun notarytool store-credentials "notarytool-profile" --apple-id "$NOTARIZATION_USERNAME" --team-id "$NOTARIZATION_TEAM_ID" --password "$NOTARIZATION_PASSWORD"
+#
+#         # We can't notarize an app bundle directly, but we need to compress it as an archive.
+#         # Therefore, we create a zip file containing our app bundle, so that we can send it to the
+#         # notarization service
+#
+#         echo "Creating temp notarization archive"
+#         ditto -c -k --keepParent "dist/Aprespy.app" "Aprespy.zip"
+#
+#         # Here we send the notarization request to the Apple's Notarization service, waiting for the result.
+#         # This typically takes a few seconds inside a CI environment, but it might take more depending on the App
+#         # characteristics. Visit the Notarization docs for more information and strategies on how to optimize it if
+#         # you're curious
+#
+#         echo "Notarize app"
+#         xcrun notarytool submit "Aprespy.zip" --keychain-profile "notarytool-profile" --wait
+#
+#         # Finally, we need to "attach the staple" to our executable, which will allow our app to be
+#         # validated by macOS even when an internet connection is not available.
+#         echo "Attach staple"
+#         xcrun stapler staple "dist/Aprespy.app"
+#
+#      - name: macOS-Clean up keychain and provisioning profile
+#        if: matrix.os == 'macos-latest'
+#        run: security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
+
+      - name: macOS-Create dmg
+        if: matrix.os == 'macos-latest'
+        run: rye run dmg
+
+      - name: Windows-Create list directory
+        if: matrix.os == 'windows-latest'
+        run: ls dist
+
+      - name: Windows-Create zip
+        if: matrix.os == 'windows-latest'
+        run: 7z a Mimspy.zip .\dist\Mimspy.exe
+
+      - name: macOS-Upload artifact
+        if: matrix.os == 'macos-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mimspy_macOS
+          path: Mimspy.dmg
+          retention-days: 1
+
+      - name: Windows-Upload artifact
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mimspy_windows
+          path: Mimspy.zip
+          retention-days: 1
+
+#  changelog-tag:
+#    name: Generate Changelog
+#    runs-on: ubuntu-latest
+#
+#    outputs:
+#      tag: ${{ steps.get_version.outputs.tag }}
+#
+#    steps:
+#      - uses: actions/checkout@v4
+#
+#      - name: Get the version
+#        id: get_version
+#        run: echo "tag=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
+#
+#
+#      - name: Generate Changelog
+#        id: read_changelog
+#        run: |
+#          python generate_changelog.py &&
+#          mv CHANGELOG.rst ${{ github.workspace }}/changelog.rst
+#
+#      - name: Upload changelog artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: changelog
+#          path: ${{ github.workspace }}/changelog.rst
+#          retention-days: 1
+#
+#  create-release:
+#    name: Create Release
+#    needs: [build-app, changelog-tag]
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - uses: actions/download-artifact@v4
+#        with:
+#          name: changelog
+#
+#      - uses: actions/download-artifact@v4
+#        with:
+#          name: Mimspy_macOS
+#
+#      - uses: actions/download-artifact@v4
+#        with:
+#          name: Mimspy_windows
+#
+#      - name: Create Release
+#        id: create_release
+#        uses: softprops/action-gh-release@v2
+#        with:
+#          tag_name: ${{ github.ref }}
+#          repository: ${{ secrets.PUB_OWNER }}/${{ secrets.PUB_REPO }}
+#          token: ${{ secrets.APRESPY_RELEASE_TOKEN }}
+#          name: Mimspy ${{ needs.changelog-tag.outputs.tag }}
+#          draft: false
+#          prerelease: false
+#          body_path: ${{ github.workspace }}/changelog.rst
+#          files: |
+#            Mimspy.dmg
+#            Mimspy.zip

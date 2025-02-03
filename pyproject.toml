@@ -31,6 +31,7 @@ allow-direct-references = true
 mimspy = "python src/app.py"
 spec = "python pyinstaller.py -s"
 app = "python pyinstaller.py -a"
+dmg = "python pyinstaller.py -d"
 ui = "pyside6-uic src/mimspy/ui/main.ui -o src/mimspy/ui/main.py"
 pyright = "pyright"
 
