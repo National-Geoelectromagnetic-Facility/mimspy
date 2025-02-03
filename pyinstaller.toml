@@ -22,6 +22,7 @@ data = [
 	"--add-data=src/mimspy/icons/green_oval_58_29.png:icons",
 	"--add-data=src/mimspy/icons/x_red_50_50.png:icons",
 	"--add-data=src/mimspy/icons/NGF_logo_sqr.icns:icons",
+	"--add-data=src/mimspy/icons/NGF_logo_sqr.ico:icons",
 ]
 
 exclude = [
