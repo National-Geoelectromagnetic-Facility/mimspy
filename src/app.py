@@ -10,7 +10,6 @@ from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
 
 from mimspy import Mimspy, configs
-from mimspy.configs import APP_NAME
 
 # needed for click, macOS to run as a compiled app with pyinstaller
 os.environ["LC_ALL"] = "en_US.utf-8"
@@ -33,7 +32,7 @@ def get_img_path() -> Path:
         The path to the 'img' directory.
     """
     img_path = Path(os.path.dirname(__file__), "mimspy", "img")
-    if getattr(sys, "frozen", False) and os.path.basename(sys.argv[0]) == APP_NAME:
+    if getattr(sys, "frozen", False) and os.path.basename(sys.argv[0]) == configs.APP_NAME:
         # we are running in a bundle
         # noinspection PyProtectedMember
         img_path = Path(sys._MEIPASS, "img")  # type: ignore[attr-defined]
@@ -91,6 +90,7 @@ def main():
     app.setApplicationName(configs.APP_NAME)
     app.setOrganizationName(configs.APP_ORGANIZATION)
     app.setApplicationVersion(configs.APP_VERSION)
+    app.setFont(configs.FONT)
     theme = QApplication.styleHints().colorScheme()
     QIcon.setThemeName(theme.name.lower())
     if sys.platform.startswith("darwin"):

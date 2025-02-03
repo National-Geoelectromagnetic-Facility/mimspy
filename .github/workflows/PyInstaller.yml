@@ -32,8 +32,6 @@ jobs:
       - name: Set up rye
         uses: eifinger/setup-rye@v4
         with:
-          python-version: ${{ matrix.python-version }}
-          architecture: ${{ matrix.architecture }}
           enable-cache: true
 
       - name: Sync Dependencies
