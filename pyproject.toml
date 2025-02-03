@@ -32,3 +32,12 @@ mimspy = "python src/app.py"
 spec = "python pyinstaller.py -s"
 app = "python pyinstaller.py -a"
 ui = "pyside6-uic src/mimspy/ui/main.ui -o src/mimspy/ui/main.py"
+pyright = "pyright"
+
+[tool.pyright]
+venvPath = "."          # rye installs the venv in the current dir
+venv = ".venv"          #       in a folder called `.venv`
+include = ["src"]
+strict = ["**/*.py"]    # use 'strict' checking on all files
+exclude = ["src/mimspy/ui/main.py"]
+pythonVersion = "3.12"

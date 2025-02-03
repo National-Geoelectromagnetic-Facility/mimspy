@@ -3,4 +3,7 @@
 from .graph import GraphWidget
 from .labels import VerticalTextLabel
 
-__all__ = ["GraphWidget", "VerticalTextLabel"]
+__all__ = [
+    "GraphWidget",
+    "VerticalTextLabel",
+]

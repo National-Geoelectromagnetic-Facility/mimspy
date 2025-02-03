@@ -14,9 +14,8 @@ class SiteReport:
     def __init__(self):
         self.status = "Install"
         self.settings = QSettings("NGF", "mimspy")
-        self.save_path = self.settings.value("save_path")
-        if self.save_path is None:
-            self.save_path = Path.home()
+        save_path_setting: str | None = self.settings.value("save_path")
+        self.save_path = Path(save_path_setting) if save_path_setting else Path.home()
         self.date = datetime.now().strftime("%Y-%m-%d")
         self.save_name = "{}_.txt".format(self.date)
         self.sw = "{} v{}".format(APP_NAME, APP_VERSION)
@@ -66,10 +65,10 @@ class SiteReport:
         self.site_id = run_id
         self.save_name = "{}_{}.txt".format(self.date, run_id)
 
-    def update_save_path(self, _dir: str):
+    def update_save_path(self, path_dir: Path):
         """Update the save path for the site report."""
-        self.settings.setValue("save_path", _dir)
-        self.save_path = self.settings.value("save_path")
+        self.settings.setValue("save_path", str(path_dir))
+        self.save_path = Path(self.settings.value("save_path"))
 
     def write_file(self):
         """Write the site report to a file."""

@@ -26,7 +26,7 @@ else:
 class SerialNode:
     """Serial port information."""
 
-    def __init__(self, port="", name="", desc="", hwid=""):
+    def __init__(self, port: str = "", name: str = "", desc: str = "", hwid: str = ""):
         self.port = port
         self.name = name
         self.desc = desc
@@ -42,7 +42,9 @@ class SerialNode:
 
 def list_ports() -> list[SerialNode]:
     """List all available serial ports."""
-    ports = []
+    ports = [
+        SerialNode(port=f"{'-' * 25}", name="", desc="", hwid=""),
+    ]
 
     # get a list of sorted comports
     iterator = sorted(comports(include_links=False))

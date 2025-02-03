@@ -5,7 +5,7 @@ import os
 import sys
 from pathlib import Path
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QCoreApplication, Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
 
@@ -36,11 +36,11 @@ def get_img_path() -> Path:
     if getattr(sys, "frozen", False) and os.path.basename(sys.argv[0]) == APP_NAME:
         # we are running in a bundle
         # noinspection PyProtectedMember
-        img_path = Path(sys._MEIPASS, "img")
+        img_path = Path(sys._MEIPASS, "img")  # type: ignore[attr-defined]
     return img_path
 
 
-def init_app() -> QApplication:
+def init_app() -> QApplication | QCoreApplication:
     """
     Initialize and return a QApplication instance.
 
@@ -73,7 +73,8 @@ def main():
     icon_path: Path = Path(Path(__file__).parent, "mimspy", "icons")
     if getattr(sys, "frozen", False):
         # we are running in a bundle
-        icon_path = Path(sys._MEIPASS, "icons")
+        # noinspection PyProtectedMember
+        icon_path = Path(sys._MEIPASS, "icons")  # type: ignore[attr-defined]
 
     mp.set_start_method("spawn", force=True)  # required for Linux
     if sys.platform.startswith("darwin"):
@@ -94,11 +95,14 @@ def main():
     QIcon.setThemeName(theme.name.lower())
     if sys.platform.startswith("darwin"):
         app.setAttribute(Qt.ApplicationAttribute.AA_DontShowIconsInMenus, True)
-        app.setWindowIcon(QIcon(str(Path(icon_path, "NGF_logo_sqr.icns"))))
+        if isinstance(app, QApplication):
+            app.setWindowIcon(QIcon(str(Path(icon_path, "NGF_logo_sqr.icns"))))
     else:
-        app.setWindowIcon(QIcon(str(Path(icon_path, "NGF_logo_sqr.ico"))))
+        if isinstance(app, QApplication):
+            app.setWindowIcon(QIcon(str(Path(icon_path, "NGF_logo_sqr.ico"))))
     if sys.platform.startswith("win"):
-        app.setStyle("fusion")
+        if isinstance(app, QApplication):
+            app.setStyle("fusion")
     # img_path = get_img_path()
     window = Mimspy(icon_path=icon_path)
     window.show()

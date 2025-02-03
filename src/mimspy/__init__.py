@@ -8,14 +8,14 @@ from re import search
 from time import gmtime, sleep, strftime
 
 import serial
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtGui import QAction, QPixmap
+from PySide6.QtCore import QSize, Qt, QTimer
+from PySide6.QtGui import QAction, QCloseEvent, QKeyEvent, QPixmap
 from PySide6.QtWidgets import QComboBox, QFileDialog, QMainWindow, QWidget
 
 from . import nims
 from .configs import APP_NAME, APP_VERSION
 from .metadata import Metadata
-from .port import PortMonitor, PortRead, list_ports
+from .port import PortMonitor, PortRead, SerialNode, list_ports
 from .site_report import SiteReport
 from .ui.main import Ui_MainWindow
 from .widgets import GraphWidget, VerticalTextLabel
@@ -30,58 +30,51 @@ class Mimspy(QMainWindow, Ui_MainWindow):
     TAB_SITE_REPORT = 3
     TAB_ENGINEERING = 4
 
-    def __init__(self, parent: QWidget | None = None, icon_path: Path | None = None):
+    def __init__(self, icon_path: Path, parent: QWidget | None = None):
         super().__init__(parent=parent)
-        self.setupUi(self)
-        self.receiving_led_timer = None
-        self.readport = None
-        self.portmonitor = None
-        self.metadata = None
-
-        self.icon_path = icon_path
+        self.setupUi(self)  # type: ignore  # noqa: PGH003
 
         self.port: serial.Serial = serial.Serial()
+        self.receiving_led_timer = QTimer()
+        self.read_port = PortRead(com_port=self.port)
+        self.port_monitor = PortMonitor()
+        self.metadata = Metadata()
+
+        self.icon_path: Path = icon_path
         self.display_index: int = 0
+        self.graph_hx_ey = GraphWidget()
+        self.graph_hy_ex = GraphWidget()
+        self.graph_hz = GraphWidget()
+        self.graph_data = GraphData(ticks=20)
 
-        # variable initialization
-        self.packet = b""
-        self.board = nims.MINERVA
-        self.scstate = nims.INITIAL
-        self.gps_state = nims.GPSINITIAL
-        self.gpsstring = ""
+        self.packet: bytes = b""
+        self.gps_state: str = nims.GPSINITIAL
+        self.gps_string: str = ""
 
-        self.portdata = b""
-        # LED Instantiations
-        self.ledblack = Path(self.icon_path, "black_led_61_61.png")
-        self.ledgreen = Path(self.icon_path, "green_led_61_61.png")
-        self.ledyellow = Path(self.icon_path, "yellow_led_61_61.png")
-        self.ledred = Path(self.icon_path, "red_led_61_61.png")
-        self.ledovalblack = Path(self.icon_path, "black_oval_58_29.png")
-        self.ledovalgreen = Path(self.icon_path, "green_oval_58_29.png")
-        self.ledovalyellow = Path(self.icon_path, "yellow_oval_58_29.png")
-        self.ledovalred = Path(self.icon_path, "red_oval_58_29.png")
-        self.icon_path = Path(self.icon_path, "NGF_logo_75_75.png")
+        self.port_data: bytes = b""
 
         # round leds
-        self.pxmprndblack = QPixmap(self.ledblack)
-        self.pxmprndgreen = QPixmap(self.ledgreen)
-        self.pxmprndyellow = QPixmap(self.ledyellow)
-        self.pxmprndred = QPixmap(self.ledred)
+        self.led_black_round = QPixmap(Path(icon_path, "black_led_61_61.png"))
+        self.led_green_round = QPixmap(Path(icon_path, "green_led_61_61.png"))
+        self.led_yellow_round = QPixmap(Path(icon_path, "yellow_led_61_61.png"))
+        self.led_red_round = QPixmap(Path(icon_path, "red_led_61_61.png"))
         # oval leds
-        self.pxmpovlblack = QPixmap(self.ledovalblack)
-        self.pxmpovlgreen = QPixmap(self.ledovalgreen)
-        self.pxmpovlyellow = QPixmap(self.ledovalyellow)
-        self.pxmpovlred = QPixmap(self.ledovalred)
+        self.led_black_oval = QPixmap(Path(icon_path, "black_oval_58_29.png"))
+        self.led_green_oval = QPixmap(Path(icon_path, "green_oval_58_29.png"))
+        self.led_yellow_oval = QPixmap(Path(icon_path, "yellow_oval_58_29.png"))
+        self.led_red_oval = QPixmap(Path(icon_path, "red_oval_58_29.png"))
 
         self.sr = SiteReport()
-        self.init_ui()
+        self.init_ui(icon_path)
 
-    def init_ui(self):
+    def init_ui(self, icon_path: Path):
         """Initialize the UI."""
         # set the window name
         self.setWindowTitle(APP_NAME + " v" + APP_VERSION)
+        self.setMinimumSize(QSize(950, 630))
+        self.setMaximumSize(QSize(950, 630))
         self.init_menu_bar_keyboard_shortcuts()
-        self.init_serial_connection()
+        self.init_serial_connection(icon_path)
         self.init_start_end_run()
         self.init_metadata()
         self.init_data_display()
@@ -92,12 +85,16 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         """Initialize the menu bar and keyboard shortcuts."""
         # move backward tab
         back_tab = QAction("&Move Back Tab", self)
-        back_tab.setShortcut(Qt.Modifier.CTRL | Qt.Modifier.SHIFT | Qt.Key_BraceLeft)
+        back_tab.setShortcut(
+            Qt.Modifier.CTRL | Qt.Modifier.SHIFT | Qt.Key_BraceLeft  # type: ignore[attr-defined]
+        )
         back_tab.setStatusTip("Move back 1 tab")
         back_tab.triggered.connect(lambda: self.display("b"))
         # move forward tab
         forward_tab = QAction("&Move Forward Tab", self)
-        forward_tab.setShortcut(Qt.Modifier.CTRL | Qt.Modifier.SHIFT | Qt.Key_BraceRight)
+        forward_tab.setShortcut(
+            Qt.Modifier.CTRL | Qt.Modifier.SHIFT | Qt.Key_BraceRight  # type: ignore[attr-defined]
+        )
         forward_tab.setStatusTip("Move forward 1 tab")
         forward_tab.triggered.connect(lambda: self.display("f"))
 
@@ -118,51 +115,45 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.tb_sitereport.clicked.connect(lambda: self.display(self.TAB_SITE_REPORT))
         self.tb_engineer.clicked.connect(lambda: self.display(self.TAB_ENGINEERING))
 
-    def init_serial_connection(self):
+    def init_serial_connection(self, icon_path: Path):
         """Initialize the serial connection."""
         # set the ngf logo
-        print(f"Icon Path: {self.icon_path}")
-        pixmap = QPixmap(self.icon_path)
+        pixmap = QPixmap(Path(icon_path, "NGF_logo_75_75.png"))
         self.label_icon.setPixmap(pixmap)
 
         # initialize the connection/packets/receive leds
-        self.label_connection_led.setPixmap(self.pxmpovlblack)
-        self.label_packets_led.setPixmap(self.pxmpovlblack)
-        self.label_receiving_led.setPixmap(self.pxmpovlblack)
+        self.label_connection_led.setPixmap(self.led_black_oval)
+        self.label_packets_led.setPixmap(self.led_black_oval)
+        self.label_receiving_led.setPixmap(self.led_black_oval)
 
         # initialize and start the serial drop down list of the available ports
-        self.portmonitor = PortMonitor()
-        self.portmonitor.pyports.connect(self.change_ports_list)
-        self.portmonitor.start()
+        self.port_monitor.pyports.connect(self.change_ports_list)
+        self.port_monitor.start()
 
         # initialize the port read thread
-        self.readport = PortRead(com_port=self.port)
-        self.readport.SERIAL_DATA.connect(self.parse_packet)
+        self.read_port.SERIAL_DATA.connect(self.parse_packet)
 
         # set up current port speed
         self.change_baud_rate_list()
-        self.cb_speed.currentIndexChanged.connect(self.connection_change)
+        self.cb_speed.currentIndexChanged.connect(self.connection_change)  # type: ignore  # noqa: PGH003
 
         # initialize the port drop down list
         self.cb_connection.setInsertPolicy(QComboBox.InsertPolicy.InsertAlphabetically)
-        self.cb_connection.currentIndexChanged.connect(self.connection_change)
+        self.cb_connection.currentIndexChanged.connect(self.connection_change)  # type: ignore  # noqa: PGH003
 
         # initialize/open the port on startup
         self.change_ports_list(list_ports())
 
         # start the read port thread
-        self.readport.start()
+        self.read_port.start()
 
         # set the receiving led timer
-        self.receiving_led_timer = QTimer()
         self.receiving_led_timer.timeout.connect(lambda: self.set_receiving_led(False))
 
         # -------------------------MetaData Tab---------------------------------
 
     def init_metadata(self):
         """Initialize the metadata tab."""
-        self.metadata = Metadata()
-
         # connect the metadata fields
         self.le_site_name.textEdited.connect(self.update_site_name_md)
         self.le_state_province.textEdited.connect(self.update_state_province_md)
@@ -180,17 +171,16 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.le_e_electrode_id.textEdited.connect(self.update_e_id_md)
         self.le_w_electrode_id.textEdited.connect(self.update_w_id_md)
         self.le_gnd_electrode_id.textEdited.connect(self.update_gnd_id)
-        self.rb_x_layout.layout = "X"
-        self.rb_x_layout.toggled.connect(self.update_survey_layout)
-        self.rb_l_layout.layout = "L"
-        self.rb_l_layout.toggled.connect(self.update_survey_layout)
-        self.rb_t_layout.layout = "T"
-        self.rb_t_layout.toggled.connect(self.update_survey_layout)
+        # self.rb_x_layout.layout = "X"
+        # self.rb_x_layout.toggled.connect(self.update_survey_layout)
+        # self.rb_l_layout.layout = "L"
+        # self.rb_l_layout.toggled.connect(self.update_survey_layout)
+        # self.rb_t_layout.layout = "T"
+        # self.rb_t_layout.toggled.connect(self.update_survey_layout)
         self.te_comments.textChanged.connect(self.update_comments_md)
 
-        iconnorth = Path(self.icon_path, "north_icon_46_101.png")
-        pixmapnorth = QPixmap(iconnorth)
-        self.label_north.setPixmap(pixmapnorth)
+        pixmap_north = QPixmap(Path(self.icon_path, "north_icon_46_101.png"))
+        self.label_north.setPixmap(pixmap_north)
 
         # initialize the gps short cycle button/led
         self.set_short_cycle_led_metadata(nims.GPSINITIAL)
@@ -229,39 +219,36 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.set_gain_leds(nims.EXUEYU)
 
         # Connect the gain buttons
-        self.tb_gain_xlyl.clicked.connect(self.send_gain_xlyl)
-        self.tb_gain_xhyl.clicked.connect(self.send_gain_xhyl)
-        self.tb_gain_xlyh.clicked.connect(self.send_gain_xlyh)
-        self.tb_gain_xhyh.clicked.connect(self.send_gain_xhyh)
+        self.tb_gain_xlyl.clicked.connect(self.send_gain_x_low_y_low)
+        self.tb_gain_xhyl.clicked.connect(self.send_gain_x_high_y_low)
+        self.tb_gain_xlyh.clicked.connect(self.send_gain_x_low_y_high)
+        self.tb_gain_xhyh.clicked.connect(self.send_gain_x_high_y_high)
 
         # Connection the misc buttons
         self.tb_mag_light.toggled.connect(self.send_mag_light)
         self.tb_nims_leds.clicked.connect(self.send_nims_leds)
 
         # Draw the vertical graph labels
-        self.label_ey = VerticalTextLabel(text="Ey (mV)")
-        self.label_ex = VerticalTextLabel(text="Ex (mV)")
-        self.label_hx = VerticalTextLabel(text="Hx (nT)")
-        self.label_hy = VerticalTextLabel(text="Hy (nT)")
-        self.label_hz = VerticalTextLabel(text="Hz (nT)")
+        label_ey = VerticalTextLabel(text="Ey (mV)")
+        label_ex = VerticalTextLabel(text="Ex (mV)")
+        label_hx = VerticalTextLabel(text="Hx (nT)")
+        label_hy = VerticalTextLabel(text="Hy (nT)")
+        label_hz = VerticalTextLabel(text="Hz (nT)")
+
         # Add the text to the layouts
-        self.horlayout_ex_label.addWidget(self.label_ex)
-        self.horlayout_ey_label.addWidget(self.label_ey)
-        self.horlayout_hx_label.addWidget(self.label_hx)
-        self.horlayout_hy_label.addWidget(self.label_hy)
-        self.horlayout_hz_label.addWidget(self.label_hz)
+        self.horlayout_ex_label.addWidget(label_ex)
+        self.horlayout_ey_label.addWidget(label_ey)
+        self.horlayout_hx_label.addWidget(label_hx)
+        self.horlayout_hy_label.addWidget(label_hy)
+        self.horlayout_hz_label.addWidget(label_hz)
 
         # Data initialization
-        self.graph_data = GraphData(ticks=20)
-        self.graph_data.update_hx(0)
-        self.graph_data.update_hy(0)
-        self.graph_data.update_hz(0)
-        self.graph_data.update_ex(0)
-        self.graph_data.update_ey(0)
+        self.graph_data.update_hx(0.0)
+        self.graph_data.update_hy(0.0)
+        self.graph_data.update_hz(0.0)
+        self.graph_data.update_ex(0.0)
+        self.graph_data.update_ey(0.0)
         # Graph initialization
-        self.graph_hx_ey = GraphWidget()
-        self.graph_hy_ex = GraphWidget()
-        self.graph_hz = GraphWidget()
         self.layout_hx_ey.addWidget(self.graph_hx_ey)
         self.layout_hy_ex.addWidget(self.graph_hy_ex)
         self.layout_hz.addWidget(self.graph_hz)
@@ -358,7 +345,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.le_e_ng_vac_sr.textEdited.connect(self.update_e_ng_vac_sr)
 
         # update on a change directory
-        self.le_change_directory_sr.setText(self.sr.save_path)
+        self.le_change_directory_sr.setText(str(self.sr.save_path))
 
         # update comments
         self.te_comments_sr.textChanged.connect(self.update_comments_sr)
@@ -376,21 +363,21 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.tb_record_raw.clicked.connect(self.record_raw_data)
 
     # -------------------------General------------------------------------------
-    def closeEvent(self, event):
+    def closeEvent(self, event: QCloseEvent):
         """Handle the close event."""
         # self.close()
-        self.portmonitor.stop()
-        self.readport.stop()
+        self.port_monitor.stop()
+        self.read_port.stop()
         if not self.port:
             self.port.close()
         super().closeEvent(event)
 
-    def keyPressEvent(self, e):
+    def keyPressEvent(self, e: QKeyEvent):
         """Handle Key Press Event."""
-        if e.key() == Qt.Key_Escape or e.key() == Qt.Key_Close:
+        if e.key() == Qt.Key.Key_Escape or e.key() == Qt.Key.Key_Close:
             self.close()
 
-    def display(self, i):
+    def display(self, i: int | str):
         """Change the display tab."""
         if i == self.TAB_METADATA:
             self.stackedWidget.setCurrentIndex(self.TAB_METADATA)
@@ -429,9 +416,9 @@ class Mimspy(QMainWindow, Ui_MainWindow):
     def connection_change(self, _):
         """Handle a port change selection."""
         # close the thread
-        self.readport.stop()
+        self.read_port.stop()
         # wait for thread to close
-        while self.readport.isRunning():
+        while self.read_port.isRunning():
             continue
         # if port open, close it
         if self.port.port is not None:
@@ -458,7 +445,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
             # clear packet
             self.packet = b""
             # start the read port again
-            self.readport.start()
+            self.read_port.start()
         else:
             self.set_connection_led(False)
             self.set_packets_led(False)
@@ -467,33 +454,29 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
         print(f"Port Open: \t{self.port.is_open}")
 
-    def set_connection_led(self, state):
+    def set_connection_led(self, state: bool):
         """Set the connection led."""
         if state is True:
-            self.label_connection_led.setPixmap(self.pxmpovlgreen)
+            self.label_connection_led.setPixmap(self.led_green_oval)
         else:
-            self.label_connection_led.setPixmap(self.pxmpovlred)
+            self.label_connection_led.setPixmap(self.led_red_oval)
 
-    def set_packets_led(self, state):
+    def set_packets_led(self, state: bool):
         """Set the packets led."""
         if state is True:
-            self.label_packets_led.setPixmap(self.pxmpovlgreen)
+            self.label_packets_led.setPixmap(self.led_green_oval)
         else:
-            self.label_packets_led.setPixmap(self.pxmpovlred)
+            self.label_packets_led.setPixmap(self.led_red_oval)
 
-    def set_receiving_led(self, state):
+    def set_receiving_led(self, state: bool):
         """Set the receiving led."""
         if state is True:
-            self.label_receiving_led.setPixmap(self.pxmpovlgreen)
+            self.label_receiving_led.setPixmap(self.led_green_oval)
         else:
-            self.label_receiving_led.setPixmap(self.pxmpovlblack)
+            self.label_receiving_led.setPixmap(self.led_black_oval)
 
-    def change_ports_list(self, ports):
+    def change_ports_list(self, ports: list[SerialNode]):
         """Change the ports list."""
-        ignore_ports = []  # items to be removed from QComboBox
-        # get the port names
-        port_names = [p.port for p in ports]
-        # get the port names in QComboBox
         serial_items = [self.cb_connection.itemText(i) for i in range(self.cb_connection.count())]
 
         # insert new ports into the list
@@ -501,18 +484,6 @@ class Mimspy(QMainWindow, Ui_MainWindow):
             # check for port already in list
             if p.port not in serial_items:
                 self.cb_connection.addItem(p.port)
-
-        # check for items to delete
-        for i, s in enumerate(serial_items, 0):
-            if s not in port_names:
-                ignore_ports.append(i)
-
-        # remove ports from QComboBox
-        if ignore_ports:
-            ignore_ports = list(reversed(ignore_ports))
-            # iterate through list and remove items
-            for i in ignore_ports:
-                self.cb_connection.removeItem(i)
 
     def change_baud_rate_list(self):
         """List of available baud rates."""
@@ -535,19 +506,19 @@ class Mimspy(QMainWindow, Ui_MainWindow):
     def update_site_name_md(self):
         """Update the site name in metadata."""
         # get text and update metadata field
-        sitename = self.le_site_name.text()
+        site_name = self.le_site_name.text()
 
-        self.update_site_name(sitename)
+        self.update_site_name(site_name)
 
-    def update_site_name(self, sn):
+    def update_site_name(self, sn: str):
         """Update the site name."""
         # get text and update metadata field
-        self.metadata.sitename = sn
+        self.metadata.site_name = sn
         # update metadata led
         self.check_metadata()
 
         # update site report site name
-        self.sr.sitename = sn
+        self.sr.site_name = sn
 
         # update the site id
         self.le_site_name.setText(sn)
@@ -560,10 +531,10 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
         self.update_state_province(sp)
 
-    def update_state_province(self, sp):
+    def update_state_province(self, sp: str):
         """Update the state/province."""
         # get text and update metadata field
-        self.metadata.stateprov = sp
+        self.metadata.state_province = sp
         # update metadata led
         self.check_metadata()
 
@@ -580,7 +551,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
         self.update_country(cntry)
 
-    def update_country(self, cntry):
+    def update_country(self, cntry: str):
         """Update the country."""
         # get text and update metadata field
         self.metadata.country = cntry
@@ -596,19 +567,19 @@ class Mimspy(QMainWindow, Ui_MainWindow):
     def update_run_id_md(self):
         """Update the run id in metadata."""
         # get text and update metadata field
-        # self.metadata.runid = self.le_run_id.text()
+        # self.metadata.run_id = self.le_run_id.text()
         txt = self.le_run_id.text()
         # update metadata led
         # self.check_metadata()
         self.update_run_id(txt)
 
         # update the run id on site report
-        # self.le_run_id_sr.setText(self.metadata.runid)
+        # self.le_run_id_sr.setText(self.metadata.run_id)
 
-    def update_run_id(self, txt):
+    def update_run_id(self, txt: str):
         """Update the run id."""
         # get text and update metadata field
-        self.metadata.runid = txt
+        self.metadata.run_id = txt
         # update metadata
         self.check_metadata()
 
@@ -633,15 +604,15 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
         self.update_nims_id(nid)
 
-    def update_nims_id(self, nid):
+    def update_nims_id(self, nid: str):
         """Update the nims id."""
         # get text and update metadata field
-        self.metadata.nimsid = nid
+        self.metadata.nims_id = nid
         # update metadata led
         self.check_metadata()
 
         # update the site report
-        self.sr.nimsid = nid
+        self.sr.nims_id = nid
 
         # update the nims id
         self.le_nims_id.setText(nid)
@@ -654,15 +625,15 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
         self.update_mag_id(mid)
 
-    def update_mag_id(self, mid):
+    def update_mag_id(self, mid: str):
         """Update the mag id."""
         # get text and update metadata field
-        self.metadata.magid = mid
+        self.metadata.mag_id = mid
         # update metadata led
         self.check_metadata()
 
         # update the site report
-        self.sr.magid = mid
+        self.sr.mag_id = mid
 
         # update the mag id
         self.le_mag_id.setText(mid)
@@ -672,7 +643,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         """Update the north-south dipole length in metadata."""
         # get text and update metadata field
         try:
-            self.metadata.nsdipolelen = int(self.le_ns_dipole_length.text())
+            self.metadata.ns_length = int(self.le_ns_dipole_length.text())
         except ValueError:
             self.le_ns_dipole_length.setText("")
         # update metadata led
@@ -682,7 +653,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         """Update the north-south dipole azimuth in metadata."""
         # get text and update metadata field
         try:
-            self.metadata.nsdipoleazi = int(self.le_ns_dipole_heading.text())
+            self.metadata.ns_azimuth = int(self.le_ns_dipole_heading.text())
         except ValueError:
             self.le_ns_dipole_heading.setText("")
         # update metadata led
@@ -692,7 +663,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         """Update the east-west dipole length in metadata."""
         # get text and update metadata field
         try:
-            self.metadata.ewdipolelen = int(self.le_ew_dipole_length.text())
+            self.metadata.ew_length = int(self.le_ew_dipole_length.text())
         except ValueError:
             self.le_ew_dipole_length.setText("")
         # update metadata led
@@ -702,7 +673,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         """Update the east-west dipole azimuth in metadata."""
         # get text and update metadata field
         try:
-            self.metadata.ewdipoleazi = int(self.le_ew_dipole_heading.text())
+            self.metadata.ew_azimuth = int(self.le_ew_dipole_heading.text())
         except ValueError:
             self.le_ew_dipole_heading.setText("")
         # update metadata led
@@ -714,14 +685,14 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
         self.update_n_id(eid)
 
-    def update_n_id(self, eid):
+    def update_n_id(self, eid: str):
         """Update the north electrode id."""
-        self.metadata.ndipoleid = eid
+        self.metadata.electrode_north_id = eid
         # update metadata led
         self.check_metadata()
 
         # update the site report
-        self.sr.enid = eid
+        self.sr.electrode_north_id = eid
 
         # update the electrode id
         self.le_n_electrode_id.setText(eid)
@@ -733,14 +704,14 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
         self.update_s_id(eid)
 
-    def update_s_id(self, eid):
+    def update_s_id(self, eid: str):
         """Update the south electrode id."""
-        self.metadata.sdipoleid = eid
+        self.metadata.electrode_south_id = eid
         # update metadata led
         self.check_metadata()
 
         # update the site report
-        self.sr.esid = eid
+        self.sr.electrode_south_id = eid
 
         # update the electrode id
         self.le_s_electrode_id.setText(eid)
@@ -752,14 +723,14 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
         self.update_e_id(eid)
 
-    def update_e_id(self, eid):
+    def update_e_id(self, eid: str):
         """Update the east electrode id."""
-        self.metadata.edipoleid = eid
+        self.metadata.electrode_east_id = eid
         # update metadata led
         self.check_metadata()
 
         # update the site report
-        self.sr.eeid = eid
+        self.sr.electrode_east_id = eid
 
         # update the electrode id
         self.le_e_electrode_id.setText(eid)
@@ -771,14 +742,14 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
         self.update_w_id(eid)
 
-    def update_w_id(self, eid):
+    def update_w_id(self, eid: str):
         """Update the west electrode id."""
-        self.metadata.wdipoleid = eid
+        self.metadata.electrode_west_id = eid
         # update metadata led
         self.check_metadata()
 
         # update the site report
-        self.sr.ewid = eid
+        self.sr.electrode_west_id = eid
 
         # update the electrode id
         self.le_w_electrode_id.setText(eid)
@@ -791,14 +762,14 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # update metadata led
         self.check_metadata()
 
-    def update_survey_layout(self):
-        """Update the survey layout."""
-        sender = self.sender()
-        if sender.isChecked():
-            # get checked value
-            self.metadata.survey_layout = sender.layout
-            # update metadata led
-            self.check_metadata()
+    # def update_survey_layout(self):
+    #     """Update the survey layout."""
+    #     sender = self.sender()
+    #     if sender.isChecked():
+    #         # get checked value
+    #         self.metadata.survey_layout = sender.layout
+    #         # update metadata led
+    #         self.check_metadata()
 
     def update_comments_md(self):
         """Update the Comments in metadata."""
@@ -811,7 +782,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # set comments
         self.set_comments_sr(comments)
 
-    def set_comments_md(self, comments):
+    def set_comments_md(self, comments: str):
         """Set the comments in metadata."""
         # check the comments length
         self.check_comments_length(comments)
@@ -823,15 +794,13 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # reconnect the signals
         self.te_comments.textChanged.connect(self.update_comments_md)
 
-    def check_comments_length(self, comments):
-        """Check for the length of the comment section.
+    def check_comments_length(self, comments: str):
+        """Check for the length of the comment section for overrun.
 
-        Checks the length of the metadata comments for overrun.
-
-        Args:
-            comments (String): The present comments in the md section.
-        -------
-
+        Parameters
+        ----------
+        comments : str
+            The present comments in the md section.
         """
         max_comment_length = 150
 
@@ -847,7 +816,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # update metadata led
         self.check_metadata()
 
-    def set_comments_label(self, flag):
+    def set_comments_label(self, flag: bool):
         """Set the comment label.
 
         The set_comments_label function sets the comments label on the MetaData
@@ -868,28 +837,25 @@ class Mimspy(QMainWindow, Ui_MainWindow):
             self.l_comments_md.setText(label)
             self.l_comments_md.setStyleSheet("color: black")
 
-    def set_short_cycle_led_metadata(self, state):
+    def set_short_cycle_led_metadata(self, code: str):
         """Set the short cycle led in metadata tab."""
-        if state == nims.GPSINITIAL:
-            self.label_short_cycle_led.setPixmap(self.pxmprndblack)
-        elif state == nims.GPSAQLOCK or state == nims.GPSRECEIVING:
-            self.label_short_cycle_led.setPixmap(self.pxmprndyellow)
-        elif state == nims.GPSRECEIVED:
-            self.label_short_cycle_led.setPixmap(self.pxmprndgreen)
-        elif state == nims.GPSALMANAC:
-            self.label_short_cycle_led.setPixmap(self.pxmprndblack)
+        match code:
+            case nims.GPSAQLOCK | nims.GPSRECEIVING:
+                pix_icon = self.led_yellow_round
+            case nims.GPSRECEIVED:
+                pix_icon = self.led_green_round
+            case _:
+                pix_icon = self.led_black_round
+        self.label_short_cycle_led.setPixmap(pix_icon)
 
-    def update_gps_value_m(self, value):
+    def update_gps_value_m(self, value: str):
         """Update the GPS value in the metadata panel."""
         # assign the value in the metadata panel
         self.le_gps_status_byte_m.setText(value)
 
-    def set_almanac_led(self, state):
+    def set_almanac_led(self, state: bool):
         """Set the almanac led in metadata tab."""
-        if state is True:
-            self.label_almanac_led.setPixmap(self.pxmprndgreen)
-        else:
-            self.label_almanac_led.setPixmap(self.pxmprndblack)
+        self.label_almanac_led.setPixmap(self.led_green_round if state else self.led_black_round)
 
     def clear_gps_string_m(self):
         """Clear the GPS string in the metadata panel."""
@@ -897,22 +863,18 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
     def update_gps_string_m(self):
         """Update the GPS string in the metadata panel."""
-        self.te_gps_string_m.setText(self.gpsstring)
+        self.te_gps_string_m.setText(self.gps_string)
 
-    def update_gps_metadata_string(self, gprmc, gpgga):
+    def update_gps_metadata_string(self, gprmc: list[str], gpgga: list[str]):
         """Update the GPS metadata string."""
         # parse the needed data from the sentences
         date = gprmc[nims.GPSDATE]
         time = gpgga[nims.GPSTIME].split(".")[0]
-        decl = gprmc[nims.GPSDECL]
-        decd = gprmc[nims.GPSDECD]
-        print(date)
-        print(time)
-        print(decl)
-        print(decd)
+        declination = gprmc[nims.GPSDECL]
+        declination_direction = gprmc[nims.GPSDECD]
 
-        if decl != "" and decd != "":
-            self.update_gps_dec(decl, decd)
+        if declination != "" and declination_direction != "":
+            self.update_gps_dec(declination, declination_direction)
 
         lat = "%s %s" % (self.dm_to_dd(gpgga[nims.GPSLATI]), gpgga[nims.GPSLATD])
         lon = "%s %s" % (self.dm_to_dd(gpgga[nims.GPSLONG]), gpgga[nims.GPSLOND])
@@ -923,10 +885,10 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         time = ":".join([time[i : i + 2] for i in range(0, len(time), 2)])
 
         # update the metadata string
-        self.metadata.gpstimestamp = "%s %s %s %s %s" % (date, time, lat, lon, alt)
+        self.metadata.gps_timestamp = "%s %s %s %s %s" % (date, time, lat, lon, alt)
 
         # update GUI GPS string
-        self.te_gps_metadata_string.setText(self.metadata.gpstimestamp)
+        self.te_gps_metadata_string.setText(self.metadata.gps_timestamp)
 
         # update site report timestamp
         self.update_timestamp_sr(date, time)
@@ -947,7 +909,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         Returns
         -------
         string
-            GPS lat/long in 'D{D:}.dddddd'
+            GPS lat/long in "D{D:}.dddddd"
 
         """
         try:
@@ -962,41 +924,42 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
     def update_gps_time(self):
         """Update the GPS time in metadata."""
-        time: str
         # parse the string into a list
-        gps_list = self.metadata.gpstimestamp.split(" ")
+        gps_list = self.metadata.gps_timestamp.split(" ")
 
         # extract the time, check for array error
-        with contextlib.suppress(IndexError):
+        try:
             time = gps_list[nims.GPSSTRINGTIME]
+        except IndexError:
+            time = "00:00:00"
 
         # update the gps field
         self.le_gps_time.setText(time)
 
     def update_gps_date(self):
         """Update the GPS date in metadata."""
-        # initialize empty date
-        date: str
         # parse the string into a list
-        gps_list = self.metadata.gpstimestamp.split(" ")
+        gps_list = self.metadata.gps_timestamp.split(" ")
 
         # extract the date, check for array error
-        with contextlib.suppress(IndexError):
+        try:
             date = gps_list[nims.GPSSTRINGDATE]
+        except IndexError:
+            date: str = "00/00/00"
 
         # update the gps field
         self.le_gps_date.setText(date)
 
     def update_gps_lat(self):
         """Update the GPS latitude in metadata."""
-        # initialize empty latitude
-        lat: str
         # parse the string into a list
-        gps_list = self.metadata.gpstimestamp.split(" ")
+        gps_list = self.metadata.gps_timestamp.split(" ")
 
         # extract the lat, check for array error
-        with contextlib.suppress(IndexError):
+        try:
             lat = f"{gps_list[nims.GPSSTRINGALTI]} {gps_list[nims.GPSSTRINGLATD]}"
+        except IndexError:
+            lat = "0.0"
 
         # update the gps field
         self.le_gps_lat.setText(lat)
@@ -1007,14 +970,14 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
     def update_gps_lon(self):
         """Update the GPS longitude in metadata."""
-        # initialize empty longitude
-        lon: str
         # parse the string into a list
-        gps_list = self.metadata.gpstimestamp.split(" ")
+        gps_list = self.metadata.gps_timestamp.split(" ")
 
         # extract the longitude, check for array error
-        with contextlib.suppress(IndexError):
-            lon = "%s %s" % (gps_list[nims.GPSSTRINGLONG], gps_list[nims.GPSSTRINGLOND])
+        try:
+            lon = f"{gps_list[nims.GPSSTRINGLONG]} {gps_list[nims.GPSSTRINGLOND]}"
+        except IndexError:
+            lon = "0.0"
 
         # update the gps field
         self.le_gps_lon.setText(lon)
@@ -1026,13 +989,14 @@ class Mimspy(QMainWindow, Ui_MainWindow):
     def update_gps_alt(self):
         """Update the GPS longitude in metadata."""
         # initialize empty altitude
-        alt: str
         # parse the string into a list
-        gps_list = self.metadata.gpstimestamp.split(" ")
+        gps_list = self.metadata.gps_timestamp.split(" ")
 
         # extract the alt, check for array error
-        with contextlib.suppress(IndexError):
+        try:
             alt = gps_list[nims.GPSSTRINGALTI]
+        except IndexError:
+            alt = "0.0"
 
         # update the gps field
         self.le_gps_alt.setText(alt)
@@ -1042,124 +1006,85 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
     def send_short_cycle(self):
         """Send the short cycle command."""
-        if self.board == nims.MINERVA:
-            print(f"Send Command: \t{bytes.fromhex(nims.SHORTCYCLE)}")
-            self.send_byte(bytes.fromhex(nims.SHORTCYCLE))
-        else:
-            self.send_byte(bytes.fromhex(nims.SENDNIMS))
-            self.send_byte(bytes.fromhex(nims.SHORTCYCLE))
+        print(f"Send Command: \t{bytes.fromhex(nims.SHORTCYCLE)}")
+        self.send_byte(bytes.fromhex(nims.SHORTCYCLE))
 
     def send_almanac(self):
         """Send the almanac command."""
-        if self.board == nims.MINERVA:
-            print(f"Send Command: \t{bytes.fromhex(nims.ALMANAC)}")
-            self.send_byte(bytes.fromhex(nims.ALMANAC))
-        else:
-            self.send_byte(bytes.fromhex(nims.SENDNIMS))
-            self.send_byte(bytes.fromhex(nims.ALMANAC))
+        print(f"Send Command: \t{bytes.fromhex(nims.ALMANAC)}")
+        self.send_byte(bytes.fromhex(nims.ALMANAC))
 
     # -------------------------Data Display-------------------------------------
-    def set_gain_leds(self, state):
+    def set_gain_leds(self, code: str):
         """Set the gain LEDs."""
         # set all leds to black
-        self.label_gain_xlyl_led.setPixmap(self.pxmpovlblack)
-        self.label_gain_xhyl_led.setPixmap(self.pxmpovlblack)
-        self.label_gain_xlyh_led.setPixmap(self.pxmpovlblack)
-        self.label_gain_xhyh_led.setPixmap(self.pxmpovlblack)
+        self.label_gain_xlyl_led.setPixmap(self.led_black_oval)
+        self.label_gain_xhyl_led.setPixmap(self.led_black_oval)
+        self.label_gain_xlyh_led.setPixmap(self.led_black_oval)
+        self.label_gain_xhyh_led.setPixmap(self.led_black_oval)
 
         # Only turn the correct LED green
-        if state == nims.EXLEYL:
-            self.label_gain_xlyl_led.setPixmap(self.pxmpovlgreen)
-        elif state == nims.EXHEYL:
-            self.label_gain_xhyl_led.setPixmap(self.pxmpovlgreen)
-        elif state == nims.EXLEYH:
-            self.label_gain_xlyh_led.setPixmap(self.pxmpovlgreen)
-        elif state == nims.EXHEYH:
-            self.label_gain_xhyh_led.setPixmap(self.pxmpovlgreen)
+        match code:
+            case nims.EXLEYL:
+                self.label_gain_xlyl_led.setPixmap(self.led_green_oval)
+            case nims.EXHEYL:
+                self.label_gain_xhyl_led.setPixmap(self.led_green_oval)
+            case nims.EXLEYH:
+                self.label_gain_xlyh_led.setPixmap(self.led_green_oval)
+            case nims.EXHEYH:
+                self.label_gain_xhyh_led.setPixmap(self.led_green_oval)
+            case _:
+                pass
 
-    def send_gain_xlyl(self):
+    def send_gain_x_low_y_low(self):
         """Send the gain command."""
-        if self.board == nims.MINERVA:
-            print(f"Send Command: \t{bytes.fromhex(nims.GAINXLYL)}")
-            self.send_byte(bytes.fromhex(nims.GAINXLYL))
-        else:
-            self.send_byte(bytes.fromhex(nims.SENDNIMS))
-            self.send_byte(bytes.fromhex(nims.GAINXLYL))
+        print(f"Send Command: \t{bytes.fromhex(nims.GAINXLYL)}")
+        self.send_byte(bytes.fromhex(nims.GAINXLYL))
 
-    def send_gain_xhyl(self):
-        """Send the gain command."""
-        # send low gain command first
-        self.send_gain_xlyl()
-        # wait for gain to change
-        sleep(0.15)
-        if self.board == nims.MINERVA:
-            # send gain command
-            print(f"Send Command: \t{bytes.fromhex(nims.GAINXHYL)}")
-            self.send_byte(bytes.fromhex(nims.GAINXHYL))
-        else:
-            # send the command to forward to NIMS
-            self.send_byte(bytes.fromhex(nims.SENDNIMS))
-            # send gain command
-            self.send_byte(bytes.fromhex(nims.GAINXHYL))
-
-    def send_gain_xlyh(self):
+    def send_gain_x_high_y_low(self):
         """Send the gain command."""
         # send low gain command first
-        self.send_gain_xlyl()
+        self.send_gain_x_low_y_low()
         # wait for gain to change
         sleep(0.15)
-        if self.board == nims.MINERVA:
-            # send gain command
-            print(f"Send Command: \t{bytes.fromhex(nims.GAINXLYH)}")
-            self.send_byte(bytes.fromhex(nims.GAINXLYH))
-        else:
-            # send the command to forward to NIMS
-            self.send_byte(bytes.fromhex(nims.SENDNIMS))
-            # send gain command
-            self.send_byte(bytes.fromhex(nims.GAINXLYH))
+        # send gain command
+        print(f"Send Command: \t{bytes.fromhex(nims.GAINXHYL)}")
+        self.send_byte(bytes.fromhex(nims.GAINXHYL))
 
-    def send_gain_xhyh(self):
+    def send_gain_x_low_y_high(self):
         """Send the gain command."""
         # send low gain command first
-        self.send_gain_xlyl()
+        self.send_gain_x_low_y_low()
         # wait for gain to change
         sleep(0.15)
-        if self.board == nims.MINERVA:
-            # send gain command
-            print(f"Send Command: \t{bytes.fromhex(nims.GAINXHYH)}")
-            self.send_byte(bytes.fromhex(nims.GAINXHYH))
-        else:
-            # send the command to forward to NIMS
-            self.send_byte(bytes.fromhex(nims.SENDNIMS))
-            # send gain command
-            self.send_byte(bytes.fromhex(nims.GAINXHYH))
+        # send gain command
+        print(f"Send Command: \t{bytes.fromhex(nims.GAINXLYH)}")
+        self.send_byte(bytes.fromhex(nims.GAINXLYH))
 
-    def send_mag_light(self, checked):
+    def send_gain_x_high_y_high(self):
+        """Send the gain command."""
+        # send low gain command first
+        self.send_gain_x_low_y_low()
+        # wait for gain to change
+        sleep(0.15)
+        # send gain command
+        print(f"Send Command: \t{bytes.fromhex(nims.GAINXHYH)}")
+        self.send_byte(bytes.fromhex(nims.GAINXHYH))
+
+    def send_mag_light(self, checked: bool):
         """Turn on the mag light."""
-        if self.board == nims.MINERVA:
-            if checked:
-                print(f"Toggle Mag Light: \t{False}")
-                self.port.setRTS(False)
-            else:
-                print(f"Toggle Mag Light: \t{True}")
-                self.port.setRTS(True)
+        if checked:
+            print(f"Toggle Mag Light: \t{False}")
+            self.port.setRTS(False)  # type: ignore  # noqa: PGH003
         else:
-            if checked:
-                # send mag light turn on command
-                self.send_byte(bytes.fromhex(nims.MAGLIGHTON))
-            else:
-                # send mag light turn off command
-                self.send_byte(bytes.fromhex(nims.MAGLIGHTOFF))
+            print(f"Toggle Mag Light: \t{True}")
+            self.port.setRTS(True)  # type: ignore  # noqa: PGH003
 
     def send_nims_leds(self):
         """Pulse the Minerva LEDs."""
         # send the nims command
-        if self.board == nims.MINERVA:
-            print(f"Send Command: \t{bytes.fromhex(nims.NIMSLEDS)}")
-            self.send_byte(bytes.fromhex(nims.NIMSLEDS))
-        else:
-            self.send_byte(bytes.fromhex(nims.SENDNIMS))
-            self.send_byte(bytes.fromhex(nims.NIMSLEDS))
+        print(f"Send Command: \t{bytes.fromhex(nims.NIMSLEDS)}")
+        self.send_byte(bytes.fromhex(nims.NIMSLEDS))
 
     def update_graphs(self):
         """Update the graphs."""
@@ -1190,90 +1115,78 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         """Set the Hz value."""
         self.le_hz.setText("%.3f" % value)
 
-    def set_ex_label(self, value):
+    def set_ex_label(self, value: float):
         """Set the Ex value."""
         self.le_ex.setText("%.3f" % value)
 
-    def set_ey_label(self, value):
+    def set_ey_label(self, value: float):
         """Set the Ey value."""
         self.le_ey.setText("%.3f" % value)
 
     # -------------------------Start/End Run------------------------------------
-    def set_short_cycle_led_start_end(self, state):
+    def set_short_cycle_led_start_end(self, code: str):
         """Set the short cycle led in start/end run tab."""
-        if state == nims.GPSINITIAL:
-            self.label_short_cycle_led_2.setPixmap(self.pxmpovlblack)
-            self.label_short_cycle_led_3.setPixmap(self.pxmpovlblack)
-            self.label_short_cycle_led_4.setPixmap(self.pxmpovlblack)
-        elif state == nims.GPSAQLOCK or state == nims.GPSRECEIVING:
-            self.label_short_cycle_led_2.setPixmap(self.pxmpovlyellow)
-            self.label_short_cycle_led_3.setPixmap(self.pxmpovlyellow)
-            self.label_short_cycle_led_4.setPixmap(self.pxmpovlyellow)
-        elif state == nims.GPSRECEIVED:
-            self.label_short_cycle_led_2.setPixmap(self.pxmpovlgreen)
-            self.label_short_cycle_led_3.setPixmap(self.pxmpovlgreen)
-            self.label_short_cycle_led_4.setPixmap(self.pxmpovlgreen)
-        elif state == nims.GPSALMANAC:
-            self.label_short_cycle_led_2.setPixmap(self.pxmpovlblack)
-            self.label_short_cycle_led_3.setPixmap(self.pxmpovlblack)
-            self.label_short_cycle_led_4.setPixmap(self.pxmpovlblack)
+        match code:
+            case nims.GPSAQLOCK | nims.GPSRECEIVING:
+                pix_icon = self.led_yellow_oval
+            case nims.GPSRECEIVED:
+                pix_icon = self.led_green_oval
+            case _:
+                pix_icon = self.led_black_oval
+        self.label_short_cycle_led_2.setPixmap(pix_icon)
+        self.label_short_cycle_led_3.setPixmap(pix_icon)
+        self.label_short_cycle_led_4.setPixmap(pix_icon)
 
-    def set_mag_ready_led(self, state):
+    def set_mag_ready_led(self, code: str):
         """Set the mag ready led in start/end run tab."""
-        if state == nims.MAGREADY:
-            self.label_mag_ready_led.setPixmap(self.pxmpovlgreen)
-        elif state == nims.MAGSLEWING:
-            self.label_mag_ready_led.setPixmap(self.pxmpovlyellow)
-        elif state == nims.MAGERROR:
-            self.label_mag_ready_led.setPixmap(self.pxmpovlred)
-        else:
-            self.label_mag_ready_led.setPixmap(self.pxmpovlblack)
+        match code:
+            case nims.MAGREADY:
+                self.label_mag_ready_led.setPixmap(self.led_green_oval)
+            case nims.MAGSLEWING:
+                self.label_mag_ready_led.setPixmap(self.led_yellow_oval)
+            case nims.MAGERROR:
+                self.label_mag_ready_led.setPixmap(self.led_red_oval)
+            case _:
+                self.label_mag_ready_led.setPixmap(self.led_black_oval)
 
-    def set_mag_north_led(self, state):
+    def set_mag_north_led(self, state: bool):
         """Set the mag north led in start/end run tab."""
-        if state is True:
-            self.label_mag_north_led.setPixmap(self.pxmpovlgreen)
-        else:
-            self.label_mag_north_led.setPixmap(self.pxmpovlyellow)
+        self.label_mag_north_led.setPixmap(self.led_green_oval if state else self.led_yellow_oval)
 
-    def set_ex_spec_led(self, state):
+    def set_ex_spec_led(self, state: bool):
         """Set the Ex spec led in start/end run tab."""
-        if state is True:
-            self.label_ex_spec_led.setPixmap(self.pxmpovlgreen)
-        else:
-            self.label_ex_spec_led.setPixmap(self.pxmpovlyellow)
+        self.label_ex_spec_led.setPixmap(self.led_green_oval if state else self.led_yellow_oval)
 
-    def set_ey_spec_led(self, state):
+    def set_ey_spec_led(self, state: bool):
         """Set the Ey spec led in start/end run tab."""
-        if state is True:
-            self.label_ey_spec_led.setPixmap(self.pxmpovlgreen)
-        else:
-            self.label_ey_spec_led.setPixmap(self.pxmpovlyellow)
+        self.label_ey_spec_led.setPixmap(self.led_green_oval if state else self.led_yellow_oval)
 
-    def set_metadata_led(self, state):
+    def set_metadata_led(self, code: int):
         """Set the metadata led in start/end run tab."""
-        if state is nims.METACOMPLETE:
-            self.label_metadata_led.setPixmap(self.pxmpovlgreen)
-        elif state == nims.METAPARTIAL:
-            self.label_metadata_led.setPixmap(self.pxmpovlyellow)
-        else:
-            self.label_metadata_led.setPixmap(self.pxmpovlred)
+        match code:
+            case nims.METACOMPLETE:
+                pix_icon = self.led_green_oval
+            case nims.METAPARTIAL:
+                pix_icon = self.led_yellow_oval
+            case _:
+                pix_icon = self.led_red_oval
+        self.label_metadata_led.setPixmap(pix_icon)
 
-    def set_start_run_led(self, state):
+    def set_start_run_led(self, state: bool):
         """Set the start run led in start/end run tab."""
         if state is True:
-            self.label_start_run_led.setPixmap(self.pxmprndgreen)
-            self.label_end_run_led.setPixmap(self.pxmprndblack)
+            self.label_start_run_led.setPixmap(self.led_green_round)
+            self.label_end_run_led.setPixmap(self.led_black_round)
         else:
-            self.label_start_run_led.setPixmap(self.pxmprndblack)
+            self.label_start_run_led.setPixmap(self.led_black_round)
 
-    def set_end_run_led(self, state):
+    def set_end_run_led(self, state: bool):
         """Set the end run led in start/end run tab."""
         if state is True:
-            self.label_end_run_led.setPixmap(self.pxmprndred)
-            self.label_start_run_led.setPixmap(self.pxmprndblack)
+            self.label_end_run_led.setPixmap(self.led_red_round)
+            self.label_start_run_led.setPixmap(self.led_black_round)
         else:
-            self.label_end_run_led.setPixmap(self.pxmprndblack)
+            self.label_end_run_led.setPixmap(self.led_black_round)
 
     def update_ready_led(self):
         """Update the ready led."""
@@ -1298,11 +1211,11 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
     def update_e_spec_leds(self):
         """Update the Ex spec led."""
-        mvoltcutoff = 16
+        cutoff_voltage_mv = 16
         gain = self.packet[nims.STATUSSRT : nims.STATUSSTP]
 
         if (
-            self.graph_data.ex[-1] >= mvoltcutoff
+            self.graph_data.ex[-1] >= cutoff_voltage_mv
             or gain == bytes.fromhex(nims.EXHEYL)
             or gain == bytes.fromhex(nims.EXHEYH)
         ):
@@ -1311,7 +1224,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
             self.set_ex_spec_led(False)
 
         if (
-            self.graph_data.ey[-1] >= mvoltcutoff
+            self.graph_data.ey[-1] >= cutoff_voltage_mv
             or gain == bytes.fromhex(nims.EXLEYH)
             or gain == bytes.fromhex(nims.EXHEYH)
         ):
@@ -1322,7 +1235,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
     def check_metadata(self):
         """Check the metadata."""
         empty = False
-        allempty = False
+        all_empty = False
 
         # check all meta boxes
         if (
@@ -1333,9 +1246,9 @@ class Mimspy(QMainWindow, Ui_MainWindow):
             or self.le_operator.text() == ""
             or self.le_nims_id.text() == ""
             or self.le_mag_id.text() == ""
-            or self.le_ns_dipole_length.text == ""
+            or self.le_ns_dipole_length.text() == ""
             or self.le_ns_dipole_heading.text() == ""
-            or self.le_ew_dipole_length.text == ""
+            or self.le_ew_dipole_length.text() == ""
             or self.le_ew_dipole_heading.text() == ""
             or self.le_n_electrode_id.text() == ""
             or self.le_s_electrode_id.text() == ""
@@ -1354,9 +1267,9 @@ class Mimspy(QMainWindow, Ui_MainWindow):
             and self.le_operator.text() == ""
             and self.le_nims_id.text() == ""
             and self.le_mag_id.text() == ""
-            and self.le_ns_dipole_length.text == ""
+            and self.le_ns_dipole_length.text() == ""
             and self.le_ns_dipole_heading.text() == ""
-            and self.le_ew_dipole_length.text == ""
+            and self.le_ew_dipole_length.text() == ""
             and self.le_ew_dipole_heading.text() == ""
             and self.le_n_electrode_id.text() == ""
             and self.le_s_electrode_id.text() == ""
@@ -1365,10 +1278,10 @@ class Mimspy(QMainWindow, Ui_MainWindow):
             and self.le_gnd_electrode_id.text() == ""
             and self.te_comments.toPlainText() == ""
         ):
-            allempty = True
+            all_empty = True
 
         # set the metadata led
-        if allempty is True:
+        if all_empty is True:
             self.set_metadata_led(nims.METAEMPTY)
         elif empty is True:
             self.set_metadata_led(nims.METAPARTIAL)
@@ -1384,30 +1297,23 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # compile the metadata
         self.metadata.make_header()
         # stop receiving packets
-        self.readport.stop()
+        self.read_port.stop()
 
         # start the run
-        if self.board == nims.MINERVA:
-            print(f"Send Command: \t{bytes.fromhex(nims.HEADER)}")
-            self.send_byte(bytes.fromhex(nims.HEADER))
-            sleep(0.30)
-            print(f"Send Command: \t{bytes.fromhex(nims.RECORD)}")
-            self.send_byte(bytes.fromhex(nims.RECORD))
-            sleep(0.50)
-            self.send_header_blocks()
-            sleep(0.50)
-            print(f"Send Command: \t{bytes.fromhex(nims.HEADER)}")
-            self.send_byte(bytes.fromhex(nims.HEADER))
-        else:
-            self.send_file_name()
-            sleep(0.15)
-            self.send_file_header()
-            sleep(0.15)
-            self.send_byte(bytes.fromhex(nims.RECORD))
+        print(f"Send Command: \t{bytes.fromhex(nims.HEADER)}")
+        self.send_byte(bytes.fromhex(nims.HEADER))
+        sleep(0.30)
+        print(f"Send Command: \t{bytes.fromhex(nims.RECORD)}")
+        self.send_byte(bytes.fromhex(nims.RECORD))
+        sleep(0.50)
+        self.send_header_blocks()
+        sleep(0.50)
+        print(f"Send Command: \t{bytes.fromhex(nims.HEADER)}")
+        self.send_byte(bytes.fromhex(nims.HEADER))
 
         # Clear the packet and start reading from the port
         self.packet = b""
-        self.readport.start()
+        self.read_port.start()
 
     def send_file_name(self):
         """Send the file name."""
@@ -1420,9 +1326,9 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         block_size = 64
         i = 0
         j = block_size
-        while j <= len(self.metadata.fileheader):
-            print(f"Send Header: \n{self.metadata.fileheader[i:j].encode('utf-8')}")
-            self.send_byte(self.metadata.fileheader[i:j].encode("utf-8"))
+        while j <= len(self.metadata.file_header):
+            print(f"Send Header: \n{self.metadata.file_header[i:j].encode('utf-8')}")
+            self.send_byte(self.metadata.file_header[i:j].encode("utf-8"))
             i += block_size
             j += block_size
             sleep(0.15)
@@ -1430,7 +1336,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
     def send_file_header(self):
         """Send the file header."""
         self.send_byte(bytes.fromhex(nims.HEADER))
-        self.send_byte(self.metadata.fileheader.encode("utf-8"))
+        self.send_byte(self.metadata.file_header.encode("utf-8"))
         self.send_byte(bytes.fromhex(nims.HEADER))
 
     def end_run(self):
@@ -1467,37 +1373,41 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.svr_preinstall_electrodes(False)
         self.svr_timing("Extract")
 
-    def svr_timing(self, state):
+    def svr_timing(self, code: str):
         """Set the timing for the site report."""
-        if state == "Install":
-            self.le_last_time_stamp_sr.setText("")
-            self.sr.last_ts = ""
-            self.label_104.setText("At Installation:")
-            self.le_last_time_stamp_sr.setEnabled(False)
-            self.le_last_time_stamp_sr.setStyleSheet("background-color: rgb(104, 104, 104)")
-            self.le_first_time_stamp_sr.setEnabled(True)
-            self.le_first_time_stamp_sr.setStyleSheet("background-color: rgb(255, 255, 255)")
-        elif state == "Check":
-            self.label_104.setText("At Check:")
-            self.le_last_time_stamp_sr.setEnabled(True)
-            self.le_last_time_stamp_sr.setStyleSheet("background-color: rgb(255, 255, 255)")
-            self.le_first_time_stamp_sr.setEnabled(True)
-            self.le_first_time_stamp_sr.setStyleSheet("background-color: rgb(255, 255, 255)")
-        elif state == "Extract":
-            self.label_104.setText("At Extraction:")
-            self.le_last_time_stamp_sr.setEnabled(True)
-            self.le_last_time_stamp_sr.setStyleSheet("background-color: rgb(255, 255, 255)")
-            self.le_first_time_stamp_sr.setText("")
-            self.sr.first_ts = ""
-            self.le_first_time_stamp_sr.setEnabled(False)
-            self.le_first_time_stamp_sr.setStyleSheet("background-color: rgb(104, 104, 104)")
+        match code:
+            case "Install":
+                self.le_last_time_stamp_sr.setText("")
+                self.sr.last_ts = ""
+                self.label_104.setText("At Installation:")
+                self.le_last_time_stamp_sr.setEnabled(False)
+                self.le_last_time_stamp_sr.setStyleSheet("background-color: rgb(104, 104, 104)")
+                self.le_first_time_stamp_sr.setEnabled(True)
+                self.le_first_time_stamp_sr.setStyleSheet("background-color: rgb(255, 255, 255)")
+            case "Check":
+                self.label_104.setText("At Check:")
+                self.le_last_time_stamp_sr.setEnabled(True)
+                self.le_last_time_stamp_sr.setStyleSheet("background-color: rgb(255, 255, 255)")
+                self.le_first_time_stamp_sr.setEnabled(True)
+                self.le_first_time_stamp_sr.setStyleSheet("background-color: rgb(255, 255, 255)")
+            case "Extract":
+                self.label_104.setText("At Extraction:")
+                self.le_last_time_stamp_sr.setEnabled(True)
+                self.le_last_time_stamp_sr.setStyleSheet("background-color: rgb(255, 255, 255)")
+                self.le_first_time_stamp_sr.setText("")
+                self.sr.first_ts = ""
+                self.le_first_time_stamp_sr.setEnabled(False)
+                self.le_first_time_stamp_sr.setStyleSheet("background-color: rgb(104, 104, 104)")
+            case _:
+                pass
 
-    def svr_preinstall_electrodes(self, state):
-        """Enable the pre-install electrodes."""
-        if state is True:
-            back_color = "background-color: rgb(255, 255, 255)"
-        else:
-            back_color = "background-color: rgb(104, 104, 104)"
+    def svr_preinstall_electrodes(self, state: bool):
+        """Enable the site visit report pre-installation electrodes fields."""
+        back_color = (
+            "background-color: rgb(255, 255, 255)"
+            if state
+            else "background-color: rgb(104, 104, 104)"
+        )
 
         # clear values if disabled
         if state is False:
@@ -1519,26 +1429,25 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.le_pre_e_ns_v_sr.setStyleSheet(back_color)
         self.le_pre_e_ew_v_sr.setStyleSheet(back_color)
 
-    def set_check_sr(self, state):
+    def set_check_sr(self, state: bool):
         """Set the check led in the site report."""
-        if state is True:
-            checkpath = os.path.join("img", "check_green_50_50.png")
-        else:
-            checkpath = os.path.join("img", "x_red_50_50.png")
-
-        checkpixmap = QPixmap(checkpath)
-        self.label_check_sr.setPixmap(checkpixmap)
+        check_icon_path = Path(
+            self.icon_path, "check_green_50_50.png" if state else "x_red_50_50.png"
+        )
+        self.label_check_sr.setPixmap(QPixmap(check_icon_path))
 
     def path_on_click(self):
         """Open the file dialog to select the save directory."""
         self.hide()
-        savedir = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
-        self.sr.update_save_path(savedir)
-
-        print(f"Site Report save directory: \t{savedir}")
+        save_dir = QFileDialog.getExistingDirectory(self, "Select Directory")
         self.show()
 
+        if not save_dir:
+            return
+        self.sr.update_save_path(Path(save_dir))
         self.update_save_directory_sr()
+
+        print(f"Site Report save directory: \t{save_dir}")
 
     def update_save_directory_sr(self):
         """Update the save directory in the site report."""
@@ -1547,9 +1456,9 @@ class Mimspy(QMainWindow, Ui_MainWindow):
     def update_site_name_sr(self):
         """Update the site name in the site report."""
         # get text and update metadata field
-        sitename = self.le_site_name_sr.text()
+        site_name = self.le_site_name_sr.text()
 
-        self.update_site_name(sitename)
+        self.update_site_name(site_name)
 
     def update_state_province_sr(self):
         """Update the state/province in the site report."""
@@ -1623,11 +1532,11 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         """Update the GPS altitude in the site report."""
         self.sr.alt = self.le_gps_alt_sr.text()
 
-    def update_gps_dec(self, decl, decd):
+    def update_gps_dec(self, declination: str, declination_direction: str):
         """Update the GPS declination in the site report."""
         d = {"N": "+", "S": "-", "E": "+", "W": "-"}
         try:
-            dec = "{}{}".format(d[decd[0]], decl)
+            dec = f"{d[declination_direction[0]]}{declination}"
             self.le_gps_dec_sr.setText("{0:.2f}".format(float(dec)))
 
         except SyntaxError:
@@ -1645,24 +1554,26 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
     def update_gain_sr(self):
         """Update the gain in the site report."""
-        exgain = self.verify_gain_value(self.le_ex_gain_sr.text())
-        eygain = self.verify_gain_value(self.le_ey_gain_sr.text())
+        ex_gain = self.verify_gain_value(self.le_ex_gain_sr.text())
+        ey_gain = self.verify_gain_value(self.le_ey_gain_sr.text())
 
         # set values
-        self.le_ex_gain_sr.setText(exgain)
-        self.le_ey_gain_sr.setText(eygain)
+        self.le_ex_gain_sr.setText(ex_gain)
+        self.le_ey_gain_sr.setText(ey_gain)
 
-        # clear the gain
-        self.sr.gain = ""
-        # set the new gain
-        if exgain == "L" and eygain == "L":
-            self.sr.gain = "L"
-        elif exgain == "H" and eygain == "L":
-            self.sr.gain = "X"
-        elif exgain == "L" and eygain == "H":
-            self.sr.gain = "Y"
-        elif exgain == "H" and eygain == "H":
-            self.sr.gain = "H"
+        # Set the gain code
+        match ex_gain + ey_gain:
+            case "LL":
+                gain = "L"
+            case "HL":
+                gain = "X"
+            case "LH":
+                gain = "Y"
+            case "HH":
+                gain = "H"
+            case _:
+                gain = "U"
+        self.sr.gain = gain
 
     @staticmethod
     def verify_gain_value(val: str) -> str:
@@ -1685,7 +1596,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         """Update the first time stamp in the site report."""
         self.sr.first_ts = self.le_first_time_stamp_sr.text()
 
-    def update_timestamp_sr(self, date, time):
+    def update_timestamp_sr(self, date: str, time: str):
         """Update the timestamp in the site report."""
         d = date.split("/")
         try:
@@ -1728,7 +1639,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.sr.pre_e_ew_r = self.le_pre_e_ew_r_sr.text()
 
     def update_pre_e_we_r_sr(self):
-        """Update the pre-installation WE resistance in the site report."""
+        """Update the pre-installation WE resistence in the site report."""
         self.sr.pre_e_we_r = self.le_pre_e_we_r_sr.text()
 
     def update_pre_e_ns_v_sr(self):
@@ -1752,7 +1663,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.sr.e_ew_r = self.le_e_ew_r_sr.text()
 
     def update_e_we_r_sr(self):
-        """Update the WE resistance in the site report."""
+        """Update the WE resistence in the site report."""
         self.sr.e_we_r = self.le_e_we_r_sr.text()
 
     def update_e_ng_r_sr(self):
@@ -1803,7 +1714,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # set the comments on metadata
         self.set_comments_md(comments)
 
-    def set_comments_sr(self, comments):
+    def set_comments_sr(self, comments: str):
         """Set the comments in the site report."""
         # update comments in site report
         self.sr.comments = comments
@@ -1825,7 +1736,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
     # -------------------------Engineering--------------------------------------
 
-    def update_hex_data(self, packet):
+    def update_hex_data(self, packet: str):
         """Update the hex data in the engineering tab."""
         text = self.te_rawhex.toPlainText()
         # print(len(text))
@@ -1849,9 +1760,9 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
         # write filename
         with open(fle_pth, "wb") as fle_ptr:
-            fle_ptr.write(self.portdata)
+            fle_ptr.write(self.port_data)
 
-    def update_filtered_data(self, packet):
+    def update_filtered_data(self, packet: str):
         """Update the filtered data in the engineering tab."""
         self.te_filteredhexdata.setText(packet)
 
@@ -1865,14 +1776,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # update the mag status byte
         self.te_magstatus.setText(value)
 
-    # def update_variant(self):
-    #     """Update the variant in the engineering tab."""
-    #     if self.packet[nims.LENGTHSRT : nims.LENGTHSTP] == bytes.fromhex(nims.LEN1HZ):
-    #         self.label_variant.setText("1 Hz")
-    #     else:
-    #         self.label_variant.setText("8 Hz")
-
-    def update_gps_value_e(self, value):
+    def update_gps_value_e(self, value: str):
         """Update the GPS value in the engineering tab."""
         # assign the value in the engineering panel
         self.te_gps_status_byte_e.setText(value)
@@ -1883,17 +1787,17 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
     def update_gps_string_e(self):
         """Update the GPS string in the engineering tab."""
-        self.te_gps_string_e.setText(self.gpsstring)
+        self.te_gps_string_e.setText(self.gps_string)
 
     # -------------------------Processing---------------------------------------
 
-    def parse_packet(self, data):
+    def parse_packet(self, data: bytes):
         """Parse the packet and update the GUI."""
         self.set_receiving_led(True)
         self.receiving_led_timer.stop()
         self.receiving_led_timer.start(250)
         # save data to variable
-        self.portdata += data
+        self.port_data += data
         # TODO: raw
         self.update_hex_data(data.hex().upper())
         # if len(self.packet) > 4:
@@ -1934,9 +1838,9 @@ class Mimspy(QMainWindow, Ui_MainWindow):
     def process_packet(self):
         """Parse the packet and update the GUI."""
         # convert from bytes to upper case hex
-        packet = self.packet.hex().upper()
+        packet: str = self.packet.hex().upper()
         # reformat packet bytes
-        packet = "\t".join([packet[i : i + 2] for i in range(0, len(packet), 2)])
+        packet: str = "\t".join([packet[i : i + 2] for i in range(0, len(packet), 2)])
 
         # update data values
         self.update_data()
@@ -1970,15 +1874,15 @@ class Mimspy(QMainWindow, Ui_MainWindow):
     def update_gps(self):
         """Update the GPS values in the engineering tab."""
         # get the binary value
-        binvalue = self.packet[nims.GPSSRT : nims.GPSSTP]
+        bin_value: bytes = self.packet[nims.GPSSRT : nims.GPSSTP]
         # get the gps value and cast as uppercase hex
-        value = self.packet[nims.GPSSRT : nims.GPSSTP].hex().upper()
+        value: str = self.packet[nims.GPSSRT : nims.GPSSTP].hex().upper()
         # update the GPS value in metadata
         self.update_gps_value_m(value)
         # update the GPS value in engineering
         self.update_gps_value_e(value)
         # check the gps receive state
-        if value == nims.GPSINITIAL and self.gps_state == nims.INITIAL:
+        if value == nims.GPSINITIAL and self.gps_state == nims.GPSINITIAL:
             # set the leds in 'metadata'
             self.set_short_cycle_led_metadata(value)
             self.set_almanac_led(False)
@@ -2004,7 +1908,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
             # set the gps state
             self.gps_state = nims.GPSRECEIVING
             # convert the first character from binary to Unicode, add to gps_string
-            self.gpsstring = ""
+            self.gps_string = ""
             # update the gps boxes
             self.clear_gps_string_m()
             self.update_gps_string_e()
@@ -2014,14 +1918,14 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # enter while receiving gps sentences
         if self.gps_state == nims.GPSRECEIVING:
             # read 139 bytes
-            self.gpsstring += binvalue.decode("utf-8", "ignore")
+            self.gps_string += bin_value.decode("utf-8", "ignore")
 
             # update the gps bytes
             self.update_gps_string_m()
             self.update_gps_string_e()
 
             # if read 139 bytes, exit
-            if len(self.gpsstring) >= 139:
+            if len(self.gps_string) >= 139:
                 # set the gps state
                 self.gps_state = nims.GPSRECEIVED
                 # set the leds in 'metadata'
@@ -2037,9 +1941,9 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         gps_rmc = []
         gps_gga = []
         print("Finished receiving GPS Data")
-        print(self.gpsstring)
+        print(self.gps_string)
         # parse the string into gps sentences
-        gps_sentences: list[str] = self.gpsstring.split("\r\n")
+        gps_sentences: list[str] = self.gps_string.split("\r\n")
 
         # find the rmc and gga NMEA sentences
         for s in gps_sentences:
@@ -2074,10 +1978,10 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # Update 'Start/End Run' components
         self.update_ready_led()
         self.update_north_led()
-        # Update 'Endineering' components
+        # Update 'Engineering' components
         self.update_mag_status()
 
-    def send_byte(self, cmd):
+    def send_byte(self, cmd: bytes):
         """Send a byte to the port."""
         if self.port.is_open:
             self.port.write(cmd)
@@ -2090,16 +1994,16 @@ def byte_to_int(_bytes: bytes) -> int:
     unpacks, it into a signed integer.
 
     Args:
-        bytex (bytes): A 4 byte(length) byte(type).
+        _bytes (bytes): A 4 byte(length) byte(type).
 
     Returns
     -------
         value (int): Description of returned object.
 
     """
-    stdlen = 4
+    std_length = 4
 
-    if len(_bytes) < stdlen:
+    if len(_bytes) < std_length:
         _bytes = to_byte4(_bytes)
 
     value = struct.unpack(">i", _bytes)[0]
@@ -2143,7 +2047,15 @@ def to_byte4(_bytes: bytes) -> bytes:
 class GraphData:
     """GraphData class."""
 
-    def __init__(self, ticks=60, hx=None, hy=None, hz=None, ex=None, ey=None):
+    def __init__(
+        self,
+        ticks: int = 60,
+        hx: list[float] | None = None,
+        hy: list[float] | None = None,
+        hz: list[float] | None = None,
+        ex: list[float] | None = None,
+        ey: list[float] | None = None,
+    ):
         if ey is None:
             ey = []
         if ex is None:
@@ -2154,15 +2066,15 @@ class GraphData:
             hy = []
         if hx is None:
             hx = []
-        self.ticks = ticks
-        self.xdata = list(range(0, ticks))
-        self.hx = hx
-        self.hy = hy
-        self.hz = hz
-        self.ex = ex
-        self.ey = ey
+        self.ticks: int = ticks
+        self.xdata: list[int] = list(range(0, ticks))
+        self.hx: list[float] = hx
+        self.hy: list[float] = hy
+        self.hz: list[float] = hz
+        self.ex: list[float] = ex
+        self.ey: list[float] = ey
 
-    def update_hx(self, value):
+    def update_hx(self, value: float):
         """Update the hx value.
 
         Parameters
@@ -2177,7 +2089,7 @@ class GraphData:
         self.hx.pop(0)
         self.hx.append(value)
 
-    def update_hy(self, value):
+    def update_hy(self, value: float):
         """Update the hy value.
 
         Parameters
@@ -2192,7 +2104,7 @@ class GraphData:
         self.hy.pop(0)
         self.hy.append(value)
 
-    def update_hz(self, value):
+    def update_hz(self, value: float):
         """Update the hz value.
 
         Parameters
@@ -2207,7 +2119,7 @@ class GraphData:
         self.hz.pop(0)
         self.hz.append(value)
 
-    def update_ex(self, value: str):
+    def update_ex(self, value: float):
         """Update the ex value.
 
         Parameters
@@ -2222,7 +2134,7 @@ class GraphData:
         self.ex.pop(0)
         self.ex.append(value)
 
-    def update_ey(self, value: str):
+    def update_ey(self, value: float):
         """Update the ey value.
 
         Parameters

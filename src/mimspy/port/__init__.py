@@ -3,9 +3,9 @@
 from time import sleep
 
 from PySide6.QtCore import QThread, Signal
-from serial import SerialException
+from serial import Serial, SerialException
 
-from .serial import list_ports
+from .serial import SerialNode, list_ports
 
 
 class PortRead(QThread):
@@ -13,7 +13,7 @@ class PortRead(QThread):
 
     SERIAL_DATA = Signal(bytes)
 
-    def __init__(self, com_port=None):
+    def __init__(self, com_port: Serial | None = None):
         QThread.__init__(self)
         self.com_port = com_port
 
@@ -26,6 +26,8 @@ class PortRead(QThread):
 
     def run(self):
         """Run the thread."""
+        if self.com_port is None:
+            return
         self.running = True
         while self.running:
             data = b""
@@ -65,4 +67,4 @@ class PortMonitor(QThread):
             self.pyports.emit(ports)
 
 
-__all__ = ["PortMonitor", "PortRead", "list_ports"]
+__all__ = ["PortMonitor", "PortRead", "SerialNode", "list_ports"]

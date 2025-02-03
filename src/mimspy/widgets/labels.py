@@ -1,20 +1,20 @@
 """Custom widgets for displaying vertical text in the GUI."""
 
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont, QPainter
+from PySide6.QtGui import QFont, QPainter, QPaintEvent
 from PySide6.QtWidgets import QWidget
 
 
 class VerticalTextLabel(QWidget):
     """A custom widget to display text vertically."""
 
-    def __init__(self, text="default"):
+    def __init__(self, text: str = "default"):
         QWidget.__init__(self)
         self.text = text
         self.rotate_mag = -90
         self.rotate_electrode = 90
 
-    def paintEvent(self, event):
+    def paintEvent(self, event: QPaintEvent):
         """Paint the text on the widget."""
         my_font = QFont()
         my_font.setPointSize(16)

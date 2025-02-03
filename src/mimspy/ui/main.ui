@@ -2355,14 +2355,14 @@ LEDS</string>
       <widget class="QLabel" name="label_40">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>36</x>
          <y>85</y>
-         <width>100</width>
+         <width>66</width>
          <height>21</height>
         </rect>
        </property>
        <property name="text">
-        <string>State/Province</string>
+        <string>Site Name</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_43">
@@ -2384,17 +2384,17 @@ LEDS</string>
       <widget class="QLabel" name="label_37">
        <property name="geometry">
         <rect>
-         <x>49</x>
+         <x>10</x>
          <y>116</y>
-         <width>53</width>
+         <width>100</width>
          <height>21</height>
         </rect>
        </property>
        <property name="text">
-        <string>Country</string>
+        <string>State/Province</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="le_site_name">
+      <widget class="QLineEdit" name="le_run_id">
        <property name="geometry">
         <rect>
          <x>110</x>
@@ -2422,8 +2422,21 @@ LEDS</string>
       <widget class="QLabel" name="label_42">
        <property name="geometry">
         <rect>
-         <x>58</x>
+         <x>49</x>
          <y>147</y>
+         <width>53</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Country</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_39">
+       <property name="geometry">
+        <rect>
+         <x>58</x>
+         <y>54</y>
          <width>44</width>
          <height>21</height>
         </rect>
@@ -2432,20 +2445,7 @@ LEDS</string>
         <string>Run ID</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_39">
-       <property name="geometry">
-        <rect>
-         <x>36</x>
-         <y>54</y>
-         <width>66</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Site Name</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="le_state_province">
+      <widget class="QLineEdit" name="le_site_name">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -2481,7 +2481,7 @@ LEDS</string>
         <string>Operator</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="le_run_id">
+      <widget class="QLineEdit" name="le_country">
        <property name="geometry">
         <rect>
          <x>110</x>
@@ -2491,7 +2491,7 @@ LEDS</string>
         </rect>
        </property>
       </widget>
-      <widget class="QLineEdit" name="le_country">
+      <widget class="QLineEdit" name="le_state_province">
        <property name="geometry">
         <rect>
          <x>110</x>
@@ -5627,10 +5627,10 @@ No other values accepted.</string>
  <tabstops>
   <tabstop>tb_shortcycle_2</tabstop>
   <tabstop>le_filename</tabstop>
+  <tabstop>le_run_id</tabstop>
   <tabstop>le_site_name</tabstop>
   <tabstop>le_state_province</tabstop>
   <tabstop>le_country</tabstop>
-  <tabstop>le_run_id</tabstop>
   <tabstop>le_operator</tabstop>
   <tabstop>le_nims_id</tabstop>
   <tabstop>le_mag_id</tabstop>
