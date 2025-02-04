@@ -16,7 +16,7 @@ class PortRead(QThread):
 
     SERIAL_DATA = Signal(bytes)
 
-    def __init__(self, com_port: Serial | None = None, debug: bool = True):
+    def __init__(self, com_port: Serial | None = None, debug: bool = False):
         QThread.__init__(self)
         self.com_port = com_port
 
@@ -59,7 +59,7 @@ class PortRead(QThread):
         if self.com_port is None:
             return
         while self._running:
-            data = ""
+            data = b""
             if self.com_port.is_open:
                 with contextlib.suppress(SerialException):
                     data = self.com_port.read()

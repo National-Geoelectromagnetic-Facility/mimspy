@@ -1,5 +1,6 @@
 """Mimspy application entry point."""
 
+import contextlib
 import multiprocessing as mp
 import os
 import sys
@@ -67,12 +68,20 @@ def init_app() -> QApplication | QCoreApplication:
     return app
 
 
+def init_logging():
+    """Add a console logger to the application."""
+    with contextlib.suppress(TypeError):
+        log.add(
+            sys.stdout,
+            format="{time} {level} {message}",
+            filter="my_module",
+            level=configs.LOG_LEVEL,
+        )
+
+
 def main():
     """Run the main application."""
-    log.add(
-        sys.stderr, format="{time} {level} {message}", filter="my_module", level=configs.LOG_LEVEL
-    )
-    log.debug("Starting the application")
+    init_logging()
     # Get the path to the img directory, need when bundling with pyinstaller
     icon_path: Path = Path(Path(__file__).parent, "mimspy", "icons")
     if getattr(sys, "frozen", False):
