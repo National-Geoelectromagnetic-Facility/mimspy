@@ -6,3 +6,8 @@ History
 ------------------
 
 * Testing GitHub Actions
+
+0.7.2 (2015-01-01)
+------------------
+
+* macOS specific application

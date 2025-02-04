@@ -183,7 +183,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           repository: ${{ secrets.PUB_OWNER }}/${{ secrets.PUB_REPO }}
-          token: ${{ secrets.APRESPY_RELEASE_TOKEN }}
+          token: ${{ secrets.MIMSPY_RELEASE_TOKEN }}
           name: Mimspy ${{ needs.changelog-tag.outputs.tag }}
           draft: false
           prerelease: false
