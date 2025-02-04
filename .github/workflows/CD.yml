@@ -1,13 +1,12 @@
 # Assemble the Mimspy app for macOS and Windows using PyInstaller
 # Apple app signing loosely based on the following guide:
 # https://localazy.com/blog/how-to-automatically-sign-macos-apps-using-github-actions
+# https://federicoterzi.com/blog/automatic-code-signing-and-notarization-for-macos-apps-using-github-actions/
 
 name: CD Runner
 
 on:
   push:
-#    branches:
-#      - "main"
     tags:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
