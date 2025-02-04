@@ -34,6 +34,7 @@ spec = "python pyinstaller.py -s"
 app = "python pyinstaller.py -a"
 dmg = "python pyinstaller.py -d"
 ui = "pyside6-uic src/mimspy/ui/main.ui -o src/mimspy/ui/main.py"
+changelog = "python generate_changelog.py"
 pyright = "pyright"
 
 [tool.pyright]

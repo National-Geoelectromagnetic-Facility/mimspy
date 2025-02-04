@@ -4,10 +4,10 @@ name: CD Runner
 
 on:
   push:
-    branches:
-      - "main"
-#    tags:
-#      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+#    branches:
+#      - "main"
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
   build-app:
@@ -131,63 +131,62 @@ jobs:
           path: Mimspy.zip
           retention-days: 1
 
-#  changelog-tag:
-#    name: Generate Changelog
-#    runs-on: ubuntu-latest
-#
-#    outputs:
-#      tag: ${{ steps.get_version.outputs.tag }}
-#
-#    steps:
-#      - uses: actions/checkout@v4
-#
-#      - name: Get the version
-#        id: get_version
-#        run: echo "tag=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
-#
-#
-#      - name: Generate Changelog
-#        id: read_changelog
-#        run: |
-#          python generate_changelog.py &&
-#          mv CHANGELOG.rst ${{ github.workspace }}/changelog.rst
-#
-#      - name: Upload changelog artifact
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: changelog
-#          path: ${{ github.workspace }}/changelog.rst
-#          retention-days: 1
-#
-#  create-release:
-#    name: Create Release
-#    needs: [build-app, changelog-tag]
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - uses: actions/download-artifact@v4
-#        with:
-#          name: changelog
-#
+  changelog-tag:
+    name: Generate Changelog
+    runs-on: ubuntu-latest
+
+    outputs:
+      tag: ${{ steps.get_version.outputs.tag }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get the version
+        id: get_version
+        run: echo "tag=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
+
+
+      - name: Generate Changelog
+        id: read_changelog
+        run: |
+          python generate_changelog.py &&
+          mv CHANGELOG.rst ${{ github.workspace }}/changelog.rst
+
+      - name: Upload changelog artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: changelog
+          path: ${{ github.workspace }}/changelog.rst
+          retention-days: 1
+
+  create-release:
+    name: Create Release
+    needs: [build-app, changelog-tag]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: changelog
+
 #      - uses: actions/download-artifact@v4
 #        with:
 #          name: Mimspy_macOS
-#
-#      - uses: actions/download-artifact@v4
-#        with:
-#          name: Mimspy_windows
-#
-#      - name: Create Release
-#        id: create_release
-#        uses: softprops/action-gh-release@v2
-#        with:
-#          tag_name: ${{ github.ref }}
-#          repository: ${{ secrets.PUB_OWNER }}/${{ secrets.PUB_REPO }}
-#          token: ${{ secrets.APRESPY_RELEASE_TOKEN }}
-#          name: Mimspy ${{ needs.changelog-tag.outputs.tag }}
-#          draft: false
-#          prerelease: false
-#          body_path: ${{ github.workspace }}/changelog.rst
-#          files: |
-#            Mimspy.dmg
-#            Mimspy.zip
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: Mimspy_windows
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref }}
+          repository: ${{ secrets.PUB_OWNER }}/${{ secrets.PUB_REPO }}
+          token: ${{ secrets.APRESPY_RELEASE_TOKEN }}
+          name: Mimspy ${{ needs.changelog-tag.outputs.tag }}
+          draft: false
+          prerelease: false
+          body_path: ${{ github.workspace }}/changelog.rst
+          files: |
+            Mimspy.zip

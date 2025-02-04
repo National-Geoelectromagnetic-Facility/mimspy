@@ -2,7 +2,7 @@
 History
 =======
 
-0.7.2 (2024-05-19)
+0.7.3 (2025-02-03)
 ------------------
 
-* Fixed a bug where the phase tensor was throwing an error if the z tensor was zeros
+* Testing GitHub Actions
