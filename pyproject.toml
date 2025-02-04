@@ -8,6 +8,7 @@ authors = [
 dependencies = [
     "pyside6>=6.8.2",
     "pyserial>=3.5",
+    "loguru>=0.7.3",
 ]
 readme = "README.md"
 requires-python = ">=3.12"

@@ -10,11 +10,6 @@
     <height>630</height>
    </rect>
   </property>
-<!--  <property name="font">-->
-<!--   <font>-->
-<!--    <family>.SF NS Text</family>-->
-<!--   </font>-->
-<!--  </property>-->
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -29,10 +24,10 @@
      </rect>
     </property>
     <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
+     <enum>QFrame::Shape::StyledPanel</enum>
     </property>
     <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
+     <enum>QFrame::Shadow::Raised</enum>
     </property>
     <widget class="QToolButton" name="tb_metadata">
      <property name="geometry">
@@ -46,12 +41,11 @@
      <property name="font">
       <font>
        <pointsize>16</pointsize>
-       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::FocusPolicy::NoFocus</enum>
      </property>
      <property name="styleSheet">
       <string notr="true"/>
@@ -82,12 +76,11 @@ GPS Control</string>
      <property name="font">
       <font>
        <pointsize>16</pointsize>
-       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::FocusPolicy::NoFocus</enum>
      </property>
      <property name="styleSheet">
       <string notr="true"/>
@@ -115,12 +108,11 @@ Gain Control</string>
      <property name="font">
       <font>
        <pointsize>16</pointsize>
-       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::FocusPolicy::NoFocus</enum>
      </property>
      <property name="styleSheet">
       <string notr="true"/>
@@ -150,12 +142,11 @@ Gain Control</string>
      <property name="font">
       <font>
        <pointsize>16</pointsize>
-       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::FocusPolicy::NoFocus</enum>
      </property>
      <property name="styleSheet">
       <string notr="true"/>
@@ -182,12 +173,11 @@ Gain Control</string>
      <property name="font">
       <font>
        <pointsize>16</pointsize>
-       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::FocusPolicy::NoFocus</enum>
      </property>
      <property name="styleSheet">
       <string notr="true"/>
@@ -222,13 +212,13 @@ Gain Control</string>
      </size>
     </property>
     <property name="focusPolicy">
-     <enum>Qt::NoFocus</enum>
+     <enum>Qt::FocusPolicy::NoFocus</enum>
     </property>
     <property name="styleSheet">
      <string notr="true"/>
     </property>
     <property name="frameShape">
-     <enum>QFrame::NoFrame</enum>
+     <enum>QFrame::Shape::NoFrame</enum>
     </property>
     <property name="currentIndex">
      <number>0</number>
@@ -244,12 +234,12 @@ Gain Control</string>
        </rect>
       </property>
       <property name="orientation">
-       <enum>Qt::Vertical</enum>
+       <enum>Qt::Orientation::Vertical</enum>
       </property>
      </widget>
      <widget class="QFrame" name="frame_34">
       <property name="enabled">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <property name="geometry">
        <rect>
@@ -260,24 +250,11 @@ Gain Control</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
-      <widget class="QTableWidget" name="tablewidget_microsdfiles">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="geometry">
-        <rect>
-         <x>130</x>
-         <y>60</y>
-         <width>311</width>
-         <height>131</height>
-        </rect>
-       </property>
-      </widget>
      </widget>
      <widget class="QLabel" name="label_62">
       <property name="geometry">
@@ -291,7 +268,6 @@ Gain Control</string>
       <property name="font">
        <font>
         <pointsize>18</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -299,7 +275,7 @@ Gain Control</string>
        <string>Start Run Procedure</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="label_63">
@@ -314,7 +290,6 @@ Gain Control</string>
       <property name="font">
        <font>
         <pointsize>18</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -322,7 +297,7 @@ Gain Control</string>
        <string>End Run Procedure</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
      <widget class="QFrame" name="frame_35">
@@ -334,14 +309,11 @@ Gain Control</string>
         <height>45</height>
        </rect>
       </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <widget class="QToolButton" name="tb_shortcycle_2">
        <property name="geometry">
@@ -374,7 +346,7 @@ Cycle</string>
         <bool>true</bool>
        </property>
        <property name="autoRaise">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
       </widget>
       <widget class="QLabel" name="label_21">
@@ -390,7 +362,7 @@ Cycle</string>
         <string>Short Cycle the GPS. Completes in ~3 min from GPS Lock.</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
        </property>
        <property name="wordWrap">
         <bool>true</bool>
@@ -415,7 +387,7 @@ Green = Complete</string>
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
      </widget>
@@ -429,10 +401,10 @@ Green = Complete</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <widget class="QLabel" name="label_23">
        <property name="geometry">
@@ -447,7 +419,7 @@ Green = Complete</string>
         <string>Is magnetometer ready to record or still slewing?</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
        </property>
        <property name="wordWrap">
         <bool>true</bool>
@@ -470,7 +442,7 @@ Green = Ready to record</string>
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
       <widget class="QLabel" name="label_mag_ready_led">
@@ -490,7 +462,7 @@ Green = Magnetometer is read to record</string>
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
       <widget class="QLabel" name="label_4">
@@ -505,7 +477,6 @@ Green = Magnetometer is read to record</string>
        <property name="font">
         <font>
          <pointsize>14</pointsize>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -525,7 +496,6 @@ Green = Magnetometer is read to record</string>
        <property name="font">
         <font>
          <pointsize>14</pointsize>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -546,7 +516,7 @@ Green = Magnetometer is read to record</string>
         <string>Is magnetometer facing north (Hy &lt; +/- 100 nT)?</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
        </property>
        <property name="wordWrap">
         <bool>true</bool>
@@ -571,7 +541,7 @@ Green = Magnetometer is read to record</string>
        <string>Step 1: Short Cycle</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
       </property>
      </widget>
      <widget class="QLabel" name="label_22">
@@ -592,7 +562,7 @@ Green = Magnetometer is read to record</string>
        <string>Step 2: Magnetometer</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
       </property>
      </widget>
      <widget class="QFrame" name="frame_37">
@@ -605,10 +575,10 @@ Green = Magnetometer is read to record</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <widget class="QLabel" name="label_25">
        <property name="geometry">
@@ -623,7 +593,7 @@ Green = Magnetometer is read to record</string>
         <string>If yellow, input is below +/- 16 mV and low gain.  Refer to 'Data Display' to check requirments if High Gain is an option. Gain Control located on the Data Display/Gain Control tab.</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
        <property name="wordWrap">
         <bool>true</bool>
@@ -642,7 +612,7 @@ Green = Magnetometer is read to record</string>
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
       <widget class="QLabel" name="label_ey_spec_led">
@@ -658,7 +628,7 @@ Green = Magnetometer is read to record</string>
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
       <widget class="QLabel" name="label_69">
@@ -673,7 +643,6 @@ Green = Magnetometer is read to record</string>
        <property name="font">
         <font>
          <pointsize>14</pointsize>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -693,7 +662,6 @@ Green = Magnetometer is read to record</string>
        <property name="font">
         <font>
          <pointsize>14</pointsize>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -720,7 +688,7 @@ Green = Magnetometer is read to record</string>
        <string>Step 3: Electric Channel Gain</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
       </property>
      </widget>
      <widget class="QLabel" name="label_28">
@@ -741,7 +709,7 @@ Green = Magnetometer is read to record</string>
        <string>Step 4: Metadata</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
       </property>
      </widget>
      <widget class="QFrame" name="frame_38">
@@ -754,10 +722,10 @@ Green = Magnetometer is read to record</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <widget class="QLabel" name="label_29">
        <property name="geometry">
@@ -772,7 +740,7 @@ Green = Magnetometer is read to record</string>
         <string>Check MetaData tab information.  Missing information will be filled with default values.</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
        </property>
        <property name="wordWrap">
         <bool>true</bool>
@@ -796,7 +764,7 @@ Green = Complete Information</string>
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
      </widget>
@@ -818,7 +786,7 @@ Green = Complete Information</string>
        <string>Step 1: Short Cycle</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
       </property>
      </widget>
      <widget class="QFrame" name="frame_39">
@@ -830,14 +798,11 @@ Green = Complete Information</string>
         <height>45</height>
        </rect>
       </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <widget class="QToolButton" name="tb_shortcycle_4">
        <property name="geometry">
@@ -870,7 +835,7 @@ Cycle</string>
         <bool>true</bool>
        </property>
        <property name="autoRaise">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
       </widget>
       <widget class="QLabel" name="label_30">
@@ -886,7 +851,7 @@ Cycle</string>
         <string>Short Cycle the GPS. Completes in ~3 min from GPS Lock.</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
        </property>
        <property name="wordWrap">
         <bool>true</bool>
@@ -911,7 +876,7 @@ Green = Complete</string>
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
      </widget>
@@ -925,10 +890,10 @@ Green = Complete</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <widget class="QLabel" name="label_end_run_led">
        <property name="geometry">
@@ -940,7 +905,7 @@ Green = Complete</string>
         </rect>
        </property>
        <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
+        <enum>QFrame::Shape::NoFrame</enum>
        </property>
        <property name="text">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -960,9 +925,6 @@ Green = Complete</string>
          <pointsize>13</pointsize>
         </font>
        </property>
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
        <property name="statusTip">
         <string/>
        </property>
@@ -977,7 +939,7 @@ Run</string>
         <bool>true</bool>
        </property>
        <property name="autoRaise">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
       </widget>
      </widget>
@@ -999,10 +961,13 @@ Run</string>
        <string>Step 2: End Run</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
       </property>
      </widget>
      <widget class="QLabel" name="label_66">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>485</x>
@@ -1020,7 +985,7 @@ Run</string>
        <string>Step 3: Download Data</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
       </property>
      </widget>
      <widget class="QFrame" name="frame_41">
@@ -1033,10 +998,10 @@ Run</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <widget class="QLabel" name="label_start_run_led">
        <property name="geometry">
@@ -1052,7 +1017,7 @@ Run</string>
 Green = Recording Data</string>
        </property>
        <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
+        <enum>QFrame::Shape::NoFrame</enum>
        </property>
        <property name="text">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1092,7 +1057,7 @@ Run</string>
         <bool>true</bool>
        </property>
        <property name="autoRaise">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
       </widget>
      </widget>
@@ -1114,7 +1079,7 @@ Run</string>
        <string>Step 5: Start Run</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
       </property>
      </widget>
      <widget class="QLabel" name="label_31">
@@ -1135,7 +1100,7 @@ Run</string>
        <string>Step 6: Short Cycle</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
       </property>
      </widget>
      <widget class="QFrame" name="frame_42">
@@ -1147,14 +1112,11 @@ Run</string>
         <height>45</height>
        </rect>
       </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <widget class="QToolButton" name="tb_shortcycle_3">
        <property name="geometry">
@@ -1187,7 +1149,7 @@ Cycle</string>
         <bool>true</bool>
        </property>
        <property name="autoRaise">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
       </widget>
       <widget class="QLabel" name="label_64">
@@ -1203,7 +1165,7 @@ Cycle</string>
         <string>Short Cycle the GPS. Completes in ~3 min from GPS Lock.</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
        </property>
        <property name="wordWrap">
         <bool>true</bool>
@@ -1228,7 +1190,7 @@ Green = Complete</string>
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
      </widget>
@@ -1244,10 +1206,10 @@ Green = Complete</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::NoFrame</enum>
+       <enum>QFrame::Shape::NoFrame</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <widget class="QFrame" name="frame_24">
        <property name="geometry">
@@ -1259,10 +1221,10 @@ Green = Complete</string>
         </rect>
        </property>
        <property name="frameShape">
-        <enum>QFrame::Panel</enum>
+        <enum>QFrame::Shape::Panel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QWidget" name="verticalLayoutWidget">
         <property name="geometry">
@@ -1300,7 +1262,7 @@ Green = Complete</string>
             <string>Hx (nT):</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+            <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft</set>
            </property>
           </widget>
          </item>
@@ -1312,7 +1274,7 @@ Green = Complete</string>
             </font>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLineEdit#le_hx {background-color: rgb(255, 246, 131);}
+            <string notr="true">QLineEdit#le_hx {color: black; background-color: rgb(255, 246, 131);}
 
 
 
@@ -1334,7 +1296,7 @@ Green = Complete</string>
             <string>Ey (mV):</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+            <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft</set>
            </property>
           </widget>
          </item>
@@ -1344,7 +1306,7 @@ Green = Complete</string>
             <bool>true</bool>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLineEdit#le_ey {background-color: rgb(255, 246, 131);}
+            <string notr="true">QLineEdit#le_ey {color: black; background-color: rgb(255, 246, 131);}
 
 
 
@@ -1368,10 +1330,10 @@ Green = Complete</string>
         </rect>
        </property>
        <property name="frameShape">
-        <enum>QFrame::Panel</enum>
+        <enum>QFrame::Shape::Panel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QWidget" name="verticalLayoutWidget_2">
         <property name="geometry">
@@ -1409,7 +1371,7 @@ Green = Complete</string>
             <string>Hy (nT):</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+            <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft</set>
            </property>
           </widget>
          </item>
@@ -1421,7 +1383,7 @@ Green = Complete</string>
             </font>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLineEdit#le_hy {background-color: rgb(255, 246, 131);}
+            <string notr="true">QLineEdit#le_hy {color: black; background-color: rgb(255, 246, 131);}
 
 
 
@@ -1443,7 +1405,7 @@ Green = Complete</string>
             <string>Ex (mV):</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+            <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft</set>
            </property>
           </widget>
          </item>
@@ -1453,7 +1415,7 @@ Green = Complete</string>
             <bool>true</bool>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLineEdit#le_ex {background-color: rgb(255, 246, 131);}
+            <string notr="true">QLineEdit#le_ex {color: black; background-color: rgb(255, 246, 131);}
 
 
 
@@ -1477,10 +1439,10 @@ Green = Complete</string>
         </rect>
        </property>
        <property name="frameShape">
-        <enum>QFrame::Panel</enum>
+        <enum>QFrame::Shape::Panel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QWidget" name="verticalLayoutWidget_3">
         <property name="geometry">
@@ -1518,7 +1480,7 @@ Green = Complete</string>
             <string>Hz (nT):</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+            <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft</set>
            </property>
           </widget>
          </item>
@@ -1530,7 +1492,7 @@ Green = Complete</string>
             </font>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLineEdit#le_hz {background-color: rgb(255, 246, 131);}
+            <string notr="true">QLineEdit#le_hz {color: black; background-color: rgb(255, 246, 131);}
 
 
 
@@ -1555,10 +1517,10 @@ Green = Complete</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::NoFrame</enum>
+       <enum>QFrame::Shape::NoFrame</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <widget class="QFrame" name="frame_27">
        <property name="geometry">
@@ -1570,10 +1532,10 @@ Green = Complete</string>
         </rect>
        </property>
        <property name="frameShape">
-        <enum>QFrame::Panel</enum>
+        <enum>QFrame::Shape::Panel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QFrame" name="f_hx">
         <property name="geometry">
@@ -1587,15 +1549,14 @@ Green = Complete</string>
         <property name="font">
          <font>
           <pointsize>13</pointsize>
-          <weight>50</weight>
           <bold>false</bold>
          </font>
         </property>
         <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
+         <enum>QFrame::Shape::NoFrame</enum>
         </property>
         <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+         <enum>QFrame::Shadow::Raised</enum>
         </property>
         <layout class="QHBoxLayout" name="horlayout_hx_label">
          <property name="leftMargin">
@@ -1622,10 +1583,10 @@ Green = Complete</string>
          </rect>
         </property>
         <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
+         <enum>QFrame::Shape::NoFrame</enum>
         </property>
         <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+         <enum>QFrame::Shadow::Raised</enum>
         </property>
         <layout class="QHBoxLayout" name="horlayout_ey_label">
          <property name="leftMargin">
@@ -1652,10 +1613,10 @@ Green = Complete</string>
          </rect>
         </property>
         <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
+         <enum>QFrame::Shape::StyledPanel</enum>
         </property>
         <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+         <enum>QFrame::Shadow::Raised</enum>
         </property>
         <widget class="QFrame" name="f_hx_ey_graph">
          <property name="geometry">
@@ -1667,10 +1628,10 @@ Green = Complete</string>
           </rect>
          </property>
          <property name="frameShape">
-          <enum>QFrame::NoFrame</enum>
+          <enum>QFrame::Shape::NoFrame</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
+          <enum>QFrame::Shadow::Raised</enum>
          </property>
          <layout class="QHBoxLayout" name="layout_hx_ey">
           <property name="leftMargin">
@@ -1699,10 +1660,10 @@ Green = Complete</string>
         </rect>
        </property>
        <property name="frameShape">
-        <enum>QFrame::Panel</enum>
+        <enum>QFrame::Shape::Panel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QFrame" name="f_hy">
         <property name="geometry">
@@ -1717,10 +1678,10 @@ Green = Complete</string>
          <number>-6</number>
         </property>
         <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
+         <enum>QFrame::Shape::NoFrame</enum>
         </property>
         <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+         <enum>QFrame::Shadow::Raised</enum>
         </property>
         <layout class="QHBoxLayout" name="horlayout_hy_label">
          <property name="leftMargin">
@@ -1747,10 +1708,10 @@ Green = Complete</string>
          </rect>
         </property>
         <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
+         <enum>QFrame::Shape::NoFrame</enum>
         </property>
         <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+         <enum>QFrame::Shadow::Raised</enum>
         </property>
         <layout class="QHBoxLayout" name="horlayout_ex_label">
          <property name="leftMargin">
@@ -1777,10 +1738,10 @@ Green = Complete</string>
          </rect>
         </property>
         <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
+         <enum>QFrame::Shape::StyledPanel</enum>
         </property>
         <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+         <enum>QFrame::Shadow::Raised</enum>
         </property>
         <widget class="QFrame" name="f_hy_ex_graph">
          <property name="geometry">
@@ -1792,10 +1753,10 @@ Green = Complete</string>
           </rect>
          </property>
          <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+          <enum>QFrame::Shape::StyledPanel</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
+          <enum>QFrame::Shadow::Raised</enum>
          </property>
          <layout class="QHBoxLayout" name="layout_hy_ex">
           <property name="leftMargin">
@@ -1824,10 +1785,10 @@ Green = Complete</string>
         </rect>
        </property>
        <property name="frameShape">
-        <enum>QFrame::Panel</enum>
+        <enum>QFrame::Shape::Panel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QFrame" name="f_hz">
         <property name="geometry">
@@ -1839,10 +1800,10 @@ Green = Complete</string>
          </rect>
         </property>
         <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
+         <enum>QFrame::Shape::NoFrame</enum>
         </property>
         <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+         <enum>QFrame::Shadow::Raised</enum>
         </property>
         <layout class="QHBoxLayout" name="horlayout_hz_label">
          <property name="leftMargin">
@@ -1869,10 +1830,10 @@ Green = Complete</string>
          </rect>
         </property>
         <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
+         <enum>QFrame::Shape::StyledPanel</enum>
         </property>
         <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+         <enum>QFrame::Shadow::Raised</enum>
         </property>
         <widget class="QFrame" name="f_hz_graph">
          <property name="geometry">
@@ -1884,10 +1845,10 @@ Green = Complete</string>
           </rect>
          </property>
          <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+          <enum>QFrame::Shape::StyledPanel</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
+          <enum>QFrame::Shadow::Raised</enum>
          </property>
          <layout class="QHBoxLayout" name="layout_hz">
           <property name="leftMargin">
@@ -1917,10 +1878,10 @@ Green = Complete</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::NoFrame</enum>
+       <enum>QFrame::Shape::NoFrame</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <widget class="QFrame" name="frame_22">
        <property name="geometry">
@@ -1932,10 +1893,10 @@ Green = Complete</string>
         </rect>
        </property>
        <property name="frameShape">
-        <enum>QFrame::Panel</enum>
+        <enum>QFrame::Shape::Panel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QLabel" name="label_95">
         <property name="geometry">
@@ -1963,7 +1924,7 @@ Green = Complete</string>
          </rect>
         </property>
         <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+         <enum>Qt::Orientation::Horizontal</enum>
         </property>
        </widget>
        <widget class="QLabel" name="label_gain_xlyl_led">
@@ -1976,7 +1937,7 @@ Green = Complete</string>
          </rect>
         </property>
         <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
+         <enum>QFrame::Shape::NoFrame</enum>
         </property>
         <property name="text">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1996,9 +1957,6 @@ Green = Complete</string>
           <pointsize>13</pointsize>
          </font>
         </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
         <property name="statusTip">
          <string/>
         </property>
@@ -2013,7 +1971,7 @@ Ey: LOW</string>
          <bool>true</bool>
         </property>
         <property name="autoRaise">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
        </widget>
        <widget class="QToolButton" name="tb_gain_xhyl">
@@ -2030,9 +1988,6 @@ Ey: LOW</string>
           <pointsize>13</pointsize>
          </font>
         </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
         <property name="statusTip">
          <string/>
         </property>
@@ -2047,7 +2002,7 @@ Ey: LOW</string>
          <bool>true</bool>
         </property>
         <property name="autoRaise">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
        </widget>
        <widget class="QLabel" name="label_gain_xhyl_led">
@@ -2060,7 +2015,7 @@ Ey: LOW</string>
          </rect>
         </property>
         <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
+         <enum>QFrame::Shape::NoFrame</enum>
         </property>
         <property name="text">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -2080,9 +2035,6 @@ Ey: LOW</string>
           <pointsize>13</pointsize>
          </font>
         </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
         <property name="statusTip">
          <string/>
         </property>
@@ -2097,7 +2049,7 @@ Ey: HIGH</string>
          <bool>true</bool>
         </property>
         <property name="autoRaise">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
        </widget>
        <widget class="QLabel" name="label_gain_xlyh_led">
@@ -2110,7 +2062,7 @@ Ey: HIGH</string>
          </rect>
         </property>
         <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
+         <enum>QFrame::Shape::NoFrame</enum>
         </property>
         <property name="text">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -2130,9 +2082,6 @@ Ey: HIGH</string>
           <pointsize>13</pointsize>
          </font>
         </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
         <property name="statusTip">
          <string/>
         </property>
@@ -2147,7 +2096,7 @@ Ey: HIGH</string>
          <bool>true</bool>
         </property>
         <property name="autoRaise">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
        </widget>
        <widget class="QLabel" name="label_gain_xhyh_led">
@@ -2160,7 +2109,7 @@ Ey: HIGH</string>
          </rect>
         </property>
         <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
+         <enum>QFrame::Shape::NoFrame</enum>
         </property>
         <property name="text">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -2176,7 +2125,7 @@ Ey: HIGH</string>
          </rect>
         </property>
         <property name="orientation">
-         <enum>Qt::Vertical</enum>
+         <enum>Qt::Orientation::Vertical</enum>
         </property>
        </widget>
       </widget>
@@ -2190,10 +2139,10 @@ Ey: HIGH</string>
         </rect>
        </property>
        <property name="frameShape">
-        <enum>QFrame::Panel</enum>
+        <enum>QFrame::Shape::Panel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QToolButton" name="tb_mag_light">
         <property name="geometry">
@@ -2208,9 +2157,6 @@ Ey: HIGH</string>
          <font>
           <pointsize>13</pointsize>
          </font>
-        </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="statusTip">
          <string/>
@@ -2229,7 +2175,7 @@ LIGHT</string>
          <bool>false</bool>
         </property>
         <property name="autoRaise">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
        </widget>
        <widget class="QToolButton" name="tb_nims_leds">
@@ -2246,9 +2192,6 @@ LIGHT</string>
           <pointsize>13</pointsize>
          </font>
         </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPS SHORT CYCLE occurs every 512 secs and completes in 3 min.  &lt;/p&gt;&lt;p&gt;To manually initiate a GPS SHORT CYCLE, press this button.  &lt;/p&gt;&lt;p&gt;During the GPS SHORT CYCLE the NIMS will not know its Gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
         <property name="statusTip">
          <string/>
         </property>
@@ -2263,7 +2206,7 @@ LEDS</string>
          <bool>true</bool>
         </property>
         <property name="autoRaise">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
        </widget>
       </widget>
@@ -2280,7 +2223,7 @@ LEDS</string>
        </rect>
       </property>
       <property name="orientation">
-       <enum>Qt::Horizontal</enum>
+       <enum>Qt::Orientation::Horizontal</enum>
       </property>
      </widget>
      <widget class="QLabel" name="label_56">
@@ -2296,7 +2239,7 @@ LEDS</string>
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt; color:#ff0000;&quot;&gt;All data runs require a header file containing metadata.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
       <property name="margin">
        <number>0</number>
@@ -2328,10 +2271,10 @@ LEDS</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <property name="lineWidth">
        <number>1</number>
@@ -2529,7 +2472,7 @@ LEDS</string>
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">QLineEdit#le_filename {background-color: rgb(104, 104, 104);}
+        <string notr="true">QLineEdit#le_filename {color: black; background-color: rgb(104, 104, 104);}
 </string>
        </property>
       </widget>
@@ -2561,7 +2504,6 @@ LEDS</string>
        <property name="font">
         <font>
          <pointsize>18</pointsize>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -2569,7 +2511,7 @@ LEDS</string>
         <string>General Information</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
      </widget>
@@ -2583,10 +2525,10 @@ LEDS</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <widget class="QLabel" name="label_45">
        <property name="geometry">
@@ -2600,7 +2542,6 @@ LEDS</string>
        <property name="font">
         <font>
          <pointsize>18</pointsize>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -2608,7 +2549,7 @@ LEDS</string>
         <string>Electrode Metadata</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
       <widget class="QFrame" name="frame_7">
@@ -2621,10 +2562,10 @@ LEDS</string>
         </rect>
        </property>
        <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
+        <enum>QFrame::Shape::NoFrame</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Plain</enum>
+        <enum>QFrame::Shadow::Plain</enum>
        </property>
        <widget class="QLabel" name="label_49">
         <property name="geometry">
@@ -2645,7 +2586,7 @@ LEDS</string>
          <string>N-S Dipole (Ex)</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <set>Qt::AlignmentFlag::AlignCenter</set>
         </property>
        </widget>
        <widget class="QWidget" name="formLayoutWidget_2">
@@ -2698,10 +2639,10 @@ LEDS</string>
         </rect>
        </property>
        <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
+        <enum>QFrame::Shape::NoFrame</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QWidget" name="formLayoutWidget">
         <property name="geometry">
@@ -2776,10 +2717,10 @@ LEDS</string>
         </rect>
        </property>
        <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
+        <enum>QFrame::Shape::NoFrame</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QLabel" name="label_46">
         <property name="geometry">
@@ -2800,7 +2741,7 @@ LEDS</string>
          <string>E-W Dipole (Ey)</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <set>Qt::AlignmentFlag::AlignCenter</set>
         </property>
        </widget>
        <widget class="QWidget" name="formLayoutWidget_3">
@@ -2845,7 +2786,7 @@ LEDS</string>
       </widget>
       <widget class="QFrame" name="frame_10">
        <property name="enabled">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
        <property name="geometry">
         <rect>
@@ -2856,10 +2797,10 @@ LEDS</string>
         </rect>
        </property>
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::Shape::StyledPanel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QLabel" name="label_94">
         <property name="geometry">
@@ -2880,7 +2821,7 @@ LEDS</string>
          <string>Survey Layout</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <set>Qt::AlignmentFlag::AlignCenter</set>
         </property>
        </widget>
        <widget class="QWidget" name="horizontalLayoutWidget">
@@ -2929,7 +2870,7 @@ LEDS</string>
          </rect>
         </property>
         <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
+         <enum>QFrame::Shape::NoFrame</enum>
         </property>
         <property name="text">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -2948,16 +2889,16 @@ LEDS</string>
          </rect>
         </property>
         <property name="styleSheet">
-         <string notr="true">QLabel#le_survey {background-color: rgb(104, 104, 104);}
+         <string notr="true">QLabel#le_survey {color: black; background-color: rgb(104, 104, 104);}
 
 
 </string>
         </property>
         <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
+         <enum>QFrame::Shape::NoFrame</enum>
         </property>
         <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+         <enum>QFrame::Shadow::Raised</enum>
         </property>
         <property name="text">
          <string/>
@@ -2975,10 +2916,10 @@ LEDS</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <widget class="QWidget" name="formLayoutWidget_4">
        <property name="geometry">
@@ -2997,7 +2938,6 @@ LEDS</string>
          <widget class="QLabel" name="label_34">
           <property name="font">
            <font>
-            <weight>50</weight>
             <bold>false</bold>
            </font>
           </property>
@@ -3006,7 +2946,7 @@ LEDS</string>
 Time Stamp (UTC)</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
           </property>
           <property name="wordWrap">
            <bool>true</bool>
@@ -3021,13 +2961,13 @@ Time Stamp (UTC)</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::NoFocus</enum>
+           <enum>Qt::FocusPolicy::NoFocus</enum>
           </property>
           <property name="contextMenuPolicy">
-           <enum>Qt::NoContextMenu</enum>
+           <enum>Qt::ContextMenuPolicy::NoContextMenu</enum>
           </property>
           <property name="styleSheet">
-           <string notr="true">QLineEdit#le_gps_time {background-color: rgb(255, 246, 131);}
+           <string notr="true">QLineEdit#le_gps_time {color: black; background-color: rgb(255, 246, 131);}
 
 
 
@@ -3057,10 +2997,10 @@ Time Stamp (UTC)</string>
            </size>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::NoFocus</enum>
+           <enum>Qt::FocusPolicy::NoFocus</enum>
           </property>
           <property name="styleSheet">
-           <string notr="true">QLineEdit#le_gps_date {background-color: rgb(255, 246, 131);}</string>
+           <string notr="true">QLineEdit#le_gps_date {color: black; background-color: rgb(255, 246, 131);}</string>
           </property>
           <property name="text">
            <string/>
@@ -3083,10 +3023,10 @@ Time Stamp (UTC)</string>
         <item row="2" column="1">
          <widget class="QLineEdit" name="le_gps_lat">
           <property name="focusPolicy">
-           <enum>Qt::NoFocus</enum>
+           <enum>Qt::FocusPolicy::NoFocus</enum>
           </property>
           <property name="styleSheet">
-           <string notr="true">QLineEdit#le_gps_lat {background-color: rgb(255, 246, 131);}
+           <string notr="true">QLineEdit#le_gps_lat {color: black; background-color: rgb(255, 246, 131);}
 </string>
           </property>
          </widget>
@@ -3101,10 +3041,10 @@ Time Stamp (UTC)</string>
         <item row="3" column="1">
          <widget class="QLineEdit" name="le_gps_lon">
           <property name="focusPolicy">
-           <enum>Qt::NoFocus</enum>
+           <enum>Qt::FocusPolicy::NoFocus</enum>
           </property>
           <property name="styleSheet">
-           <string notr="true">QLineEdit#le_gps_lon {background-color: rgb(255, 246, 131);}</string>
+           <string notr="true">QLineEdit#le_gps_lon {color: black; background-color: rgb(255, 246, 131);}</string>
           </property>
          </widget>
         </item>
@@ -3121,11 +3061,11 @@ Time Stamp (UTC)</string>
            <bool>true</bool>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::NoFocus</enum>
+           <enum>Qt::FocusPolicy::NoFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">
-QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
+QLineEdit#le_gps_alt {color: black; background-color: rgb(255, 246, 131);}</string>
           </property>
           <property name="text">
            <string/>
@@ -3155,7 +3095,6 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
        <property name="font">
         <font>
          <pointsize>18</pointsize>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -3163,7 +3102,7 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
         <string>GPS Metadata</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
      </widget>
@@ -3177,10 +3116,10 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <widget class="QTextEdit" name="te_comments">
        <property name="geometry">
@@ -3207,7 +3146,6 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
        <property name="font">
         <font>
          <pointsize>18</pointsize>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -3215,7 +3153,7 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
         <string>Field Crew Comments</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
      </widget>
@@ -3229,10 +3167,10 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <widget class="QLabel" name="label_60">
        <property name="geometry">
@@ -3246,7 +3184,6 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
        <property name="font">
         <font>
          <pointsize>18</pointsize>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -3254,7 +3191,7 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
         <string>GPS Control</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
       <widget class="QLineEdit" name="le_gps_status_byte_m">
@@ -3272,16 +3209,16 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
         </font>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::FocusPolicy::NoFocus</enum>
        </property>
        <property name="contextMenuPolicy">
-        <enum>Qt::NoContextMenu</enum>
+        <enum>Qt::ContextMenuPolicy::NoContextMenu</enum>
        </property>
        <property name="toolTip">
         <string>Codes: C7 = GPS Short Cycling, A3 = Receiving GPS Almanac</string>
        </property>
        <property name="styleSheet">
-        <string notr="true">QLineEdit#le_gps_status_byte_m {background-color: rgb(255, 246, 131);}
+        <string notr="true">QLineEdit#le_gps_status_byte_m {color: black; background-color: rgb(255, 246, 131);}
 
 
 
@@ -3320,10 +3257,10 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
         </rect>
        </property>
        <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
+        <enum>QFrame::Shape::NoFrame</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QToolButton" name="tb_shortcycle">
         <property name="geometry">
@@ -3350,7 +3287,7 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
          <bool>true</bool>
         </property>
         <property name="autoRaise">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
        </widget>
        <widget class="QLabel" name="label_short_cycle_led">
@@ -3398,7 +3335,7 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
          <bool>true</bool>
         </property>
         <property name="autoRaise">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
        </widget>
        <widget class="QLabel" name="label_almanac_led">
@@ -3426,10 +3363,10 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <widget class="QTextEdit" name="te_gps_metadata_string">
        <property name="geometry">
@@ -3441,7 +3378,7 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">QTextEdit#te_gps_metadata_string {background-color: rgb(255, 246, 131);}\n\n\n\n</string>
+        <string notr="true">QTextEdit#te_gps_metadata_string {color: black; background-color: rgb(255, 246, 131);}\n\n\n\n</string>
        </property>
        <property name="documentTitle">
         <string/>
@@ -3460,7 +3397,7 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">QTextEdit#te_gps_string_m {background-color: rgb(255, 246, 131);}\n\n\n\n</string>
+        <string notr="true">QTextEdit#te_gps_string_m {color: black; background-color: rgb(255, 246, 131);}\n\n\n\n</string>
        </property>
        <property name="readOnly">
         <bool>true</bool>
@@ -3478,7 +3415,6 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
        <property name="font">
         <font>
          <pointsize>14</pointsize>
-         <weight>50</weight>
          <bold>false</bold>
         </font>
        </property>
@@ -3486,7 +3422,7 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
         <string>GPS data that will populate the header file if metadata is updated</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
       <widget class="QLabel" name="label_9">
@@ -3501,7 +3437,6 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
        <property name="font">
         <font>
          <pointsize>14</pointsize>
-         <weight>50</weight>
          <bold>false</bold>
         </font>
        </property>
@@ -3509,7 +3444,7 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
         <string>GPS Data (displayed during Acquisition)</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
      </widget>
@@ -3525,10 +3460,10 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <property name="spacing">
@@ -3712,10 +3647,10 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_18">
        <property name="leftMargin">
@@ -3743,7 +3678,6 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
            <property name="font">
             <font>
              <pointsize>16</pointsize>
-             <weight>50</weight>
              <bold>false</bold>
             </font>
            </property>
@@ -3782,7 +3716,6 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
             <widget class="QLabel" name="label_113">
              <property name="font">
               <font>
-               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -3790,7 +3723,7 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
               <string>Decl:</string>
              </property>
              <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
@@ -3859,10 +3792,10 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_10">
        <property name="leftMargin">
@@ -3884,7 +3817,6 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
            <property name="font">
             <font>
              <pointsize>16</pointsize>
-             <weight>50</weight>
              <bold>false</bold>
             </font>
            </property>
@@ -4018,7 +3950,7 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
         <x>20</x>
         <y>10</y>
         <width>899</width>
-        <height>28</height>
+        <height>32</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_9">
@@ -4057,10 +3989,10 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
           </size>
          </property>
          <property name="frameShape">
-          <enum>QFrame::NoFrame</enum>
+          <enum>QFrame::Shape::NoFrame</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Plain</enum>
+          <enum>QFrame::Shadow::Plain</enum>
          </property>
         </widget>
        </item>
@@ -4098,10 +4030,10 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::NoFrame</enum>
+       <enum>QFrame::Shape::NoFrame</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
      </widget>
      <widget class="QToolButton" name="tb_generate_report_sr">
@@ -4122,7 +4054,6 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
       <property name="font">
        <font>
         <pointsize>24</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -4142,7 +4073,6 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
       <property name="font">
        <font>
         <pointsize>16</pointsize>
-        <weight>50</weight>
         <bold>false</bold>
        </font>
       </property>
@@ -4203,10 +4133,10 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_16">
        <property name="leftMargin">
@@ -4228,7 +4158,6 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
            <property name="font">
             <font>
              <pointsize>16</pointsize>
-             <weight>50</weight>
              <bold>false</bold>
             </font>
            </property>
@@ -4252,7 +4181,6 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
                <property name="font">
                 <font>
                  <pointsize>14</pointsize>
-                 <weight>75</weight>
                  <bold>true</bold>
                 </font>
                </property>
@@ -4355,7 +4283,7 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
              <item>
               <widget class="Line" name="line_4">
                <property name="orientation">
-                <enum>Qt::Horizontal</enum>
+                <enum>Qt::Orientation::Horizontal</enum>
                </property>
               </widget>
              </item>
@@ -4427,7 +4355,7 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
            <item>
             <widget class="Line" name="line_5">
              <property name="orientation">
-              <enum>Qt::Vertical</enum>
+              <enum>Qt::Orientation::Vertical</enum>
              </property>
             </widget>
            </item>
@@ -4438,7 +4366,6 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
                <property name="font">
                 <font>
                  <pointsize>14</pointsize>
-                 <weight>75</weight>
                  <bold>true</bold>
                 </font>
                </property>
@@ -4760,10 +4687,10 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_11">
        <property name="leftMargin">
@@ -4783,7 +4710,6 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
          <property name="font">
           <font>
            <pointsize>16</pointsize>
-           <weight>50</weight>
            <bold>false</bold>
           </font>
          </property>
@@ -4857,10 +4783,10 @@ QLineEdit#le_gps_alt {background-color: rgb(255, 246, 131);}</string>
        </size>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_19">
        <property name="spacing">
@@ -4980,10 +4906,10 @@ No other values accepted.</string>
        <bool>true</bool>
       </property>
       <property name="styleSheet">
-       <string notr="true">QLineEdit#label_icon {background-color: rgb(255, 246, 131);}</string>
+       <string notr="true">QLineEdit#label_icon {color: black; background-color: rgb(255, 246, 131);}</string>
       </property>
       <property name="frameShape">
-       <enum>QFrame::NoFrame</enum>
+       <enum>QFrame::Shape::NoFrame</enum>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -5021,7 +4947,7 @@ No other values accepted.</string>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">QTextEdit#te_filteredhexdata {background-color: rgb(255, 246, 131);}
+       <string notr="true">QTextEdit#te_filteredhexdata {color: black; background-color: rgb(255, 246, 131);}
 
 
 
@@ -5043,12 +4969,11 @@ No other values accepted.</string>
       <property name="font">
        <font>
         <pointsize>15</pointsize>
-        <weight>50</weight>
         <bold>false</bold>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">QTextEdit#te_rawhex {background-color: rgb(255, 246, 131);}
+       <string notr="true">QTextEdit#te_rawhex {color: black; background-color: rgb(255, 246, 131);}
 
 
 
@@ -5068,7 +4993,7 @@ No other values accepted.</string>
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">QTextEdit#te_gps_string_e {background-color: rgb(255, 246, 131);}
+       <string notr="true">QTextEdit#te_gps_string_e {color: black; background-color: rgb(255, 246, 131);}
 
 
 
@@ -5088,10 +5013,10 @@ No other values accepted.</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <widget class="QLabel" name="label_19">
        <property name="geometry">
@@ -5111,7 +5036,7 @@ No other values accepted.</string>
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;EGINEERING MODE reveals the binary data packet streaming from the NIMS each second.&lt;/p&gt;&lt;p&gt;Each 25-byte data packet has the same order of bytes, numbered 0 through 24, beginning with a h01 and ending with a h04. ('h' means Hex display)&lt;/p&gt;&lt;p&gt;ENGINEERING MODE  enables the User to bypass the filters of the GUI and see the NIMS communication directly.  It can be helpful.&lt;/p&gt;&lt;p&gt;Frequently used bytes are displayed separately but can still be found in the original 25-byte packet.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
        </property>
        <property name="wordWrap">
         <bool>true</bool>
@@ -5130,7 +5055,6 @@ No other values accepted.</string>
       <property name="font">
        <font>
         <pointsize>23</pointsize>
-        <weight>50</weight>
         <bold>false</bold>
        </font>
       </property>
@@ -5150,7 +5074,6 @@ No other values accepted.</string>
       <property name="font">
        <font>
         <pointsize>23</pointsize>
-        <weight>50</weight>
         <bold>false</bold>
        </font>
       </property>
@@ -5170,7 +5093,6 @@ No other values accepted.</string>
       <property name="font">
        <font>
         <pointsize>23</pointsize>
-        <weight>50</weight>
         <bold>false</bold>
        </font>
       </property>
@@ -5190,12 +5112,11 @@ No other values accepted.</string>
       <property name="font">
        <font>
         <pointsize>15</pointsize>
-        <weight>50</weight>
         <bold>false</bold>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">QTextEdit#te_bytesread {background-color: rgb(255, 246, 131);}
+       <string notr="true">QTextEdit#te_bytesread {color: black; background-color: rgb(255, 246, 131);}
 
 
 
@@ -5220,7 +5141,7 @@ No other values accepted.</string>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">QTextEdit#te_magstatus {background-color: rgb(255, 246, 131);}
+       <string notr="true">QTextEdit#te_magstatus {color: black; background-color: rgb(255, 246, 131);}
 
 
 
@@ -5248,7 +5169,7 @@ No other values accepted.</string>
        <string>Codes: C7 = GPS Short Cycling, A3 = Receiving GPS Almanac</string>
       </property>
       <property name="styleSheet">
-       <string notr="true">QTextEdit#te_gps_status_byte_e {background-color: rgb(255, 246, 131);}
+       <string notr="true">QTextEdit#te_gps_status_byte_e {color: black; background-color: rgb(255, 246, 131);}
 
 
 
@@ -5270,7 +5191,6 @@ No other values accepted.</string>
       <property name="font">
        <font>
         <pointsize>23</pointsize>
-        <weight>50</weight>
         <bold>false</bold>
        </font>
       </property>
@@ -5290,7 +5210,6 @@ No other values accepted.</string>
       <property name="font">
        <font>
         <pointsize>23</pointsize>
-        <weight>50</weight>
         <bold>false</bold>
        </font>
       </property>
@@ -5310,28 +5229,11 @@ No other values accepted.</string>
       <property name="font">
        <font>
         <pointsize>23</pointsize>
-        <weight>50</weight>
         <bold>false</bold>
        </font>
       </property>
       <property name="text">
        <string>GPS STATUS</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="tb_record_raw">
-      <property name="geometry">
-       <rect>
-        <x>230</x>
-        <y>295</y>
-        <width>80</width>
-        <height>32</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Record</string>
-      </property>
-      <property name="checkable">
-       <bool>false</bool>
       </property>
      </widget>
     </widget>
@@ -5364,10 +5266,10 @@ No other values accepted.</string>
      </rect>
     </property>
     <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
+     <enum>QFrame::Shape::StyledPanel</enum>
     </property>
     <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
+     <enum>QFrame::Shadow::Raised</enum>
     </property>
     <widget class="QComboBox" name="cb_connection">
      <property name="geometry">
@@ -5391,10 +5293,7 @@ No other values accepted.</string>
       <number>20</number>
      </property>
      <property name="insertPolicy">
-      <enum>QComboBox::InsertAlphabetically</enum>
-     </property>
-     <property name="sizeAdjustPolicy">
-      <enum>QComboBox::AdjustToMinimumContentsLength</enum>
+      <enum>QComboBox::InsertPolicy::InsertAlphabetically</enum>
      </property>
      <property name="frame">
       <bool>true</bool>
@@ -5412,7 +5311,6 @@ No other values accepted.</string>
      <property name="font">
       <font>
        <pointsize>16</pointsize>
-       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -5436,10 +5334,10 @@ No other values accepted.</string>
       <item>
        <widget class="QFrame" name="frame_18">
         <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
+         <enum>QFrame::Shape::NoFrame</enum>
         </property>
         <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+         <enum>QFrame::Shadow::Raised</enum>
         </property>
         <widget class="QLabel" name="label_connection_led">
          <property name="geometry">
@@ -5454,7 +5352,7 @@ No other values accepted.</string>
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="alignment">
-          <set>Qt::AlignCenter</set>
+          <set>Qt::AlignmentFlag::AlignCenter</set>
          </property>
         </widget>
         <widget class="QComboBox" name="cb_speed">
@@ -5475,10 +5373,10 @@ No other values accepted.</string>
       <item>
        <widget class="QFrame" name="frame_17">
         <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
+         <enum>QFrame::Shape::NoFrame</enum>
         </property>
         <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+         <enum>QFrame::Shadow::Raised</enum>
         </property>
         <widget class="QLabel" name="label_packets_led">
          <property name="geometry">
@@ -5493,7 +5391,7 @@ No other values accepted.</string>
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="alignment">
-          <set>Qt::AlignCenter</set>
+          <set>Qt::AlignmentFlag::AlignCenter</set>
          </property>
         </widget>
         <widget class="QLabel" name="label_10">
@@ -5508,7 +5406,6 @@ No other values accepted.</string>
          <property name="font">
           <font>
            <pointsize>16</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -5516,7 +5413,7 @@ No other values accepted.</string>
           <string>Packets:</string>
          </property>
          <property name="alignment">
-          <set>Qt::AlignCenter</set>
+          <set>Qt::AlignmentFlag::AlignCenter</set>
          </property>
         </widget>
        </widget>
@@ -5524,10 +5421,10 @@ No other values accepted.</string>
       <item>
        <widget class="QFrame" name="frame_16">
         <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
+         <enum>QFrame::Shape::NoFrame</enum>
         </property>
         <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+         <enum>QFrame::Shadow::Raised</enum>
         </property>
         <widget class="QLabel" name="label_11">
          <property name="geometry">
@@ -5541,7 +5438,6 @@ No other values accepted.</string>
          <property name="font">
           <font>
            <pointsize>16</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -5549,7 +5445,7 @@ No other values accepted.</string>
           <string>Receive:</string>
          </property>
          <property name="alignment">
-          <set>Qt::AlignCenter</set>
+          <set>Qt::AlignmentFlag::AlignCenter</set>
          </property>
         </widget>
         <widget class="QLabel" name="label_receiving_led">
@@ -5565,7 +5461,7 @@ No other values accepted.</string>
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="alignment">
-          <set>Qt::AlignCenter</set>
+          <set>Qt::AlignmentFlag::AlignCenter</set>
          </property>
         </widget>
        </widget>
@@ -5583,13 +5479,13 @@ No other values accepted.</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QFrameEdit#frame_icon {background-color: rgb(255, 246, 131);}</string>
+     <string notr="true">QFrameEdit#frame_icon {color: black; background-color: rgb(255, 246, 131);}</string>
     </property>
     <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
+     <enum>QFrame::Shape::StyledPanel</enum>
     </property>
     <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
+     <enum>QFrame::Shadow::Raised</enum>
     </property>
     <widget class="QLabel" name="label_icon">
      <property name="geometry">
@@ -5604,7 +5500,7 @@ No other values accepted.</string>
       <bool>true</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLineEdit#label_icon {background-color: rgb(255, 246, 131);}</string>
+      <string notr="true">QLineEdit#label_icon {color: black; background-color: rgb(255, 246, 131);}</string>
      </property>
      <property name="text">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -5618,7 +5514,7 @@ No other values accepted.</string>
      <x>0</x>
      <y>0</y>
      <width>950</width>
-     <height>22</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>
@@ -5707,7 +5603,6 @@ No other values accepted.</string>
   <tabstop>te_gps_metadata_string</tabstop>
   <tabstop>le_hz</tabstop>
   <tabstop>le_ey</tabstop>
-  <tabstop>tablewidget_microsdfiles</tabstop>
   <tabstop>tb_shortcycle_4</tabstop>
   <tabstop>te_filteredhexdata</tabstop>
   <tabstop>te_rawhex</tabstop>
@@ -5721,5 +5616,6 @@ No other values accepted.</string>
   <tabstop>tb_end_run</tabstop>
   <tabstop>tb_start_run</tabstop>
  </tabstops>
+ <resources/>
  <connections/>
 </ui>

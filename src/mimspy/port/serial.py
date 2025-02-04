@@ -43,7 +43,7 @@ class SerialNode:
 def list_ports() -> list[SerialNode]:
     """List all available serial ports."""
     ports = [
-        SerialNode(port=f"{'-' * 25}", name="", desc="", hwid=""),
+        SerialNode(port="", name="", desc="", hwid=""),
     ]
 
     # get a list of sorted comports

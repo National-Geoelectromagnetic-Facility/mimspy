@@ -14,11 +14,14 @@ altgraph==0.17.4
     # via macholib
     # via pyinstaller
 click==8.1.8
-colorama==0.4.6 ; platform_system == 'Windows'
+colorama==0.4.6 ; sys_platform == 'win32' or platform_system == 'Windows'
     # via click
+    # via loguru
 dmgbuild==1.6.4
 ds-store==1.3.1
     # via dmgbuild
+loguru==0.7.3
+    # via mimspy
 mac-alias==2.2.2
     # via dmgbuild
     # via ds-store
@@ -52,3 +55,5 @@ shiboken6==6.8.2
     # via pyside6-addons
     # via pyside6-essentials
 toml==0.10.2
+win32-setctime==1.2.0 ; sys_platform == 'win32'
+    # via loguru

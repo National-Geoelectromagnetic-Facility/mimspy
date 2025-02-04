@@ -3,11 +3,14 @@
 import contextlib
 import os
 import struct
+import sys
 from pathlib import Path
 from re import search
 from time import gmtime, sleep, strftime
+from typing import TYPE_CHECKING
 
 import serial
+from loguru import logger as log
 from PySide6.QtCore import QSize, Qt, QTimer
 from PySide6.QtGui import QAction, QCloseEvent, QKeyEvent, QPixmap
 from PySide6.QtWidgets import QComboBox, QFileDialog, QMainWindow, QWidget
@@ -19,6 +22,9 @@ from .port import PortMonitor, PortRead, SerialNode, list_ports
 from .site_report import SiteReport
 from .ui.main import Ui_MainWindow
 from .widgets import GraphWidget, VerticalTextLabel
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 
 class Mimspy(QMainWindow, Ui_MainWindow):
@@ -33,6 +39,10 @@ class Mimspy(QMainWindow, Ui_MainWindow):
     def __init__(self, icon_path: Path, parent: QWidget | None = None):
         super().__init__(parent=parent)
         self.setupUi(self)  # type: ignore  # noqa: PGH003
+        self._x_size = 950
+        self._y_size = 630
+        if sys.platform.startswith("win"):
+            self._adjust_ui_for_windows()
 
         self.port: serial.Serial = serial.Serial()
         self.receiving_led_timer = QTimer()
@@ -67,12 +77,31 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.sr = SiteReport()
         self.init_ui(icon_path)
 
+    def _adjust_ui_for_windows(self):
+        """Adjust the UI for Windows.
+
+        Hardcoded font size adjustments for Windows. Original program was
+        designed in and for macOS exclusively. This method is a quick fix to
+        shrink the hardcoded font sizes to fit in thw Windows environment.
+        """
+        _widgets: Iterable[QWidget] = self.findChildren(QWidget)
+        for widget in _widgets:
+            font = widget.font()
+            if font.pointSize() == 10:
+                continue
+            _size = int(font.pointSize() * 0.75)
+            font.setPointSize(1 if _size < 1 else _size)
+            widget.setFont(font)
+
+        # Need to adjust the vertical size of the window just slightly
+        self._y_size += 10
+
     def init_ui(self, icon_path: Path):
         """Initialize the UI."""
         # set the window name
         self.setWindowTitle(APP_NAME + " v" + APP_VERSION)
-        self.setMinimumSize(QSize(950, 630))
-        self.setMaximumSize(QSize(950, 630))
+        self.setMinimumSize(QSize(self._x_size, self._y_size))
+        self.setMaximumSize(QSize(self._x_size, self._y_size))
         self.init_menu_bar_keyboard_shortcuts()
         self.init_serial_connection(icon_path)
         self.init_start_end_run()
@@ -309,7 +338,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.le_gps_lat_sr.textEdited.connect(self.update_gps_lat_sr)
         self.le_gps_lon_sr.textEdited.connect(self.update_gps_lon_sr)
         self.le_gps_alt_sr.textEdited.connect(self.update_gps_alt_sr)
-        self.le_gps_dec_sr.textEdited.connect(self.update_gps_dec_sr)
+        # self.le_gps_dec_sr.textEdited.connect(self.update_gps_dec_sr)
 
         # update the battery and gain
         self.le_battery_voltage_sr.textEdited.connect(self.update_batt_volt_sr)
@@ -360,7 +389,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
     def init_engineering(self):
         """Initialize the engineering tab."""
-        self.tb_record_raw.clicked.connect(self.record_raw_data)
+        pass
 
     # -------------------------General------------------------------------------
     def closeEvent(self, event: QCloseEvent):
@@ -428,6 +457,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.port.baudrate = int(self.cb_speed.currentText())
         self.port.timeout = 0.5
         self.port.stopbits = 2
+        log.info(f"\nNew Connection{'-' * 66}")
         print(f"{self.port}")
         # open the port
         if not self.port.is_open:
@@ -435,7 +465,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
             try:
                 self.port.open()
             except (OSError, serial.SerialException):
-                print(f"Failed to open port: {self.port.port}")
+                log.error(f"Failed to open port: {self.port.port}")
 
         if self.port.is_open:
             # set the connection led to green
@@ -452,7 +482,8 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
         self.set_receiving_led(False)
 
-        print(f"Port Open: \t{self.port.is_open}")
+        if not self.port.is_open:
+            log.error(f"Port is not open: {self.port.port}")
 
     def set_connection_led(self, state: bool):
         """Set the connection led."""
@@ -870,11 +901,6 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # parse the needed data from the sentences
         date = gprmc[nims.GPSDATE]
         time = gpgga[nims.GPSTIME].split(".")[0]
-        declination = gprmc[nims.GPSDECL]
-        declination_direction = gprmc[nims.GPSDECD]
-
-        if declination != "" and declination_direction != "":
-            self.update_gps_dec(declination, declination_direction)
 
         lat = "%s %s" % (self.dm_to_dd(gpgga[nims.GPSLATI]), gpgga[nims.GPSLATD])
         lon = "%s %s" % (self.dm_to_dd(gpgga[nims.GPSLONG]), gpgga[nims.GPSLOND])
@@ -885,7 +911,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         time = ":".join([time[i : i + 2] for i in range(0, len(time), 2)])
 
         # update the metadata string
-        self.metadata.gps_timestamp = "%s %s %s %s %s" % (date, time, lat, lon, alt)
+        self.metadata.gps_timestamp = f"{date} {time} {lat} {lon} {alt}"
 
         # update GUI GPS string
         self.te_gps_metadata_string.setText(self.metadata.gps_timestamp)
@@ -957,7 +983,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
         # extract the lat, check for array error
         try:
-            lat = f"{gps_list[nims.GPSSTRINGALTI]} {gps_list[nims.GPSSTRINGLATD]}"
+            lat = f"{gps_list[nims.GPSSTRINGLATI]} {gps_list[nims.GPSSTRINGLATD]}"
         except IndexError:
             lat = "0.0"
 
@@ -1006,12 +1032,12 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
     def send_short_cycle(self):
         """Send the short cycle command."""
-        print(f"Send Command: \t{bytes.fromhex(nims.SHORTCYCLE)}")
+        log.info(f"Send Command: \t{bytes.fromhex(nims.SHORTCYCLE)}")
         self.send_byte(bytes.fromhex(nims.SHORTCYCLE))
 
     def send_almanac(self):
         """Send the almanac command."""
-        print(f"Send Command: \t{bytes.fromhex(nims.ALMANAC)}")
+        log.info(f"Send Command: \t{bytes.fromhex(nims.ALMANAC)}")
         self.send_byte(bytes.fromhex(nims.ALMANAC))
 
     # -------------------------Data Display-------------------------------------
@@ -1038,7 +1064,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
     def send_gain_x_low_y_low(self):
         """Send the gain command."""
-        print(f"Send Command: \t{bytes.fromhex(nims.GAINXLYL)}")
+        log.info(f"Send Command: \t{bytes.fromhex(nims.GAINXLYL)}")
         self.send_byte(bytes.fromhex(nims.GAINXLYL))
 
     def send_gain_x_high_y_low(self):
@@ -1048,7 +1074,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # wait for gain to change
         sleep(0.15)
         # send gain command
-        print(f"Send Command: \t{bytes.fromhex(nims.GAINXHYL)}")
+        log.info(f"Send Command: \t{bytes.fromhex(nims.GAINXHYL)}")
         self.send_byte(bytes.fromhex(nims.GAINXHYL))
 
     def send_gain_x_low_y_high(self):
@@ -1058,7 +1084,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # wait for gain to change
         sleep(0.15)
         # send gain command
-        print(f"Send Command: \t{bytes.fromhex(nims.GAINXLYH)}")
+        log.info(f"Send Command: \t{bytes.fromhex(nims.GAINXLYH)}")
         self.send_byte(bytes.fromhex(nims.GAINXLYH))
 
     def send_gain_x_high_y_high(self):
@@ -1068,22 +1094,22 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # wait for gain to change
         sleep(0.15)
         # send gain command
-        print(f"Send Command: \t{bytes.fromhex(nims.GAINXHYH)}")
+        log.info(f"Send Command: \t{bytes.fromhex(nims.GAINXHYH)}")
         self.send_byte(bytes.fromhex(nims.GAINXHYH))
 
     def send_mag_light(self, checked: bool):
         """Turn on the mag light."""
         if checked:
-            print(f"Toggle Mag Light: \t{False}")
+            log.info("Turn on Mag Light")
             self.port.setRTS(False)  # type: ignore  # noqa: PGH003
         else:
-            print(f"Toggle Mag Light: \t{True}")
+            log.info("Turn off Mag Light")
             self.port.setRTS(True)  # type: ignore  # noqa: PGH003
 
     def send_nims_leds(self):
         """Pulse the Minerva LEDs."""
         # send the nims command
-        print(f"Send Command: \t{bytes.fromhex(nims.NIMSLEDS)}")
+        log.info(f"Send Command: \t{bytes.fromhex(nims.NIMSLEDS)}")
         self.send_byte(bytes.fromhex(nims.NIMSLEDS))
 
     def update_graphs(self):
@@ -1290,6 +1316,8 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
     def start_run(self):
         """Start the run."""
+        if not self.port.is_open:
+            return
         # turn on the start run led
         self.set_start_run_led(True)
         # pull the current time from the computer
@@ -1300,15 +1328,15 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.read_port.stop()
 
         # start the run
-        print(f"Send Command: \t{bytes.fromhex(nims.HEADER)}")
+        log.info(f"Send Command: \t{bytes.fromhex(nims.HEADER)}")
         self.send_byte(bytes.fromhex(nims.HEADER))
         sleep(0.30)
-        print(f"Send Command: \t{bytes.fromhex(nims.RECORD)}")
+        log.info(f"Send Command: \t{bytes.fromhex(nims.RECORD)}")
         self.send_byte(bytes.fromhex(nims.RECORD))
         sleep(0.50)
         self.send_header_blocks()
         sleep(0.50)
-        print(f"Send Command: \t{bytes.fromhex(nims.HEADER)}")
+        log.info(f"Send Command: \t{bytes.fromhex(nims.HEADER)}")
         self.send_byte(bytes.fromhex(nims.HEADER))
 
         # Clear the packet and start reading from the port
@@ -1327,7 +1355,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         i = 0
         j = block_size
         while j <= len(self.metadata.file_header):
-            print(f"Send Header: \n{self.metadata.file_header[i:j].encode('utf-8')}")
+            log.info(f"Send Header: \n{self.metadata.file_header[i:j].encode('utf-8')}")
             self.send_byte(self.metadata.file_header[i:j].encode("utf-8"))
             i += block_size
             j += block_size
@@ -1344,7 +1372,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # toggle start run/end run leds
         self.set_end_run_led(True)
         # send end run command
-        print(f"Send Command: \t{bytes.fromhex(nims.ENDREC)}")
+        log.info(f"Send Command: \t{bytes.fromhex(nims.ENDREC)}")
         self.send_byte(bytes.fromhex(nims.ENDREC))
 
     # -------------------------Site Report--------------------------------------
@@ -1447,7 +1475,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.sr.update_save_path(Path(save_dir))
         self.update_save_directory_sr()
 
-        print(f"Site Report save directory: \t{save_dir}")
+        log.info(f"Site Report save directory: \t{save_dir}")
 
     def update_save_directory_sr(self):
         """Update the save directory in the site report."""
@@ -1532,22 +1560,22 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         """Update the GPS altitude in the site report."""
         self.sr.alt = self.le_gps_alt_sr.text()
 
-    def update_gps_dec(self, declination: str, declination_direction: str):
-        """Update the GPS declination in the site report."""
-        d = {"N": "+", "S": "-", "E": "+", "W": "-"}
-        try:
-            dec = f"{d[declination_direction[0]]}{declination}"
-            self.le_gps_dec_sr.setText("{0:.2f}".format(float(dec)))
+    # def update_gps_dec(self, declination: str, declination_direction: str):
+    #     """Update the GPS declination in the site report."""
+    #     d = {"N": "+", "S": "-", "E": "+", "W": "-"}
+    #     try:
+    #         dec = f"{d[declination_direction[0]]}{declination}"
+    #         self.le_gps_dec_sr.setText("{0:.2f}".format(float(dec)))
+    #
+    #     except SyntaxError:
+    #         self.le_gps_dec_sr.setText(str(0))
+    #
+    #     self.update_gps_dec_sr()
 
-        except SyntaxError:
-            self.le_gps_dec_sr.setText(str(0))
-
-        self.update_gps_dec_sr()
-
-    def update_gps_dec_sr(self):
-        """Update the GPS declination in the site report."""
-        self.sr.dec = self.le_gps_dec_sr.text()
-
+    # def update_gps_dec_sr(self):
+    #     """Update the GPS declination in the site report."""
+    #     self.sr.dec = self.le_gps_dec_sr.text()
+    #
     def update_batt_volt_sr(self):
         """Update the battery voltage in the site report."""
         self.sr.battery = self.le_battery_voltage_sr.text()
@@ -1940,8 +1968,8 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         """Parse the GPS packet."""
         gps_rmc = []
         gps_gga = []
-        print("Finished receiving GPS Data")
-        print(self.gps_string)
+        log.info("Finished receiving GPS Data")
+        log.info(self.gps_string)
         # parse the string into gps sentences
         gps_sentences: list[str] = self.gps_string.split("\r\n")
 
@@ -1960,7 +1988,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.update_gps_lon()
         self.update_gps_alt()
         # clear the gps text boxes
-        self.clear_gps_string_e()
+        # self.clear_gps_string_e()
         self.clear_gps_string_m()
 
     def update_e(self):
@@ -1983,8 +2011,11 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
     def send_byte(self, cmd: bytes):
         """Send a byte to the port."""
-        if self.port.is_open:
-            self.port.write(cmd)
+        if not self.port.is_open:
+            log.error("SerialError: \tPort Closed")
+            return
+
+        self.port.write(cmd)
 
 
 def byte_to_int(_bytes: bytes) -> int:

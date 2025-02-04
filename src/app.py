@@ -5,6 +5,7 @@ import os
 import sys
 from pathlib import Path
 
+from loguru import logger as log
 from PySide6.QtCore import QCoreApplication, Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
@@ -68,6 +69,10 @@ def init_app() -> QApplication | QCoreApplication:
 
 def main():
     """Run the main application."""
+    log.add(
+        sys.stderr, format="{time} {level} {message}", filter="my_module", level=configs.LOG_LEVEL
+    )
+    log.debug("Starting the application")
     # Get the path to the img directory, need when bundling with pyinstaller
     icon_path: Path = Path(Path(__file__).parent, "mimspy", "icons")
     if getattr(sys, "frozen", False):
@@ -90,7 +95,7 @@ def main():
     app.setApplicationName(configs.APP_NAME)
     app.setOrganizationName(configs.APP_ORGANIZATION)
     app.setApplicationVersion(configs.APP_VERSION)
-    app.setFont(configs.FONT)
+    app.setFont(configs.FONT)  # type: ignore[attr-defined]
     theme = QApplication.styleHints().colorScheme()
     QIcon.setThemeName(theme.name.lower())
     if sys.platform.startswith("darwin"):
@@ -102,6 +107,9 @@ def main():
             app.setWindowIcon(QIcon(str(Path(icon_path, "NGF_logo_sqr.ico"))))
     if sys.platform.startswith("win"):
         if isinstance(app, QApplication):
+            font = app.font()
+            font.setPointSize(10)
+            app.setFont(font)
             app.setStyle("fusion")
     # img_path = get_img_path()
     window = Mimspy(icon_path=icon_path)

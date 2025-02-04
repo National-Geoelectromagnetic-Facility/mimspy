@@ -1,6 +1,6 @@
 # Assemble the Aprespy app for macOS and Windows using PyInstaller
 
-name: PyInstaller Runner
+name: CD Runner
 
 on:
   push:

@@ -10,6 +10,10 @@
 #   universal: true
 
 -e file:.
+colorama==0.4.6 ; sys_platform == 'win32'
+    # via loguru
+loguru==0.7.3
+    # via mimspy
 pyserial==3.5
     # via mimspy
 pyside6==6.8.2
@@ -23,3 +27,5 @@ shiboken6==6.8.2
     # via pyside6
     # via pyside6-addons
     # via pyside6-essentials
+win32-setctime==1.2.0 ; sys_platform == 'win32'
+    # via loguru
