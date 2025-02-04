@@ -1,4 +1,6 @@
-# Assemble the Aprespy app for macOS and Windows using PyInstaller
+# Assemble the Mimspy app for macOS and Windows using PyInstaller
+# Apple app signing loosely based on the following guide:
+# https://localazy.com/blog/how-to-automatically-sign-macos-apps-using-github-actions
 
 name: CD Runner
 
@@ -16,7 +18,7 @@ jobs:
     strategy:
       matrix:
         os:
-#          - macos-latest
+          - macos-latest
           - windows-latest
         python-version:
           - 3.12
@@ -37,28 +39,28 @@ jobs:
       - name: Sync Dependencies
         run: rye sync
 
-#      - name: macOS-Install the Apple signing certificate
-#        if: matrix.os == 'macos-latest'
-#        env:
-#          BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
-#          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
-#          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-#        run: |
-#          # create variables
-#          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
-#          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
-#
-#          # import certificate and provisioning profile from secrets
-#          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
-#
-#          # create temporary keychain
-#          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-#          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-#          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-#
-#          # import certificate to keychain
-#          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-#          security list-keychain -d user -s $KEYCHAIN_PATH
+      - name: macOS-Install the Apple signing certificate
+        if: matrix.os == 'macos-latest'
+        env:
+          BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          # create variables
+          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
+          # import certificate and provisioning profile from secrets
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
+
+          # create temporary keychain
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+          # import certificate to keychain
+          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
 
       - name: Make spec file
         run: rye run spec
@@ -66,42 +68,42 @@ jobs:
       - name: Build App
         run: rye run app
 
-#      - name: macOS-Notarize and Staple app
-#        if: matrix.os == 'macos-latest'
-#        env:
-#          NOTARIZATION_USERNAME: ${{ secrets.NOTARIZATION_USERNAME }}
-#          NOTARIZATION_TEAM_ID: ${{ secrets.NOTARIZATION_TEAM_ID }}
-#          NOTARIZATION_PASSWORD: ${{ secrets.NOTARIZATION_PASSWORD }}
-#        run: |
-#         # Store the notarization credentials so that we can prevent a UI password dialog
-#         # from blocking the CI
-#
-#         echo "Create keychain profile"
-#         xcrun notarytool store-credentials "notarytool-profile" --apple-id "$NOTARIZATION_USERNAME" --team-id "$NOTARIZATION_TEAM_ID" --password "$NOTARIZATION_PASSWORD"
-#
-#         # We can't notarize an app bundle directly, but we need to compress it as an archive.
-#         # Therefore, we create a zip file containing our app bundle, so that we can send it to the
-#         # notarization service
-#
-#         echo "Creating temp notarization archive"
-#         ditto -c -k --keepParent "dist/Aprespy.app" "Aprespy.zip"
-#
-#         # Here we send the notarization request to the Apple's Notarization service, waiting for the result.
-#         # This typically takes a few seconds inside a CI environment, but it might take more depending on the App
-#         # characteristics. Visit the Notarization docs for more information and strategies on how to optimize it if
-#         # you're curious
-#
-#         echo "Notarize app"
-#         xcrun notarytool submit "Aprespy.zip" --keychain-profile "notarytool-profile" --wait
-#
-#         # Finally, we need to "attach the staple" to our executable, which will allow our app to be
-#         # validated by macOS even when an internet connection is not available.
-#         echo "Attach staple"
-#         xcrun stapler staple "dist/Aprespy.app"
-#
-#      - name: macOS-Clean up keychain and provisioning profile
-#        if: matrix.os == 'macos-latest'
-#        run: security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
+      - name: macOS-Notarize and Staple app
+        if: matrix.os == 'macos-latest'
+        env:
+          NOTARIZATION_USERNAME: ${{ secrets.NOTARIZATION_USERNAME }}
+          NOTARIZATION_TEAM_ID: ${{ secrets.NOTARIZATION_TEAM_ID }}
+          NOTARIZATION_PASSWORD: ${{ secrets.NOTARIZATION_PASSWORD }}
+        run: |
+         # Store the notarization credentials so that we can prevent a UI password dialog
+         # from blocking the CI
+
+         echo "Create keychain profile"
+         xcrun notarytool store-credentials "notarytool-profile" --apple-id "$NOTARIZATION_USERNAME" --team-id "$NOTARIZATION_TEAM_ID" --password "$NOTARIZATION_PASSWORD"
+
+         # We can't notarize an app bundle directly, but we need to compress it as an archive.
+         # Therefore, we create a zip file containing our app bundle, so that we can send it to the
+         # notarization service
+
+         echo "Creating temp notarization archive"
+         ditto -c -k --keepParent "dist/Mimspy.app" "Mimspy.zip"
+
+         # Here we send the notarization request to the Apple's Notarization service, waiting for the result.
+         # This typically takes a few seconds inside a CI environment, but it might take more depending on the App
+         # characteristics. Visit the Notarization docs for more information and strategies on how to optimize it if
+         # you're curious
+
+         echo "Notarize app"
+         xcrun notarytool submit "Mimspy.zip" --keychain-profile "notarytool-profile" --wait
+
+         # Finally, we need to "attach the staple" to our executable, which will allow our app to be
+         # validated by macOS even when an internet connection is not available.
+         echo "Attach staple"
+         xcrun stapler staple "dist/Mimspy.app"
+
+      - name: macOS-Clean up keychain and provisioning profile
+        if: matrix.os == 'macos-latest'
+        run: security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
 
       - name: macOS-Create dmg
         if: matrix.os == 'macos-latest'
@@ -169,9 +171,9 @@ jobs:
         with:
           name: changelog
 
-#      - uses: actions/download-artifact@v4
-#        with:
-#          name: Mimspy_macOS
+      - uses: actions/download-artifact@v4
+        with:
+          name: Mimspy_macOS
 
       - uses: actions/download-artifact@v4
         with:
@@ -189,4 +191,5 @@ jobs:
           prerelease: false
           body_path: ${{ github.workspace }}/changelog.rst
           files: |
+            Mimspy.dmg
             Mimspy.zip
