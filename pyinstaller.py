@@ -80,7 +80,7 @@ def generate_spec_file(platform: str, _: str, bin_path: Path, config: dict):
 
     if platform == "darwin" and osx_code_sign and osx_bundle_id:
         args.append(f"--codesign-identity={osx_code_sign}")
-        args.append(f"--osx-bundle-identifier={osx_bundle_id}" + config["project"]["name"])
+        args.append(f"--osx-bundle-identifier={osx_bundle_id}." + config["project"]["name"])
         args += config["arguments"]["macos"]
     elif platform == "win32":
         args += config["arguments"]["windows"]

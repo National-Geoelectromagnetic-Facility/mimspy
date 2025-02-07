@@ -96,6 +96,9 @@ jobs:
         run: rye run spec
 
       - name: Build App
+        env:
+          OSX_BUNDLE_IDENTIFIER: ${{ secrets.OSX_BUNDLE_IDENTIFIER }}
+          OSX_CODESIGN_IDENTITY: ${{ secrets.OSX_CODESIGN_IDENTITY }}
         run: rye run assemble
 
       - name: macOS-Notarize and Staple app
