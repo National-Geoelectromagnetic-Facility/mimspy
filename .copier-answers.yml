@@ -1,0 +1,16 @@
+# Changes here will be overwritten by Copier
+_commit: 0.0.0
+_src_path: gh:chaytus/copier-rye-application
+author_email: dev@chaytus.com
+author_fullname: Brady Fry
+author_organization: Chaytus Research & Engineering LLC
+author_username: chaytus
+copyright_license: MIT License
+ensure_python_version: '3.12'
+project_description: NGF GUI for Minerva NIMS
+project_name: Mimspy
+python_package_distribution_name: Mimspy
+python_package_import_name: mimspy
+repository_name: mimspy
+repository_namespace: chaytus
+repository_provider: github.com

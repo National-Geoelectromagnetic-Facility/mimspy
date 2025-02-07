@@ -1,11 +1,13 @@
 """Generate a Application."""
 
+import os
 import subprocess
 import sys
 from pathlib import Path
 
 import click
 import toml
+from dotenv import load_dotenv
 
 from update_version import add_version, update_spec
 
@@ -13,7 +15,7 @@ from update_version import add_version, update_spec
 def fixture(func):
     """Fixture decorator."""
 
-    def wrapper():
+    def wrapper(arch: str = "x86_64"):
         """Read the project config and set up support."""
         config_path = Path("pyinstaller.toml")
         # Get the os platform
@@ -27,7 +29,7 @@ def fixture(func):
         # Load the config info and initialize the meta
         config = toml.load(config_path)
 
-        func(platform, bin_path, config)
+        func(platform, arch, bin_path, config)
 
     return wrapper
 
@@ -39,10 +41,16 @@ def translate(data: list, platform: str) -> list[str]:
 
 
 @fixture
-def generate_spec_file(platform: str, bin_path: Path, config: dict):
+def generate_spec_file(platform: str, _: str, bin_path: Path, config: dict):
     """Generate a Application."""
     application_name: str = config["project"]["name"]
     cmd: Path = Path(bin_path, "pyi-makespec")
+    # Get the environment variables from the shell
+    osx_code_sign: str | None = os.getenv("OSX_CODESIGN_IDENTITY")
+    osx_bundle_id: str | None = os.getenv("OSX_BUNDLE_IDENTIFIER")
+    print(f"Code Sign: {osx_code_sign}")
+    print(f"Bundle ID: {osx_bundle_id}")
+
     args: list = []
 
     # Check if the spec file exists and delete it if it does
@@ -70,9 +78,9 @@ def generate_spec_file(platform: str, bin_path: Path, config: dict):
     args += config["arguments"]["exclude"]
     args += config["arguments"]["hidden"]
 
-    if platform == "darwin":
-        args.append("--codesign-identity=Developer ID Application: Brady Fry (LT3LJEF3CS)")
-        args.append("--osx-bundle-identifier=com.bradyfry.lt3ljef3cs." + config["project"]["name"])
+    if platform == "darwin" and osx_code_sign and osx_bundle_id:
+        args.append(f"--codesign-identity={osx_code_sign}")
+        args.append(f"--osx-bundle-identifier={osx_bundle_id}" + config["project"]["name"])
         args += config["arguments"]["macos"]
     elif platform == "win32":
         args += config["arguments"]["windows"]
@@ -88,7 +96,7 @@ def generate_spec_file(platform: str, bin_path: Path, config: dict):
 
 
 @fixture
-def make_app(platform: str, bin_path: Path, config: dict):
+def make_app(platform: str, _: str, bin_path: Path, config: dict):
     """Generate the application with PyInstaller."""
     application_name: str = config["project"]["name"]
     cmd: Path = Path(bin_path, "pyinstaller")
@@ -108,7 +116,7 @@ def make_app(platform: str, bin_path: Path, config: dict):
 
 
 @fixture
-def make_dmg(_: str, bin_path: Path, config: dict):
+def make_dmg(_: str, arch: str, bin_path: Path, config: dict):
     """Generate the application with PyInstaller."""
     application_name: str = config["project"]["name"]
     cmd = Path(bin_path, "dmgbuild")
@@ -116,9 +124,8 @@ def make_dmg(_: str, bin_path: Path, config: dict):
         "-s",
         "dmg-settings.json",
         f'"{application_name} Installation"',
-        f"{application_name}.dmg",
+        f"{application_name}_{arch}.dmg",
     ]
-
     run_cmd(cmd, args)
 
 
@@ -134,14 +141,17 @@ def run_cmd(cmd: Path, args: list[str]):
 @click.option("-s", "--spec", is_flag=True, help="Generate the spec file")
 @click.option("-a", "--app", is_flag=True, help="Make application")
 @click.option("-d", "--dmg", is_flag=True, help="Make dmg file")
-def main(spec: bool = False, app: bool = False, dmg: bool = False):
+@click.option("-p", "--platform", default="x86_64", help="The architecture to build for")
+def main(spec: bool = False, app: bool = False, dmg: bool = False, platform: str = "x84_64"):
     """Update the version number in pyinstaller spec file and Info.plist file."""
+    load_dotenv()
+
     if spec:
         generate_spec_file()
     if app:
         make_app()
     if dmg:
-        make_dmg()
+        make_dmg(platform)
 
 
 if __name__ == "__main__":

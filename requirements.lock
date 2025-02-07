@@ -9,15 +9,11 @@
 #   generate-hashes: false
 #   universal: true
 
--e file:.
 colorama==0.4.6 ; sys_platform == 'win32'
     # via loguru
 loguru==0.7.3
-    # via mimspy
 pyserial==3.5
-    # via mimspy
 pyside6==6.8.2
-    # via mimspy
 pyside6-addons==6.8.2
     # via pyside6
 pyside6-essentials==6.8.2
