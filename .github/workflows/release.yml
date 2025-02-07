@@ -99,7 +99,6 @@ jobs:
         run: rye run assemble
 
       - name: macOS-Notarize and Staple app
-        if: matrix.os == 'macos-latest'
         env:
           NOTARIZATION_USERNAME: ${{ secrets.NOTARIZATION_USERNAME }}
           NOTARIZATION_TEAM_ID: ${{ secrets.NOTARIZATION_TEAM_ID }}
@@ -164,7 +163,7 @@ jobs:
         run: rye sync
 
       - name: Generate Changelog
-        run: run rye changelog  ${{ steps.generate-changelog.outputs.tag }}
+        run: rye run changelog  ${{ steps.generate-changelog.outputs.tag }}
 
       - name: Upload changelog artifact
         uses: actions/upload-artifact@v4

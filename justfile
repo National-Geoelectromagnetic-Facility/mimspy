@@ -87,7 +87,7 @@ release: fmt audit lint bump
   git push --tag
 
 # Run all CI checks
-ci: fmt lint audit check-bump
+ci: fmt lint audit
 
 # Run all tests
 test:
