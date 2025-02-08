@@ -35,10 +35,10 @@ jobs:
         run: uv sync
 
       - name: Make spec file
-        run: uv run python configs/pyinstaller.py -s
+        run: uv run python scripts/pyinstaller.py -s
 
       - name: Build App
-        run: uv run python configs/pyinstaller.py -a
+        run: uv run python scripts/pyinstaller.py -a
 
       - name: Create zip
         run: 7z a Mimspy_${{ matrix.platform.target }}.zip .\dist\Mimspy.exe
@@ -96,10 +96,10 @@ jobs:
         env:
           OSX_BUNDLE_IDENTIFIER: ${{ secrets.OSX_BUNDLE_IDENTIFIER }}
           OSX_CODESIGN_IDENTITY: ${{ secrets.OSX_CODESIGN_IDENTITY }}
-        run: uv run python configs/pyinstaller.py -s
+        run: uv run python scripts/pyinstaller.py -s
 
       - name: Build App
-        run: uv run python configs/pyinstaller.py -s
+        run: uv run python scripts/pyinstaller.py -s
 
       - name: macOS-Notarize and Staple app
         env:
@@ -134,7 +134,7 @@ jobs:
           xcrun stapler staple "dist/Mimspy.app"
 
       - name: macOS-Create dmg
-        run: uv run python configs/pyinstaller.py -d -p ${{ matrix.platform.target }}
+        run: uv run python scripts/pyinstaller.py -d -p ${{ matrix.platform.target }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

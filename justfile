@@ -77,6 +77,9 @@ set positional-arguments
 
 alias c := commit
 
+# Run all pre-push checks
+@pre-push: fmt lint audit
+
 # Push changes to the remote repository
 # TODO: add typecheck back after testing
 @push: fmt lint

@@ -30,7 +30,7 @@ def fixture(func):
         # Load the config info and initialize the meta
         config = toml.load(config_path)
 
-        func(platform, arch, bin_path, config)
+        func(platform, bin_path, config, arch)
 
     return wrapper
 
@@ -42,7 +42,7 @@ def translate(data: list, platform: str) -> list[str]:
 
 
 @fixture
-def generate_spec_file(platform: str, _: str, bin_path: Path, config: dict):
+def generate_spec_file(platform: str, bin_path: Path, config: dict, _: str):
     """Generate a Application."""
     application_name: str = config["project"]["name"]
     cmd: Path = Path(bin_path, "pyi-makespec")
@@ -97,7 +97,7 @@ def generate_spec_file(platform: str, _: str, bin_path: Path, config: dict):
 
 
 @fixture
-def make_app(platform: str, _: str, bin_path: Path, config: dict):
+def make_app(platform: str, bin_path: Path, config: dict, _: str):
     """Generate the application with PyInstaller."""
     application_name: str = config["project"]["name"]
     cmd: Path = Path(bin_path, "pyinstaller")
@@ -117,13 +117,13 @@ def make_app(platform: str, _: str, bin_path: Path, config: dict):
 
 
 @fixture
-def make_dmg(_: str, arch: str, bin_path: Path, config: dict):
+def make_dmg(_: str, bin_path: Path, config: dict, arch: str):
     """Generate the application with PyInstaller."""
     application_name: str = config["project"]["name"]
     cmd = Path(bin_path, "dmgbuild")
     args = [
         "-s",
-        "dmg-settings.json",
+        "configs/dmg-settings.json",
         f'"{application_name} Installation"',
         f"{application_name}_{arch}.dmg",
     ]
