@@ -54,7 +54,7 @@ class Metadata:
         self.comments = comments
         self.file_header = ""
 
-    def set_head_comp_time(self):
+    def set_head_comp_time(self) -> None:
         """Set the computer time."""
         # get the current computer time
         current_time = time.localtime()
@@ -63,7 +63,7 @@ class Metadata:
         # format the computer time of 'Start Run' clicked and time zone
         self.computer_timestamp = time.strftime("%Y/%m/%d %H:%M:%S") + " " + timezone
 
-    def make_header(self):
+    def make_header(self) -> None:
         """Make the header for the NIMS data file."""
         header_len = 2048
         header = ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n"

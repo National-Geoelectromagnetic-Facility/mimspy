@@ -81,15 +81,13 @@ alias c := commit
 @pre-push: fmt lint audit
 
 # Push changes to the remote repository
-# TODO: add typecheck back after testing
-@push: fmt lint
+@push: fmt lint typecheck
   git push
   sleep 5
   just check-ci
 
 # Run all CI checks
-# TODO: add typecheck back after testing
-@ci: fmt lint audit
+@ci: fmt lint audit typecheck
 
 # Check the CI status
 @check-ci:
@@ -107,12 +105,11 @@ alias c := commit
 @pre-release: fmt lint audit check-bump
 
 # Bump the version
-@bump: check-bump
+@bump:
   uv run cz bump
 
 # Release a new version
-# TODO: add typecheck back after testing
-@release: fmt audit lint bump push
+@release: ci bump push
   git push --tag
   sleep 5
   just check-release

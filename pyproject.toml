@@ -47,6 +47,7 @@ dev = [
   "ruff>=0.7.2",
   "scipy-stubs>=1.15.1",
   "toml>=0.10.2",
+  "types-pyserial>=3.5.0.20250130",
   "types-python-dateutil>=2.9.0.20241206",
   "types-toml>=0.10.8.20240310",
   "validate-pyproject>=0.23",
@@ -72,6 +73,12 @@ disallow_untyped_defs = true
 no_implicit_optional = true
 warn_return_any = true
 warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = [
+  "mimspy.ui.main",
+]
+ignore_errors = true
 
 [tool.pyright]
 venvPath = "."

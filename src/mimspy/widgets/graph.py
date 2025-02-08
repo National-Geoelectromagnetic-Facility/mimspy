@@ -24,7 +24,7 @@ class GraphWidget(QMainWindow):
         self.series_mag: QLineSeries = QLineSeries()
         self.y_axis_h: QValueAxis = QValueAxis()
 
-    def set_title(self, title: str):
+    def set_title(self, title: str) -> None:
         """Set the title of the chart."""
         self.chart.setTitle(title)
 
@@ -35,7 +35,7 @@ class GraphWidget(QMainWindow):
         ticks: int = 20,
         color: Qt.GlobalColor = Qt.GlobalColor.blue,
         align: Qt.AlignmentFlag = Qt.AlignmentFlag.AlignRight,
-    ):
+    ) -> None:
         """Add data to the chart."""
         # define the x-axis
         axis_x = QValueAxis()
@@ -74,7 +74,7 @@ class GraphWidget(QMainWindow):
         ticks: int = 20,
         color: Qt.GlobalColor = Qt.GlobalColor.red,
         align: Qt.AlignmentFlag = Qt.AlignmentFlag.AlignLeft,
-    ):
+    ) -> None:
         """Add data to the chart."""
         # define the x-axis
         x_axis = QValueAxis()
@@ -107,7 +107,7 @@ class GraphWidget(QMainWindow):
         # add the axis to the series
         self.series_mag.attachAxis(self.y_axis_h)
 
-    def add_point_e(self, ydata: list[float]):
+    def add_point_e(self, ydata: list[float]) -> None:
         """Add a point to the chart."""
         # remove the series so that is can be updated
         self.chart.removeSeries(self.series_electrode)
@@ -122,7 +122,7 @@ class GraphWidget(QMainWindow):
         self.axis_y_electrode.setMax(max(ydata) + 1)
         self.axis_y_electrode.setMin(min(ydata) - 1)
 
-    def add_point_h(self, ydata: list[float]):
+    def add_point_h(self, ydata: list[float]) -> None:
         """Add a point to the chart."""
         # remove the series so that is can be updated
         self.chart.removeSeries(self.series_mag)

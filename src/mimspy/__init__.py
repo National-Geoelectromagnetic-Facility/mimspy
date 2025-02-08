@@ -38,7 +38,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
     def __init__(self, icon_path: Path, parent: QWidget | None = None):
         super().__init__(parent=parent)
-        self.setupUi(self)  # type: ignore  # noqa: PGH003
+        self.setupUi(self)
         self._x_size = 950
         self._y_size = 630
         if sys.platform.startswith("win"):
@@ -77,7 +77,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.sr = SiteReport()
         self.init_ui(icon_path)
 
-    def _adjust_ui_for_windows(self):
+    def _adjust_ui_for_windows(self) -> None:
         """Adjust the UI for Windows.
 
         Hardcoded font size adjustments for Windows. Original program was
@@ -96,7 +96,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # Need to adjust the vertical size of the window just slightly
         self._y_size += 10
 
-    def init_ui(self, icon_path: Path):
+    def init_ui(self, icon_path: Path) -> None:
         """Initialize the UI."""
         # set the window name
         self.setWindowTitle(APP_NAME + " v" + APP_VERSION)
@@ -110,7 +110,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.init_site_report()
         self.init_engineering()
 
-    def init_menu_bar_keyboard_shortcuts(self):
+    def init_menu_bar_keyboard_shortcuts(self) -> None:
         """Initialize the menu bar and keyboard shortcuts."""
         # move backward tab
         back_tab = QAction("&Move Back Tab", self)
@@ -144,7 +144,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.tb_sitereport.clicked.connect(lambda: self.display(self.TAB_SITE_REPORT))
         self.tb_engineer.clicked.connect(lambda: self.display(self.TAB_ENGINEERING))
 
-    def init_serial_connection(self, icon_path: Path):
+    def init_serial_connection(self, icon_path: Path) -> None:
         """Initialize the serial connection."""
         # set the ngf logo
         pixmap = QPixmap(Path(icon_path, "NGF_logo_75_75.png"))
@@ -164,11 +164,11 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
         # set up current port speed
         self.change_baud_rate_list()
-        self.cb_speed.currentIndexChanged.connect(self.connection_change)  # type: ignore  # noqa: PGH003
+        self.cb_speed.currentIndexChanged.connect(self.connection_change)
 
         # initialize the port drop down list
         self.cb_connection.setInsertPolicy(QComboBox.InsertPolicy.InsertAlphabetically)
-        self.cb_connection.currentIndexChanged.connect(self.connection_change)  # type: ignore  # noqa: PGH003
+        self.cb_connection.currentIndexChanged.connect(self.connection_change)
 
         # initialize/open the port on startup
         self.change_ports_list(list_ports())
@@ -181,7 +181,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
         # -------------------------MetaData Tab---------------------------------
 
-    def init_metadata(self):
+    def init_metadata(self) -> None:
         """Initialize the metadata tab."""
         # connect the metadata fields
         self.le_site_name.textEdited.connect(self.update_site_name_md)
@@ -219,7 +219,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.tb_shortcycle.clicked.connect(self.send_short_cycle)
         self.tb_almanac.clicked.connect(self.send_almanac)
 
-    def init_start_end_run(self):
+    def init_start_end_run(self) -> None:
         """Initialize the start/end run tab."""
         # start run leds
         self.set_short_cycle_led_start_end(nims.GPSINITIAL)
@@ -242,7 +242,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.tb_start_run.clicked.connect(self.start_run)
         self.tb_end_run.clicked.connect(self.end_run)
 
-    def init_data_display(self):
+    def init_data_display(self) -> None:
         """Initialize the data display tab."""
         # Gain LEDs initialization.
         self.set_gain_leds(nims.EXUEYU)
@@ -313,7 +313,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
             align=Qt.AlignmentFlag.AlignLeft,
         )
 
-    def init_site_report(self):
+    def init_site_report(self) -> None:
         """Initialize the site report tab."""
         # monitor status change: Install/Check/Extract
         self.status_change()
@@ -387,12 +387,12 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # write to file
         self.tb_generate_report_sr.clicked.connect(self.write_report)
 
-    def init_engineering(self):
+    def init_engineering(self) -> None:
         """Initialize the engineering tab."""
         pass
 
     # -------------------------General------------------------------------------
-    def closeEvent(self, event: QCloseEvent):
+    def closeEvent(self, event: QCloseEvent) -> None:
         """Handle the close event."""
         # self.close()
         self.port_monitor.stop()
@@ -401,12 +401,12 @@ class Mimspy(QMainWindow, Ui_MainWindow):
             self.port.close()
         super().closeEvent(event)
 
-    def keyPressEvent(self, e: QKeyEvent):
+    def keyPressEvent(self, e: QKeyEvent) -> None:
         """Handle Key Press Event."""
         if e.key() == Qt.Key.Key_Escape or e.key() == Qt.Key.Key_Close:
             self.close()
 
-    def display(self, i: int | str):
+    def display(self, i: int | str) -> None:
         """Change the display tab."""
         if i == self.TAB_METADATA:
             self.stackedWidget.setCurrentIndex(self.TAB_METADATA)
@@ -442,7 +442,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
             self.display(self.display_index)
 
     # -------------------------Connection---------------------------------------
-    def connection_change(self, _):
+    def connection_change(self, _: int) -> None:
         """Handle a port change selection."""
         # close the thread
         self.read_port.stop()
@@ -485,28 +485,28 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         if not self.port.is_open:
             log.error(f"Port is not open: {self.port.port}")
 
-    def set_connection_led(self, state: bool):
+    def set_connection_led(self, state: bool) -> None:
         """Set the connection led."""
         if state is True:
             self.label_connection_led.setPixmap(self.led_green_oval)
         else:
             self.label_connection_led.setPixmap(self.led_red_oval)
 
-    def set_packets_led(self, state: bool):
+    def set_packets_led(self, state: bool) -> None:
         """Set the packets led."""
         if state is True:
             self.label_packets_led.setPixmap(self.led_green_oval)
         else:
             self.label_packets_led.setPixmap(self.led_red_oval)
 
-    def set_receiving_led(self, state: bool):
+    def set_receiving_led(self, state: bool) -> None:
         """Set the receiving led."""
         if state is True:
             self.label_receiving_led.setPixmap(self.led_green_oval)
         else:
             self.label_receiving_led.setPixmap(self.led_black_oval)
 
-    def change_ports_list(self, ports: list[SerialNode]):
+    def change_ports_list(self, ports: list[SerialNode]) -> None:
         """Change the ports list."""
         serial_items = [self.cb_connection.itemText(i) for i in range(self.cb_connection.count())]
 
@@ -516,7 +516,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
             if p.port not in serial_items:
                 self.cb_connection.addItem(p.port)
 
-    def change_baud_rate_list(self):
+    def change_baud_rate_list(self) -> None:
         """List of available baud rates."""
         speeds = ["19200"]
         for s in speeds:
@@ -534,14 +534,14 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
         return fn
 
-    def update_site_name_md(self):
+    def update_site_name_md(self) -> None:
         """Update the site name in metadata."""
         # get text and update metadata field
         site_name = self.le_site_name.text()
 
         self.update_site_name(site_name)
 
-    def update_site_name(self, sn: str):
+    def update_site_name(self, sn: str) -> None:
         """Update the site name."""
         # get text and update metadata field
         self.metadata.site_name = sn
@@ -555,14 +555,14 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.le_site_name.setText(sn)
         self.le_site_name_sr.setText(sn)
 
-    def update_state_province_md(self):
+    def update_state_province_md(self) -> None:
         """Update the state/province in metadata."""
         # get text
         sp = self.le_state_province.text()
 
         self.update_state_province(sp)
 
-    def update_state_province(self, sp: str):
+    def update_state_province(self, sp: str) -> None:
         """Update the state/province."""
         # get text and update metadata field
         self.metadata.state_province = sp
@@ -575,14 +575,14 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.le_state_province.setText(sp)
         self.le_state_province_sr.setText(sp)
 
-    def update_country_md(self):
+    def update_country_md(self) -> None:
         """Update the country in metadata."""
         # get text
         cntry = self.le_country.text()
 
         self.update_country(cntry)
 
-    def update_country(self, cntry: str):
+    def update_country(self, cntry: str) -> None:
         """Update the country."""
         # get text and update metadata field
         self.metadata.country = cntry
@@ -595,7 +595,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.le_country.setText(cntry)
         self.le_country_sr.setText(cntry)
 
-    def update_run_id_md(self):
+    def update_run_id_md(self) -> None:
         """Update the run id in metadata."""
         # get text and update metadata field
         # self.metadata.run_id = self.le_run_id.text()
@@ -607,7 +607,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # update the run id on site report
         # self.le_run_id_sr.setText(self.metadata.run_id)
 
-    def update_run_id(self, txt: str):
+    def update_run_id(self, txt: str) -> None:
         """Update the run id."""
         # get text and update metadata field
         self.metadata.run_id = txt
@@ -621,21 +621,21 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.sr.update_save_name(txt)
         self.update_save_directory_sr()
 
-    def update_operator(self):
+    def update_operator(self) -> None:
         """Update the operator in metadata."""
         # get text and update metadata field
         self.metadata.operator = self.le_operator.text()
         # update metadata led
         self.check_metadata()
 
-    def update_nims_id_md(self):
+    def update_nims_id_md(self) -> None:
         """Update the nims id in metadata."""
         # get text and update metadata field
         nid = self.le_nims_id.text()
 
         self.update_nims_id(nid)
 
-    def update_nims_id(self, nid: str):
+    def update_nims_id(self, nid: str) -> None:
         """Update the nims id."""
         # get text and update metadata field
         self.metadata.nims_id = nid
@@ -649,14 +649,14 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.le_nims_id.setText(nid)
         self.le_nims_id_sr.setText(nid)
 
-    def update_mag_id_md(self):
+    def update_mag_id_md(self) -> None:
         """Update the mag id in metadata."""
         # get text and update metadata field
         mid = self.le_mag_id.text()
 
         self.update_mag_id(mid)
 
-    def update_mag_id(self, mid: str):
+    def update_mag_id(self, mid: str) -> None:
         """Update the mag id."""
         # get text and update metadata field
         self.metadata.mag_id = mid
@@ -670,7 +670,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.le_mag_id.setText(mid)
         self.le_mag_id_sr.setText(mid)
 
-    def update_ns_length(self):
+    def update_ns_length(self) -> None:
         """Update the north-south dipole length in metadata."""
         # get text and update metadata field
         try:
@@ -680,7 +680,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # update metadata led
         self.check_metadata()
 
-    def update_ns_azimuth(self):
+    def update_ns_azimuth(self) -> None:
         """Update the north-south dipole azimuth in metadata."""
         # get text and update metadata field
         try:
@@ -690,7 +690,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # update metadata led
         self.check_metadata()
 
-    def update_ew_length(self):
+    def update_ew_length(self) -> None:
         """Update the east-west dipole length in metadata."""
         # get text and update metadata field
         try:
@@ -700,7 +700,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # update metadata led
         self.check_metadata()
 
-    def update_ew_azimuth(self):
+    def update_ew_azimuth(self) -> None:
         """Update the east-west dipole azimuth in metadata."""
         # get text and update metadata field
         try:
@@ -710,13 +710,13 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # update metadata led
         self.check_metadata()
 
-    def update_n_id_md(self):
+    def update_n_id_md(self) -> None:
         """Update the north electrode id in metadata."""
         eid = self.le_n_electrode_id.text()
 
         self.update_n_id(eid)
 
-    def update_n_id(self, eid: str):
+    def update_n_id(self, eid: str) -> None:
         """Update the north electrode id."""
         self.metadata.electrode_north_id = eid
         # update metadata led
@@ -729,13 +729,13 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.le_n_electrode_id.setText(eid)
         self.le_n_electrode_id_sr.setText(eid)
 
-    def update_s_id_md(self):
+    def update_s_id_md(self) -> None:
         """Update the south electrode id in metadata."""
         eid = self.le_s_electrode_id.text()
 
         self.update_s_id(eid)
 
-    def update_s_id(self, eid: str):
+    def update_s_id(self, eid: str) -> None:
         """Update the south electrode id."""
         self.metadata.electrode_south_id = eid
         # update metadata led
@@ -748,13 +748,13 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.le_s_electrode_id.setText(eid)
         self.le_s_electrode_id_sr.setText(eid)
 
-    def update_e_id_md(self):
+    def update_e_id_md(self) -> None:
         """Update the east electrode id in metadata."""
         eid = self.le_e_electrode_id.text()
 
         self.update_e_id(eid)
 
-    def update_e_id(self, eid: str):
+    def update_e_id(self, eid: str) -> None:
         """Update the east electrode id."""
         self.metadata.electrode_east_id = eid
         # update metadata led
@@ -767,13 +767,13 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.le_e_electrode_id.setText(eid)
         self.le_e_electrode_id_sr.setText(eid)
 
-    def update_w_id_md(self):
+    def update_w_id_md(self) -> None:
         """Update the east electrode id."""
         eid = self.le_w_electrode_id.text()
 
         self.update_w_id(eid)
 
-    def update_w_id(self, eid: str):
+    def update_w_id(self, eid: str) -> None:
         """Update the west electrode id."""
         self.metadata.electrode_west_id = eid
         # update metadata led
@@ -786,7 +786,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.le_w_electrode_id.setText(eid)
         self.le_w_electrode_id_sr.setText(eid)
 
-    def update_gnd_id(self):
+    def update_gnd_id(self) -> None:
         """Update the west electrode id."""
         # get text and update metadata field
         self.metadata.ground = self.le_gnd_electrode_id.text()
@@ -802,7 +802,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
     #         # update metadata led
     #         self.check_metadata()
 
-    def update_comments_md(self):
+    def update_comments_md(self) -> None:
         """Update the Comments in metadata."""
         # get text and update metadata field
         comments = self.te_comments.toPlainText()
@@ -813,7 +813,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # set comments
         self.set_comments_sr(comments)
 
-    def set_comments_md(self, comments: str):
+    def set_comments_md(self, comments: str) -> None:
         """Set the comments in metadata."""
         # check the comments length
         self.check_comments_length(comments)
@@ -825,7 +825,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # reconnect the signals
         self.te_comments.textChanged.connect(self.update_comments_md)
 
-    def check_comments_length(self, comments: str):
+    def check_comments_length(self, comments: str) -> None:
         """Check for the length of the comment section for overrun.
 
         Parameters
@@ -847,7 +847,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # update metadata led
         self.check_metadata()
 
-    def set_comments_label(self, flag: bool):
+    def set_comments_label(self, flag: bool) -> None:
         """Set the comment label.
 
         The set_comments_label function sets the comments label on the MetaData
@@ -868,7 +868,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
             self.l_comments_md.setText(label)
             self.l_comments_md.setStyleSheet("color: black")
 
-    def set_short_cycle_led_metadata(self, code: str):
+    def set_short_cycle_led_metadata(self, code: str) -> None:
         """Set the short cycle led in metadata tab."""
         match code:
             case nims.GPSAQLOCK | nims.GPSRECEIVING:
@@ -879,24 +879,24 @@ class Mimspy(QMainWindow, Ui_MainWindow):
                 pix_icon = self.led_black_round
         self.label_short_cycle_led.setPixmap(pix_icon)
 
-    def update_gps_value_m(self, value: str):
+    def update_gps_value_m(self, value: str) -> None:
         """Update the GPS value in the metadata panel."""
         # assign the value in the metadata panel
         self.le_gps_status_byte_m.setText(value)
 
-    def set_almanac_led(self, state: bool):
+    def set_almanac_led(self, state: bool) -> None:
         """Set the almanac led in metadata tab."""
         self.label_almanac_led.setPixmap(self.led_green_round if state else self.led_black_round)
 
-    def clear_gps_string_m(self):
+    def clear_gps_string_m(self) -> None:
         """Clear the GPS string in the metadata panel."""
         self.te_gps_string_m.setText("")
 
-    def update_gps_string_m(self):
+    def update_gps_string_m(self) -> None:
         """Update the GPS string in the metadata panel."""
         self.te_gps_string_m.setText(self.gps_string)
 
-    def update_gps_metadata_string(self, gprmc: list[str], gpgga: list[str]):
+    def update_gps_metadata_string(self, gprmc: list[str], gpgga: list[str]) -> None:
         """Update the GPS metadata string."""
         # parse the needed data from the sentences
         date = gprmc[nims.GPSDATE]
@@ -948,7 +948,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
         return "{:.6f}".format(degree + minute)
 
-    def update_gps_time(self):
+    def update_gps_time(self) -> None:
         """Update the GPS time in metadata."""
         # parse the string into a list
         gps_list = self.metadata.gps_timestamp.split(" ")
@@ -962,21 +962,21 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # update the gps field
         self.le_gps_time.setText(time)
 
-    def update_gps_date(self):
+    def update_gps_date(self) -> None:
         """Update the GPS date in metadata."""
         # parse the string into a list
         gps_list = self.metadata.gps_timestamp.split(" ")
 
         # extract the date, check for array error
         try:
-            date = gps_list[nims.GPSSTRINGDATE]
+            date: str = gps_list[nims.GPSSTRINGDATE]
         except IndexError:
-            date: str = "00/00/00"
+            date = "00/00/00"
 
         # update the gps field
         self.le_gps_date.setText(date)
 
-    def update_gps_lat(self):
+    def update_gps_lat(self) -> None:
         """Update the GPS latitude in metadata."""
         # parse the string into a list
         gps_list = self.metadata.gps_timestamp.split(" ")
@@ -994,7 +994,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # update the site report
         self.sr.lat = lat
 
-    def update_gps_lon(self):
+    def update_gps_lon(self) -> None:
         """Update the GPS longitude in metadata."""
         # parse the string into a list
         gps_list = self.metadata.gps_timestamp.split(" ")
@@ -1012,7 +1012,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # update the site report
         self.sr.lon = lon
 
-    def update_gps_alt(self):
+    def update_gps_alt(self) -> None:
         """Update the GPS longitude in metadata."""
         # initialize empty altitude
         # parse the string into a list
@@ -1030,18 +1030,18 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # update the site report
         self.sr.alt = alt
 
-    def send_short_cycle(self):
+    def send_short_cycle(self) -> None:
         """Send the short cycle command."""
-        log.info(f"Send Command: \t{bytes.fromhex(nims.SHORTCYCLE)}")
+        log.info(f"Send Command: \t{nims.SHORTCYCLE}")
         self.send_byte(bytes.fromhex(nims.SHORTCYCLE))
 
-    def send_almanac(self):
+    def send_almanac(self) -> None:
         """Send the almanac command."""
-        log.info(f"Send Command: \t{bytes.fromhex(nims.ALMANAC)}")
+        log.info(f"Send Command: \t{nims.ALMANAC}")
         self.send_byte(bytes.fromhex(nims.ALMANAC))
 
     # -------------------------Data Display-------------------------------------
-    def set_gain_leds(self, code: str):
+    def set_gain_leds(self, code: str) -> None:
         """Set the gain LEDs."""
         # set all leds to black
         self.label_gain_xlyl_led.setPixmap(self.led_black_oval)
@@ -1062,57 +1062,57 @@ class Mimspy(QMainWindow, Ui_MainWindow):
             case _:
                 pass
 
-    def send_gain_x_low_y_low(self):
+    def send_gain_x_low_y_low(self) -> None:
         """Send the gain command."""
-        log.info(f"Send Command: \t{bytes.fromhex(nims.GAINXLYL)}")
+        log.info(f"Send Command: \t{nims.GAINXLYL}")
         self.send_byte(bytes.fromhex(nims.GAINXLYL))
 
-    def send_gain_x_high_y_low(self):
+    def send_gain_x_high_y_low(self) -> None:
         """Send the gain command."""
         # send low gain command first
         self.send_gain_x_low_y_low()
         # wait for gain to change
         sleep(0.15)
         # send gain command
-        log.info(f"Send Command: \t{bytes.fromhex(nims.GAINXHYL)}")
+        log.info(f"Send Command: \t{nims.GAINXHYL}")
         self.send_byte(bytes.fromhex(nims.GAINXHYL))
 
-    def send_gain_x_low_y_high(self):
+    def send_gain_x_low_y_high(self) -> None:
         """Send the gain command."""
         # send low gain command first
         self.send_gain_x_low_y_low()
         # wait for gain to change
         sleep(0.15)
         # send gain command
-        log.info(f"Send Command: \t{bytes.fromhex(nims.GAINXLYH)}")
+        log.info(f"Send Command: \t{nims.GAINXLYH}")
         self.send_byte(bytes.fromhex(nims.GAINXLYH))
 
-    def send_gain_x_high_y_high(self):
+    def send_gain_x_high_y_high(self) -> None:
         """Send the gain command."""
         # send low gain command first
         self.send_gain_x_low_y_low()
         # wait for gain to change
         sleep(0.15)
         # send gain command
-        log.info(f"Send Command: \t{bytes.fromhex(nims.GAINXHYH)}")
+        log.info(f"Send Command: \t{nims.GAINXHYH}")
         self.send_byte(bytes.fromhex(nims.GAINXHYH))
 
-    def send_mag_light(self, checked: bool):
+    def send_mag_light(self, checked: bool) -> None:
         """Turn on the mag light."""
         if checked:
             log.info("Turn on Mag Light")
-            self.port.setRTS(False)  # type: ignore  # noqa: PGH003
+            self.port.setRTS(False)  # type: ignore[attr-defined]
         else:
             log.info("Turn off Mag Light")
-            self.port.setRTS(True)  # type: ignore  # noqa: PGH003
+            self.port.setRTS(True)  # type: ignore[attr-defined]
 
-    def send_nims_leds(self):
+    def send_nims_leds(self) -> None:
         """Pulse the Minerva LEDs."""
         # send the nims command
-        log.info(f"Send Command: \t{bytes.fromhex(nims.NIMSLEDS)}")
+        log.info(f"Send Command: \t{nims.NIMSLEDS}")
         self.send_byte(bytes.fromhex(nims.NIMSLEDS))
 
-    def update_graphs(self):
+    def update_graphs(self) -> None:
         """Update the graphs."""
         # update graphs
         self.graph_hx_ey.add_point_h(self.graph_data.hx)
@@ -1121,7 +1121,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.graph_hy_ex.add_point_e(self.graph_data.ex)
         self.graph_hz.add_point_h(self.graph_data.hz)
 
-    def update_sensor_values(self):
+    def update_sensor_values(self) -> None:
         """Update the sensor values."""
         self.set_hx_label(self.graph_data.hx[-1])
         self.set_hy_label(self.graph_data.hy[-1])
@@ -1129,28 +1129,28 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.set_ex_label(self.graph_data.ex[-1])
         self.set_ey_label(self.graph_data.ey[-1])
 
-    def set_hx_label(self, value: float):
+    def set_hx_label(self, value: float) -> None:
         """Set the Hx value."""
         self.le_hx.setText("%.3f" % value)
 
-    def set_hy_label(self, value: float):
+    def set_hy_label(self, value: float) -> None:
         """Set the Hy value."""
         self.le_hy.setText("%.3f" % value)
 
-    def set_hz_label(self, value: float):
+    def set_hz_label(self, value: float) -> None:
         """Set the Hz value."""
         self.le_hz.setText("%.3f" % value)
 
-    def set_ex_label(self, value: float):
+    def set_ex_label(self, value: float) -> None:
         """Set the Ex value."""
         self.le_ex.setText("%.3f" % value)
 
-    def set_ey_label(self, value: float):
+    def set_ey_label(self, value: float) -> None:
         """Set the Ey value."""
         self.le_ey.setText("%.3f" % value)
 
     # -------------------------Start/End Run------------------------------------
-    def set_short_cycle_led_start_end(self, code: str):
+    def set_short_cycle_led_start_end(self, code: str) -> None:
         """Set the short cycle led in start/end run tab."""
         match code:
             case nims.GPSAQLOCK | nims.GPSRECEIVING:
@@ -1163,7 +1163,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.label_short_cycle_led_3.setPixmap(pix_icon)
         self.label_short_cycle_led_4.setPixmap(pix_icon)
 
-    def set_mag_ready_led(self, code: str):
+    def set_mag_ready_led(self, code: str) -> None:
         """Set the mag ready led in start/end run tab."""
         match code:
             case nims.MAGREADY:
@@ -1175,19 +1175,19 @@ class Mimspy(QMainWindow, Ui_MainWindow):
             case _:
                 self.label_mag_ready_led.setPixmap(self.led_black_oval)
 
-    def set_mag_north_led(self, state: bool):
+    def set_mag_north_led(self, state: bool) -> None:
         """Set the mag north led in start/end run tab."""
         self.label_mag_north_led.setPixmap(self.led_green_oval if state else self.led_yellow_oval)
 
-    def set_ex_spec_led(self, state: bool):
+    def set_ex_spec_led(self, state: bool) -> None:
         """Set the Ex spec led in start/end run tab."""
         self.label_ex_spec_led.setPixmap(self.led_green_oval if state else self.led_yellow_oval)
 
-    def set_ey_spec_led(self, state: bool):
+    def set_ey_spec_led(self, state: bool) -> None:
         """Set the Ey spec led in start/end run tab."""
         self.label_ey_spec_led.setPixmap(self.led_green_oval if state else self.led_yellow_oval)
 
-    def set_metadata_led(self, code: int):
+    def set_metadata_led(self, code: int) -> None:
         """Set the metadata led in start/end run tab."""
         match code:
             case nims.METACOMPLETE:
@@ -1198,7 +1198,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
                 pix_icon = self.led_red_oval
         self.label_metadata_led.setPixmap(pix_icon)
 
-    def set_start_run_led(self, state: bool):
+    def set_start_run_led(self, state: bool) -> None:
         """Set the start run led in start/end run tab."""
         if state is True:
             self.label_start_run_led.setPixmap(self.led_green_round)
@@ -1206,7 +1206,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         else:
             self.label_start_run_led.setPixmap(self.led_black_round)
 
-    def set_end_run_led(self, state: bool):
+    def set_end_run_led(self, state: bool) -> None:
         """Set the end run led in start/end run tab."""
         if state is True:
             self.label_end_run_led.setPixmap(self.led_red_round)
@@ -1214,7 +1214,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         else:
             self.label_end_run_led.setPixmap(self.led_black_round)
 
-    def update_ready_led(self):
+    def update_ready_led(self) -> None:
         """Update the ready led."""
         status = self.packet[nims.STATUSSRT : nims.STATUSSTP].hex()
         if status == nims.MAGREADY:
@@ -1226,7 +1226,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         else:
             self.set_mag_ready_led(status)
 
-    def update_north_led(self):
+    def update_north_led(self) -> None:
         """Update the north led."""
         value = self.graph_data.hy[-1]
         # Check if mag is in range of north.
@@ -1235,7 +1235,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         else:
             self.set_mag_north_led(False)
 
-    def update_e_spec_leds(self):
+    def update_e_spec_leds(self) -> None:
         """Update the Ex spec led."""
         cutoff_voltage_mv = 16
         gain = self.packet[nims.STATUSSRT : nims.STATUSSTP]
@@ -1258,7 +1258,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         else:
             self.set_ey_spec_led(False)
 
-    def check_metadata(self):
+    def check_metadata(self) -> None:
         """Check the metadata."""
         empty = False
         all_empty = False
@@ -1314,7 +1314,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         else:
             self.set_metadata_led(nims.METACOMPLETE)
 
-    def start_run(self):
+    def start_run(self) -> None:
         """Start the run."""
         if not self.port.is_open:
             return
@@ -1328,55 +1328,55 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.read_port.stop()
 
         # start the run
-        log.info(f"Send Command: \t{bytes.fromhex(nims.HEADER)}")
+        log.info(f"Send Command: \t{nims.HEADER}")
         self.send_byte(bytes.fromhex(nims.HEADER))
         sleep(0.30)
-        log.info(f"Send Command: \t{bytes.fromhex(nims.RECORD)}")
+        log.info(f"Send Command: \t{nims.RECORD}")
         self.send_byte(bytes.fromhex(nims.RECORD))
         sleep(0.50)
         self.send_header_blocks()
         sleep(0.50)
-        log.info(f"Send Command: \t{bytes.fromhex(nims.HEADER)}")
+        log.info(f"Send Command: \t{nims.HEADER}")
         self.send_byte(bytes.fromhex(nims.HEADER))
 
         # Clear the packet and start reading from the port
         self.packet = b""
         self.read_port.start()
 
-    def send_file_name(self):
+    def send_file_name(self) -> None:
         """Send the file name."""
         self.send_byte(bytes.fromhex(nims.FLENAME))
         self.send_byte(self.get_file_name().encode("utf-8"))
         self.send_byte(bytes.fromhex(nims.FLENAME))
 
-    def send_header_blocks(self):
+    def send_header_blocks(self) -> None:
         """Send the header blocks."""
         block_size = 64
         i = 0
         j = block_size
         while j <= len(self.metadata.file_header):
-            log.info(f"Send Header: \n{self.metadata.file_header[i:j].encode('utf-8')}")
+            log.info(f"Send Header: \n{self.metadata.file_header[i:j].encode('utf-8')!r}")
             self.send_byte(self.metadata.file_header[i:j].encode("utf-8"))
             i += block_size
             j += block_size
             sleep(0.15)
 
-    def send_file_header(self):
+    def send_file_header(self) -> None:
         """Send the file header."""
         self.send_byte(bytes.fromhex(nims.HEADER))
         self.send_byte(self.metadata.file_header.encode("utf-8"))
         self.send_byte(bytes.fromhex(nims.HEADER))
 
-    def end_run(self):
+    def end_run(self) -> None:
         """End the run."""
         # toggle start run/end run leds
         self.set_end_run_led(True)
         # send end run command
-        log.info(f"Send Command: \t{bytes.fromhex(nims.ENDREC)}")
+        log.info(f"Send Command: \t{nims.ENDREC}")
         self.send_byte(bytes.fromhex(nims.ENDREC))
 
     # -------------------------Site Report--------------------------------------
-    def status_change(self):
+    def status_change(self) -> None:
         """Change the status of the site report."""
         self.sr.status = self.cb_status.currentText()
         if self.sr.status == "Install":
@@ -1386,22 +1386,22 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         elif self.sr.status == "Extract":
             self.svr_enable_extract()
 
-    def svr_enable_install(self):
+    def svr_enable_install(self) -> None:
         """Enable the site report for installation."""
         self.svr_preinstall_electrodes(True)
         self.svr_timing("Install")
 
-    def svr_enable_check(self):
+    def svr_enable_check(self) -> None:
         """Enable the site report for check."""
         self.svr_preinstall_electrodes(False)
         self.svr_timing("Check")
 
-    def svr_enable_extract(self):
+    def svr_enable_extract(self) -> None:
         """Enable the site report for extraction."""
         self.svr_preinstall_electrodes(False)
         self.svr_timing("Extract")
 
-    def svr_timing(self, code: str):
+    def svr_timing(self, code: str) -> None:
         """Set the timing for the site report."""
         match code:
             case "Install":
@@ -1429,7 +1429,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
             case _:
                 pass
 
-    def svr_preinstall_electrodes(self, state: bool):
+    def svr_preinstall_electrodes(self, state: bool) -> None:
         """Enable the site visit report pre-installation electrodes fields."""
         back_color = (
             "background-color: rgb(255, 255, 255)"
@@ -1457,14 +1457,14 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.le_pre_e_ns_v_sr.setStyleSheet(back_color)
         self.le_pre_e_ew_v_sr.setStyleSheet(back_color)
 
-    def set_check_sr(self, state: bool):
+    def set_check_sr(self, state: bool) -> None:
         """Set the check led in the site report."""
         check_icon_path = Path(
             self.icon_path, "check_green_50_50.png" if state else "x_red_50_50.png"
         )
         self.label_check_sr.setPixmap(QPixmap(check_icon_path))
 
-    def path_on_click(self):
+    def path_on_click(self) -> None:
         """Open the file dialog to select the save directory."""
         self.hide()
         save_dir = QFileDialog.getExistingDirectory(self, "Select Directory")
@@ -1477,86 +1477,86 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
         log.info(f"Site Report save directory: \t{save_dir}")
 
-    def update_save_directory_sr(self):
+    def update_save_directory_sr(self) -> None:
         """Update the save directory in the site report."""
         self.le_change_directory_sr.setText(os.path.join(self.sr.save_path, self.sr.save_name))
 
-    def update_site_name_sr(self):
+    def update_site_name_sr(self) -> None:
         """Update the site name in the site report."""
         # get text and update metadata field
         site_name = self.le_site_name_sr.text()
 
         self.update_site_name(site_name)
 
-    def update_state_province_sr(self):
+    def update_state_province_sr(self) -> None:
         """Update the state/province in the site report."""
         # get text and update metadata field
         sp = self.le_state_province_sr.text()
 
         self.update_state_province(sp)
 
-    def update_country_sr(self):
+    def update_country_sr(self) -> None:
         """Update the country in the site report."""
         # get text and update metadata field
         cntry = self.le_country_sr.text()
 
         self.update_country(cntry)
 
-    def update_crew_sr(self):
+    def update_crew_sr(self) -> None:
         """Update the crew in the site report."""
         self.sr.crew = self.le_crew.text()
 
-    def update_run_id_sr(self):
+    def update_run_id_sr(self) -> None:
         """Update the run id in the site report."""
         txt = self.le_run_id_sr.text()
 
         self.update_run_id(txt)
 
-    def update_nims_id_sr(self):
+    def update_nims_id_sr(self) -> None:
         """Update the NIMS id in the site report."""
         txt = self.le_nims_id_sr.text()
 
         self.update_nims_id(txt)
 
-    def update_mag_id_sr(self):
+    def update_mag_id_sr(self) -> None:
         """Update the mag id in the site report."""
         txt = self.le_mag_id_sr.text()
 
         self.update_mag_id(txt)
 
-    def update_n_id_sr(self):
+    def update_n_id_sr(self) -> None:
         """Update the north electrode id in the site report."""
         txt = self.le_n_electrode_id_sr.text()
 
         self.update_n_id(txt)
 
-    def update_s_id_sr(self):
+    def update_s_id_sr(self) -> None:
         """Update the south electrode id in the site report."""
         txt = self.le_s_electrode_id_sr.text()
 
         self.update_s_id(txt)
 
-    def update_e_id_sr(self):
+    def update_e_id_sr(self) -> None:
         """Update the east electrode id in the site report."""
         txt = self.le_e_electrode_id_sr.text()
 
         self.update_e_id(txt)
 
-    def update_w_id_sr(self):
+    def update_w_id_sr(self) -> None:
         """Update the west electrode id in the site report."""
         txt = self.le_w_electrode_id_sr.text()
 
         self.update_w_id(txt)
 
-    def update_gps_lat_sr(self):
+    def update_gps_lat_sr(self) -> None:
         """Update the GPS latitude in the site report."""
         self.sr.lat = self.le_gps_lat_sr.text()
 
-    def update_gps_lon_sr(self):
+    def update_gps_lon_sr(self) -> None:
         """Update the GPS longitude in the site report."""
         self.sr.lon = self.le_gps_lon_sr.text()
 
-    def update_gps_alt_sr(self):
+    def update_gps_alt_sr(self) -> None:
         """Update the GPS altitude in the site report."""
         self.sr.alt = self.le_gps_alt_sr.text()
 
@@ -1576,11 +1576,11 @@ class Mimspy(QMainWindow, Ui_MainWindow):
     #     """Update the GPS declination in the site report."""
     #     self.sr.dec = self.le_gps_dec_sr.text()
     #
-    def update_batt_volt_sr(self):
+    def update_batt_volt_sr(self) -> None:
         """Update the battery voltage in the site report."""
         self.sr.battery = self.le_battery_voltage_sr.text()
 
-    def update_gain_sr(self):
+    def update_gain_sr(self) -> None:
         """Update the gain in the site report."""
         ex_gain = self.verify_gain_value(self.le_ex_gain_sr.text())
         ey_gain = self.verify_gain_value(self.le_ey_gain_sr.text())
@@ -1616,15 +1616,15 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
         return gain
 
-    def update_last_time_stamp_sr(self):
+    def update_last_time_stamp_sr(self) -> None:
         """Update the last time stamp in the site report."""
         self.sr.last_ts = self.le_last_time_stamp_sr.text()
 
-    def update_first_time_stamp_sr(self):
+    def update_first_time_stamp_sr(self) -> None:
         """Update the first time stamp in the site report."""
         self.sr.first_ts = self.le_first_time_stamp_sr.text()
 
-    def update_timestamp_sr(self, date: str, time: str):
+    def update_timestamp_sr(self, date: str, time: str) -> None:
         """Update the timestamp in the site report."""
         d = date.split("/")
         try:
@@ -1639,7 +1639,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
             self.le_first_time_stamp_sr.setText(dt)
             self.sr.first_ts = dt
 
-    def clear_pre_e_sr(self):
+    def clear_pre_e_sr(self) -> None:
         """Clear the pre-installation electrodes."""
         self.sr.pre_e_ns_r = ""
         self.le_pre_e_ns_r_sr.setText("")
@@ -1654,87 +1654,87 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.sr.pre_e_ew_v = ""
         self.le_pre_e_ew_v_sr.setText("")
 
-    def update_pre_e_ns_r_sr(self):
+    def update_pre_e_ns_r_sr(self) -> None:
         """Update the pre-installation NS resistance in the site report."""
         self.sr.pre_e_ns_r = self.le_pre_e_ns_r_sr.text()
 
-    def update_pre_e_sn_r_sr(self):
+    def update_pre_e_sn_r_sr(self) -> None:
         """Update the pre-installation SN resistance in the site report."""
         self.sr.pre_e_sn_r = self.le_pre_e_sn_r_sr.text()
 
-    def update_pre_e_ew_r_sr(self):
+    def update_pre_e_ew_r_sr(self) -> None:
         """Update the pre-installation EW resistance in the site report."""
         self.sr.pre_e_ew_r = self.le_pre_e_ew_r_sr.text()
 
-    def update_pre_e_we_r_sr(self):
+    def update_pre_e_we_r_sr(self) -> None:
         """Update the pre-installation WE resistence in the site report."""
         self.sr.pre_e_we_r = self.le_pre_e_we_r_sr.text()
 
-    def update_pre_e_ns_v_sr(self):
+    def update_pre_e_ns_v_sr(self) -> None:
         """Update the pre-installation NS voltage in the site report."""
         self.sr.pre_e_ns_v = self.le_pre_e_ns_v_sr.text()
 
-    def update_pre_e_ew_v_sr(self):
+    def update_pre_e_ew_v_sr(self) -> None:
         """Update the pre-installation EW voltage in the site report."""
         self.sr.pre_e_ew_v = self.le_pre_e_ew_v_sr.text()
 
-    def update_e_ns_r_sr(self):
+    def update_e_ns_r_sr(self) -> None:
         """Update the NS resistance in the site report."""
         self.sr.e_ns_r = self.le_e_ns_r_sr.text()
 
-    def update_e_sr_r_sr(self):
+    def update_e_sr_r_sr(self) -> None:
         """Update the SR resistance in the site report."""
         self.sr.e_sn_r = self.le_e_sn_r_sr.text()
 
-    def update_e_ew_r_sr(self):
+    def update_e_ew_r_sr(self) -> None:
         """Update the EW resistance in the site report."""
         self.sr.e_ew_r = self.le_e_ew_r_sr.text()
 
-    def update_e_we_r_sr(self):
+    def update_e_we_r_sr(self) -> None:
         """Update the WE resistence in the site report."""
         self.sr.e_we_r = self.le_e_we_r_sr.text()
 
-    def update_e_ng_r_sr(self):
+    def update_e_ng_r_sr(self) -> None:
         """Update the NG resistance in the site report."""
         self.sr.e_ng_r = self.le_e_ng_r_sr.text()
 
-    def update_e_gn_r_sr(self):
+    def update_e_gn_r_sr(self) -> None:
         """Update the GN resistance in the site report."""
         self.sr.e_gn_r = self.le_e_gn_r_sr.text()
 
-    def update_ex_gps_sr(self):
+    def update_ex_gps_sr(self) -> None:
         """Update the EX GPS in the site report."""
         self.sr.ex_gps = self.le_ex_gps_sr.text()
 
-    def update_ey_gps_sr(self):
+    def update_ey_gps_sr(self) -> None:
         """Update the EY GPS in the site report."""
         self.sr.ey_gps = self.le_ey_gps_sr.text()
 
-    def update_e_ns_vdc_sr(self):
+    def update_e_ns_vdc_sr(self) -> None:
         """Update the NS voltage in the site report."""
         self.sr.e_ns_vdc = self.le_e_ns_vdc_sr.text()
 
-    def update_e_ew_vdc_sr(self):
+    def update_e_ew_vdc_sr(self) -> None:
         """Update the EW voltage in the site report."""
         self.sr.e_ew_vdc = self.le_e_ew_vdc_sr.text()
 
-    def update_e_ng_vdc_sr(self):
+    def update_e_ng_vdc_sr(self) -> None:
         """Update the NG voltage in the site report."""
         self.sr.e_ng_vdc = self.le_e_ng_vdc_sr.text()
 
-    def update_e_ns_vac_sr(self):
+    def update_e_ns_vac_sr(self) -> None:
         """Update the NS voltage in the site report."""
         self.sr.e_ns_vac = self.le_e_ns_vac_sr.text()
 
-    def update_e_ew_vac_sr(self):
+    def update_e_ew_vac_sr(self) -> None:
         """Update the EW voltage in the site report."""
         self.sr.e_ew_vac = self.le_e_ew_vac_sr.text()
 
-    def update_e_ng_vac_sr(self):
+    def update_e_ng_vac_sr(self) -> None:
         """Update the NG voltage in the site report."""
         self.sr.e_ng_vac = self.le_e_ng_vac_sr.text()
 
-    def update_comments_sr(self):
+    def update_comments_sr(self) -> None:
         """Update the comments in the site report."""
         # get text and update metadata field
         comments = self.te_comments_sr.toPlainText()
@@ -1742,7 +1742,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # set the comments on metadata
         self.set_comments_md(comments)
 
-    def set_comments_sr(self, comments: str):
+    def set_comments_sr(self, comments: str) -> None:
         """Set the comments in the site report."""
         # update comments in site report
         self.sr.comments = comments
@@ -1754,7 +1754,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # reconnect the signals
         self.te_comments_sr.textChanged.connect(self.update_comments_sr)
 
-    def write_report(self):
+    def write_report(self) -> None:
         """Write the site report."""
         try:
             self.sr.write_file()
@@ -1764,7 +1764,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
 
     # -------------------------Engineering--------------------------------------
 
-    def update_hex_data(self, packet: str):
+    def update_hex_data(self, packet: str) -> None:
         """Update the hex data in the engineering tab."""
         text = self.te_rawhex.toPlainText()
         # print(len(text))
@@ -1772,7 +1772,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
             text = f"{text[-98:]} "
         self.te_rawhex.setText(f"{text}\t{packet}")
 
-    def record_raw_data(self):
+    def record_raw_data(self) -> None:
         """Record the port data since opening.
 
         The record_raw_data will record the data that has been read on the port
@@ -1790,36 +1790,36 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         with open(fle_pth, "wb") as fle_ptr:
             fle_ptr.write(self.port_data)
 
-    def update_filtered_data(self, packet: str):
+    def update_filtered_data(self, packet: str) -> None:
         """Update the filtered data in the engineering tab."""
         self.te_filteredhexdata.setText(packet)
 
-    def update_bytes_read(self):
+    def update_bytes_read(self) -> None:
         """Update the bytes read in the engineering tab."""
         self.te_bytesread.setText(str(len(self.packet)))
 
-    def update_mag_status(self):
+    def update_mag_status(self) -> None:
         """Update the mag status in the engineering tab."""
         value = self.packet[nims.STATUSSRT : nims.STATUSSTP].hex().upper()
         # update the mag status byte
         self.te_magstatus.setText(value)
 
-    def update_gps_value_e(self, value: str):
+    def update_gps_value_e(self, value: str) -> None:
         """Update the GPS value in the engineering tab."""
         # assign the value in the engineering panel
         self.te_gps_status_byte_e.setText(value)
 
-    def clear_gps_string_e(self):
+    def clear_gps_string_e(self) -> None:
         """Clear the GPS string in the engineering tab."""
         self.te_gps_string_e.setText("")
 
-    def update_gps_string_e(self):
+    def update_gps_string_e(self) -> None:
         """Update the GPS string in the engineering tab."""
         self.te_gps_string_e.setText(self.gps_string)
 
     # -------------------------Processing---------------------------------------
 
-    def parse_packet(self, data: bytes):
+    def parse_packet(self, data: bytes) -> None:
         """Parse the packet and update the GUI."""
         self.set_receiving_led(True)
         self.receiving_led_timer.stop()
@@ -1863,12 +1863,12 @@ class Mimspy(QMainWindow, Ui_MainWindow):
             # handle command
             pass
 
-    def process_packet(self):
+    def process_packet(self) -> None:
         """Parse the packet and update the GUI."""
         # convert from bytes to upper case hex
         packet: str = self.packet.hex().upper()
         # reformat packet bytes
-        packet: str = "\t".join([packet[i : i + 2] for i in range(0, len(packet), 2)])
+        packet = "\t".join([packet[i : i + 2] for i in range(0, len(packet), 2)])
 
         # update data values
         self.update_data()
@@ -1885,7 +1885,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # clear packets
         self.packet = b""
 
-    def update_data(self):
+    def update_data(self) -> None:
         """Update the data values in the engineering tab."""
         hx = self.packet[nims.HXSTART : nims.HXSTOP]
         hy = self.packet[nims.HYSTART : nims.HYSTOP]
@@ -1899,7 +1899,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         self.graph_data.update_ex(byte_to_int(ex) * nims.ECONVERSION)
         self.graph_data.update_ey(byte_to_int(ey) * nims.ECONVERSION)
 
-    def update_gps(self):
+    def update_gps(self) -> None:
         """Update the GPS values in the engineering tab."""
         # get the binary value
         bin_value: bytes = self.packet[nims.GPSSRT : nims.GPSSTP]
@@ -1964,10 +1964,10 @@ class Mimspy(QMainWindow, Ui_MainWindow):
                 # parse the data
                 self.parse_gps_packet()
 
-    def parse_gps_packet(self):
+    def parse_gps_packet(self) -> None:
         """Parse the GPS packet."""
-        gps_rmc = []
-        gps_gga = []
+        gps_rmc: list[str] = []
+        gps_gga: list[str] = []
         log.info("Finished receiving GPS Data")
         log.info(self.gps_string)
         # parse the string into gps sentences
@@ -1976,9 +1976,9 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # find the rmc and gga NMEA sentences
         for s in gps_sentences:
             if search("RMC", s) is not None:
-                gps_rmc: list[str] = s.split(",")
+                gps_rmc = s.split(",")
             if search("GGA", s) is not None:
-                gps_gga: list[str] = s.split(",")
+                gps_gga = s.split(",")
         # format the lists into readable gps string
         self.update_gps_metadata_string(gps_rmc, gps_gga)
         # update gps fields on 'Metadata' tab
@@ -1991,7 +1991,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # self.clear_gps_string_e()
         self.clear_gps_string_m()
 
-    def update_e(self):
+    def update_e(self) -> None:
         """Update the 'Data Display' and 'Start/End Run' components."""
         # parse the gain byte
         gain = self.packet[nims.GAINSRT : nims.GAINSTP].hex().upper()
@@ -2000,7 +2000,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # Update E gain spec leds on Start/End Run
         self.update_e_spec_leds()
 
-    def update_h(self):
+    def update_h(self) -> None:
         """Update the 'Data Display' and 'Start/End Run' components."""
         # Update 'Data Display' components
         # Update 'Start/End Run' components
@@ -2009,7 +2009,7 @@ class Mimspy(QMainWindow, Ui_MainWindow):
         # Update 'Engineering' components
         self.update_mag_status()
 
-    def send_byte(self, cmd: bytes):
+    def send_byte(self, cmd: bytes) -> None:
         """Send a byte to the port."""
         if not self.port.is_open:
             log.error("SerialError: \tPort Closed")
@@ -2024,13 +2024,15 @@ def byte_to_int(_bytes: bytes) -> int:
     The byte_to_int takes a byte (data type), length of 4 bytes, and converts,
     unpacks, it into a signed integer.
 
-    Args:
-        _bytes (bytes): A 4 byte(length) byte(type).
+    Parameters
+    ----------
+    _bytes : bytes
+        A 4 byte(length) byte(type).
 
     Returns
     -------
-        value (int): Description of returned object.
-
+    value : int
+        Description of returned object.
     """
     std_length = 4
 
@@ -2039,7 +2041,7 @@ def byte_to_int(_bytes: bytes) -> int:
 
     value = struct.unpack(">i", _bytes)[0]
 
-    return value
+    return int(value)
 
 
 def to_byte4(_bytes: bytes) -> bytes:
@@ -2105,7 +2107,7 @@ class GraphData:
         self.ex: list[float] = ex
         self.ey: list[float] = ey
 
-    def update_hx(self, value: float):
+    def update_hx(self, value: float) -> None:
         """Update the hx value.
 
         Parameters
@@ -2120,7 +2122,7 @@ class GraphData:
         self.hx.pop(0)
         self.hx.append(value)
 
-    def update_hy(self, value: float):
+    def update_hy(self, value: float) -> None:
         """Update the hy value.
 
         Parameters
@@ -2135,7 +2137,7 @@ class GraphData:
         self.hy.pop(0)
         self.hy.append(value)
 
-    def update_hz(self, value: float):
+    def update_hz(self, value: float) -> None:
         """Update the hz value.
 
         Parameters
@@ -2150,7 +2152,7 @@ class GraphData:
         self.hz.pop(0)
         self.hz.append(value)
 
-    def update_ex(self, value: float):
+    def update_ex(self, value: float) -> None:
         """Update the ex value.
 
         Parameters
@@ -2165,7 +2167,7 @@ class GraphData:
         self.ex.pop(0)
         self.ex.append(value)
 
-    def update_ey(self, value: float):
+    def update_ey(self, value: float) -> None:
         """Update the ey value.
 
         Parameters

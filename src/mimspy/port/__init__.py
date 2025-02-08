@@ -24,7 +24,7 @@ class PortRead(QThread):
         self._debug = debug
         self._fle_ptr = None
 
-    def stop(self):
+    def stop(self) -> None:
         """Stop the thread."""
         self._running = False
         if self._debug and self._fle_ptr is not None:
@@ -32,7 +32,7 @@ class PortRead(QThread):
             log.debug(f"File closed: {self._fle_ptr.closed}")
         self.wait()
 
-    def run(self):
+    def run(self) -> None:
         """Run the thread."""
         self._running = True
         if self._debug:
@@ -40,7 +40,7 @@ class PortRead(QThread):
         else:
             self._read_port()
 
-    def _read_file(self):
+    def _read_file(self) -> None:
         """Read data from a file."""
         fle_path = Path(Path(__file__).parent.parent.parent.parent, "data", "data.nim")
         log.debug(f"Using file: {fle_path}")
@@ -54,7 +54,7 @@ class PortRead(QThread):
                         break
                     self.SERIAL_DATA.emit(data)
 
-    def _read_port(self):
+    def _read_port(self) -> None:
         """Read data from the serial port."""
         if self.com_port is None:
             return
@@ -72,16 +72,16 @@ class PortMonitor(QThread):
 
     pyports = Signal(list)
 
-    def __init__(self):
+    def __init__(self) -> None:
         QThread.__init__(self)
         self._running = False
 
-    def stop(self):
+    def stop(self) -> None:
         """Stop the thread."""
         self._running = False
         self.wait()
 
-    def run(self):
+    def run(self) -> None:
         """Run the thread."""
         self._running = True
         while self._running:

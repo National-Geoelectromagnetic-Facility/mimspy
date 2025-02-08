@@ -11,7 +11,7 @@ from .configs import APP_NAME, APP_VERSION
 class SiteReport:
     """A class to generate a site report."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.status = "Install"
         self.settings = QSettings("NGF", "mimspy")
         save_path_setting: str | None = self.settings.value("save_path")
@@ -60,17 +60,17 @@ class SiteReport:
         self.e_ng_vac = ""
         self.comments = ""
 
-    def update_save_name(self, run_id: str):
+    def update_save_name(self, run_id: str) -> None:
         """Update the save name for the site report."""
         self.site_id = run_id
         self.save_name = "{}_{}.txt".format(self.date, run_id)
 
-    def update_save_path(self, path_dir: Path):
+    def update_save_path(self, path_dir: Path) -> None:
         """Update the save path for the site report."""
         self.settings.setValue("save_path", str(path_dir))
         self.save_path = Path(self.settings.value("save_path"))
 
-    def write_file(self):
+    def write_file(self) -> None:
         """Write the site report to a file."""
         divider = "--------------------------------------------------------------------"
 

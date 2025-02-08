@@ -68,7 +68,7 @@ def init_app() -> QApplication | QCoreApplication:
     return app
 
 
-def init_logging():
+def init_logging() -> None:
     """Add a console logger to the application."""
     with contextlib.suppress(TypeError):
         log.add(
@@ -79,7 +79,7 @@ def init_logging():
         )
 
 
-def main():
+def main() -> None:
     """Run the main application."""
     init_logging()
     # Get the path to the img directory, need when bundling with pyinstaller

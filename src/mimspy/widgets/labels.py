@@ -14,7 +14,7 @@ class VerticalTextLabel(QWidget):
         self.rotate_mag = -90
         self.rotate_electrode = 90
 
-    def paintEvent(self, event: QPaintEvent):
+    def paintEvent(self, event: QPaintEvent) -> None:
         """Paint the text on the widget."""
         my_font = QFont()
         my_font.setPointSize(16)

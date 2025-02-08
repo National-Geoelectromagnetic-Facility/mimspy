@@ -16,7 +16,7 @@ import os
 
 # chose an implementation, depending on os
 if os.name == "nt":  # sys.platform == 'win32':
-    from serial.tools.list_ports_windows import comports
+    from serial.tools.list_ports_windows import comports  # type: ignore[attr-defined]
 elif os.name == "posix":
     from serial.tools.list_ports_posix import comports
 else:
@@ -32,7 +32,7 @@ class SerialNode:
         self.desc = desc
         self.hwid = hwid
 
-    def print_all(self):
+    def print_all(self) -> None:
         """Print all serial port information."""
         print("Serial Port: \t\t{}".format(self.port))
         print("Port Name: \t\t{}".format(self.name))
