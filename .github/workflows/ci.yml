@@ -10,12 +10,11 @@ on:
 
 jobs:
   continuous-integration:
+    runs-on: ${{ matrix.platform.runner }}
     strategy:
       matrix:
-        os:
-          - ubuntu-latest
-
-    runs-on: ${{ matrix.os }}
+        platform:
+          - runner: ubuntu-latest
 
     steps:
       - name: Checkout

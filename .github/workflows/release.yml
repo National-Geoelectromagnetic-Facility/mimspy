@@ -93,115 +93,112 @@ jobs:
           security list-keychain -d user -s $KEYCHAIN_PATH
 
       - name: Make spec file
-        run: rye run spec
-
-      - name: Build App
         env:
           OSX_BUNDLE_IDENTIFIER: ${{ secrets.OSX_BUNDLE_IDENTIFIER }}
           OSX_CODESIGN_IDENTITY: ${{ secrets.OSX_CODESIGN_IDENTITY }}
-#        run: rye run assemble
-        run: |
-          echo "OSX_BUNDLE_IDENTIFIER: ${OSX_BUNDLE_IDENTIFIER}"
-          echo "OSX_CODESIGN_IDENTITY: ${OSX_CODESIGN_IDENTITY}"
+        run: rye run spec
 
-#      - name: macOS-Notarize and Staple app
-#        env:
-#          NOTARIZATION_USERNAME: ${{ secrets.NOTARIZATION_USERNAME }}
-#          NOTARIZATION_TEAM_ID: ${{ secrets.NOTARIZATION_TEAM_ID }}
-#          NOTARIZATION_PASSWORD: ${{ secrets.NOTARIZATION_PASSWORD }}
-#        run: |
-#          # Store the notarization credentials so that we can prevent a UI password dialog
-#          # from blocking the CI
-#
-#          echo "Create keychain profile"
-#          xcrun notarytool store-credentials "notarytool-profile" --apple-id "$NOTARIZATION_USERNAME" --team-id "$NOTARIZATION_TEAM_ID" --password "$NOTARIZATION_PASSWORD"
-#
-#          # We can't notarize an app bundle directly, but we need to compress it as an archive.
-#          # Therefore, we create a zip file containing our app bundle, so that we can send it to the
-#          # notarization service
-#
-#          echo "Creating temp notarization archive"
-#          ditto -c -k --keepParent "dist/Mimspy.app" "Mimspy.zip"
-#
-#          # Here we send the notarization request to the Apple's Notarization service, waiting for the result.
-#          # This typically takes a few seconds inside a CI environment, but it might take more depending on the App
-#          # characteristics. Visit the Notarization docs for more information and strategies on how to optimize it if
-#          # you're curious
-#
-#          echo "Notarize app"
-#          xcrun notarytool submit "Mimspy.zip" --keychain-profile "notarytool-profile" --wait
-#
-#          # Finally, we need to "attach the staple" to our executable, which will allow our app to be
-#          # validated by macOS even when an internet connection is not available.
-#          echo "Attach staple"
-#          xcrun stapler staple "dist/Mimspy.app"
-#
-#      - name: macOS-Create dmg
-#        run: rye run dmg -p ${{ matrix.platform.target }}
-#
-#      - name: Upload artifact
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: Mimspy_${{ matrix.platform.target }}
-#          path: Mimspy_${{ matrix.platform.target }}.dmg
-#          retention-days: 1
-#
-#  generate-changelog:
-#    name: Generate Changelog
-#    runs-on: ubuntu-latest
-#
-#    outputs:
-#      tag: ${{ steps.generate-changelog.outputs.tag }}
-#
-#    steps:
-#      - uses: actions/checkout@v4
-#
-#      - name: Get the version
-#        id: get_version
-#        run: echo "tag=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
-#
-#      - name: Set up rye
-#        uses: eifinger/setup-rye@v4
-#        with:
-#          enable-cache: true
-#
-#      - name: Sync Dependencies
-#        run: rye sync
-#
-#      - name: Generate Changelog
-#        run: rye run changelog  ${{ steps.generate-changelog.outputs.tag }}
-#
-#      - name: Upload changelog artifact
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: changelog
-#          path: changelog.rst
-#          retention-days: 1
-#
-#  create-release:
-#    name: Create Release
-#    needs: [ windows, macos, generate-changelog ]
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - uses: actions/download-artifact@v4
-#        with:
-#          name: changelog
-#
-#      - name: Download all artifacts
-#        uses: actions/download-artifact@v4
-#
-#      - name: Create Release
-#        id: create_release
-#        uses: softprops/action-gh-release@v2
-#        with:
-#          tag_name: ${{ github.ref }}
-#          repository: ${{ secrets.PUB_OWNER }}/${{ secrets.PUB_REPO }}
-#          token: ${{ secrets.MIMSPY_RELEASE_TOKEN }}
-#          name: ${{ needs.generate-changelog.outputs.tag }}
-#          draft: false
-#          prerelease: false
-#          body_path: changelog.rst
-#          files: |
-#            Mimspy_*.dmg
-#            Mimspy_*.zip
+      - name: Build App
+        run: rye run assemble
+
+      - name: macOS-Notarize and Staple app
+        env:
+          NOTARIZATION_USERNAME: ${{ secrets.NOTARIZATION_USERNAME }}
+          NOTARIZATION_TEAM_ID: ${{ secrets.NOTARIZATION_TEAM_ID }}
+          NOTARIZATION_PASSWORD: ${{ secrets.NOTARIZATION_PASSWORD }}
+        run: |
+          # Store the notarization credentials so that we can prevent a UI password dialog
+          # from blocking the CI
+
+          echo "Create keychain profile"
+          xcrun notarytool store-credentials "notarytool-profile" --apple-id "$NOTARIZATION_USERNAME" --team-id "$NOTARIZATION_TEAM_ID" --password "$NOTARIZATION_PASSWORD"
+
+          # We can't notarize an app bundle directly, but we need to compress it as an archive.
+          # Therefore, we create a zip file containing our app bundle, so that we can send it to the
+          # notarization service
+
+          echo "Creating temp notarization archive"
+          ditto -c -k --keepParent "dist/Mimspy.app" "Mimspy.zip"
+
+          # Here we send the notarization request to the Apple's Notarization service, waiting for the result.
+          # This typically takes a few seconds inside a CI environment, but it might take more depending on the App
+          # characteristics. Visit the Notarization docs for more information and strategies on how to optimize it if
+          # you're curious
+
+          echo "Notarize app"
+          xcrun notarytool submit "Mimspy.zip" --keychain-profile "notarytool-profile" --wait
+
+          # Finally, we need to "attach the staple" to our executable, which will allow our app to be
+          # validated by macOS even when an internet connection is not available.
+          echo "Attach staple"
+          xcrun stapler staple "dist/Mimspy.app"
+
+      - name: macOS-Create dmg
+        run: rye run dmg -p ${{ matrix.platform.target }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mimspy_${{ matrix.platform.target }}
+          path: Mimspy_${{ matrix.platform.target }}.dmg
+          retention-days: 1
+
+  generate-changelog:
+    name: Generate Changelog
+    runs-on: ubuntu-latest
+
+    outputs:
+      tag: ${{ steps.generate-changelog.outputs.tag }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get the version
+        id: get_version
+        run: echo "tag=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
+
+      - name: Set up rye
+        uses: eifinger/setup-rye@v4
+        with:
+          enable-cache: true
+
+      - name: Sync Dependencies
+        run: rye sync
+
+      - name: Generate Changelog
+        run: rye run changelog  ${{ steps.generate-changelog.outputs.tag }}
+
+      - name: Upload changelog artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: changelog
+          path: changelog.rst
+          retention-days: 1
+
+  create-release:
+    name: Create Release
+    needs: [ windows, macos, generate-changelog ]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: changelog
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref }}
+          repository: ${{ secrets.PUB_OWNER }}/${{ secrets.PUB_REPO }}
+          token: ${{ secrets.MIMSPY_RELEASE_TOKEN }}
+          name: ${{ needs.generate-changelog.outputs.tag }}
+          draft: false
+          prerelease: false
+          body_path: changelog.rst
+          files: |
+            Mimspy_*.dmg
+            Mimspy_*.zip

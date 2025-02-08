@@ -81,13 +81,39 @@ app:
 assemble:
   rye run assemble
 
-# Release a new version
-release: fmt audit lint bump
+# Push changes to the remote repository
+# TODO: add typecheck back after testing
+push: fmt lint
   git push
-  git push --tag
+  sleep 5
+  just check-ci
 
 # Run all CI checks
+# TODO: add typecheck back after testing
 ci: fmt lint audit
+
+# Check the CI status
+check-ci:
+  @echo "Checking CI status..."
+  # Get the latest run ID for ci.yml on main
+  RUN_ID=$(gh run list --workflow ci.yml --branch main --limit 1 --json databaseId --jq ".[0].databaseId") \
+  && echo "Watching run ID $RUN_ID..." \
+  && gh run watch $RUN_ID
+
+# Release a new version
+# TODO: add typecheck back after testing
+release: fmt audit lint bump push
+  git push --tag
+  sleep 5
+  just check-release
+
+# Check the release status
+check-release:
+  @echo "Checking release status..."
+  # Get the latest run ID for ci.yml on main
+  RUN_ID=$(gh run list --workflow release.yml --branch main --limit 1 --json databaseId --jq ".[0].databaseId") \
+  && echo "Watching run ID $RUN_ID..." \
+  && gh run watch $RUN_ID
 
 # Run all tests
 test:
