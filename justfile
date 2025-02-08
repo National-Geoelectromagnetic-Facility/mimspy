@@ -124,7 +124,8 @@ alias c := commit
 
 # Generate the spec file
 @spec:
-  uv run python scripts/pyinstaller.py -s
+  TAG=$(uv run cz version -p) \
+  && uv run python scripts/pyinstaller.py -s -v $TAG
 
 # Assemble the app
 @assemble:
@@ -132,12 +133,18 @@ alias c := commit
 
 # Assemble file into a dmg
 @dmg:
-  uv run python scripts/pyinstaller.py -d
+  uv run python scripts/pyinstaller.py -d -p aarch64
 
-# Generate the release change log
-# TODO: must be tied to a version number
+# Generate the release body text from the changelog
 @release-log:
-    uv run cz changelog 0.2.0 --file-name release.md
+  #!/bin/bash
+  set -euxo pipefail
+  TAG=$(uv run cz version -p)
+  echo $TAG
+  (uv run cz changelog $TAG --dry-run; \
+  cat .github/RELEASE_TEMPLATE/changelog_footer.md) \
+  | sed "s/\[UNRELEASED\]/$TAG/" > release.md
+  cat release.md
 
 # Set default version of the documentation
 @set-default-docs-version:

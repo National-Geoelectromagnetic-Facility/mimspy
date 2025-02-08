@@ -96,10 +96,12 @@ jobs:
         env:
           OSX_BUNDLE_IDENTIFIER: ${{ secrets.OSX_BUNDLE_IDENTIFIER }}
           OSX_CODESIGN_IDENTITY: ${{ secrets.OSX_CODESIGN_IDENTITY }}
-        run: uv run python scripts/pyinstaller.py -s
+        run: |
+          TAG=$(uv run cz version -p)
+          uv run python scripts/pyinstaller.py -s -v $TAG
 
       - name: Build App
-        run: uv run python scripts/pyinstaller.py -s
+        run: uv run python scripts/pyinstaller.py -a
 
       - name: macOS-Notarize and Staple app
         env:
@@ -152,10 +154,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Get the version
-        id: get_version
-        run: echo "tag=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
+        with:
+          fetch-depth: 0
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
@@ -166,13 +166,19 @@ jobs:
         run: uv sync
 
       - name: Generate Changelog
-        run: uv run changelog  ${{ steps.generate-changelog.outputs.tag }}
+        run: |
+          TAG=$(uv run cz version -p)
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          (uv run cz changelog $TAG --dry-run; \
+          cat .github/RELEASE_TEMPLATE/changelog_footer.md) \
+          | sed "s/\[UNRELEASED\]/$TAG/" > release.md
+          cat release.md
 
       - name: Upload changelog artifact
         uses: actions/upload-artifact@v4
         with:
           name: changelog
-          path: changelog.rst
+          path: release.md
           retention-days: 1
 
   create-release:
@@ -181,12 +187,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-#      - uses: actions/download-artifact@v4
-#        with:
-#          name: changelog
-
       - name: Download all artifacts
         uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+
+      - run: ls -la
 
       - name: Create Release
         id: create_release
@@ -195,12 +201,10 @@ jobs:
           tag_name: ${{ github.ref }}
           repository: ${{ secrets.PUB_OWNER }}/${{ secrets.PUB_REPO }}
           token: ${{ secrets.MIMSPY_RELEASE_TOKEN }}
-          name: ${{ needs.generate-changelog.outputs.tag }}
+          name: Mimspy Release
           draft: false
           prerelease: false
-          body_path: changelog.rst
+          body_path: release.md
           files: |
-            Mimspy_aarch64.dmg
-            Mimspy_x86_64.dmg
-            Mimspy_aarch64.zip
-            Mimspy_x64.zip
+            *.dmg
+            *.zip

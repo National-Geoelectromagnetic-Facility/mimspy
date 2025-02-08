@@ -14,7 +14,7 @@ from update_version import add_version, update_spec
 def fixture(func):
     """Fixture decorator."""
 
-    def wrapper(arch: str = "x86_64", wd: Path | None = None):
+    def wrapper(arch: str = "x86_64", version: str = "0.0.0", wd: Path | None = None):
         """Read the project config and set up support."""
         if not wd:
             wd = Path.cwd()
@@ -30,7 +30,7 @@ def fixture(func):
         # Load the config info and initialize the meta
         config = toml.load(config_path)
 
-        func(platform, bin_path, config, arch)
+        func(platform, bin_path, config, arch, version)
 
     return wrapper
 
@@ -42,7 +42,7 @@ def translate(data: list, platform: str) -> list[str]:
 
 
 @fixture
-def generate_spec_file(platform: str, bin_path: Path, config: dict, _: str):
+def generate_spec_file(platform: str, bin_path: Path, config: dict, _arch: str, version: str):
     """Generate a Application."""
     application_name: str = config["project"]["name"]
     cmd: Path = Path(bin_path, "pyi-makespec")
@@ -92,12 +92,14 @@ def generate_spec_file(platform: str, bin_path: Path, config: dict, _: str):
 
     # Add the version number to the spec file
     if platform == "darwin":
+        print("Adding version to spec file")
         add_version(application_name)
-        update_spec(application_name)
+        print("Updating version to spec file")
+        update_spec(application_name, version)
 
 
 @fixture
-def make_app(platform: str, bin_path: Path, config: dict, _: str):
+def make_app(platform: str, bin_path: Path, config: dict, _arch: str, _version: str):
     """Generate the application with PyInstaller."""
     application_name: str = config["project"]["name"]
     cmd: Path = Path(bin_path, "pyinstaller")
@@ -117,7 +119,7 @@ def make_app(platform: str, bin_path: Path, config: dict, _: str):
 
 
 @fixture
-def make_dmg(_: str, bin_path: Path, config: dict, arch: str):
+def make_dmg(_platform: str, bin_path: Path, config: dict, arch: str, _version: str):
     """Generate the application with PyInstaller."""
     application_name: str = config["project"]["name"]
     cmd = Path(bin_path, "dmgbuild")
@@ -143,16 +145,23 @@ def run_cmd(cmd: Path, args: list[str]):
 @click.option("-a", "--app", is_flag=True, help="Make application")
 @click.option("-d", "--dmg", is_flag=True, help="Make dmg file")
 @click.option("-p", "--platform", default="x86_64", help="The architecture to build for")
-def main(spec: bool = False, app: bool = False, dmg: bool = False, platform: str = "x84_64"):
+@click.option("-v", "--version", default="0.0.0", help="The version of the application")
+def main(
+    spec: bool = False,
+    app: bool = False,
+    dmg: bool = False,
+    platform: str = "x84_64",
+    version: str = "0.0.0",
+):
     """Update the version number in pyinstaller spec file and Info.plist file."""
     load_dotenv()
 
     if spec:
-        generate_spec_file()
+        generate_spec_file(version=version)
     if app:
-        make_app()
+        make_app(version=version)
     if dmg:
-        make_dmg(platform)
+        make_dmg(arch=platform)
 
 
 if __name__ == "__main__":

@@ -3,6 +3,7 @@
 import os
 import re
 from os import rename
+from pathlib import Path
 from shutil import move
 
 import click
@@ -33,7 +34,8 @@ def update_plist(name: str, version: str = "0.0.0") -> None:
 def update_spec(name: str, version: str = "0.0.0") -> None:
     """Update the version number in the $(app).spec file."""
     buf: str
-    with open(f"{name}.spec") as fle:
+    wd = Path.cwd()
+    with open(Path(wd, f"{name}.spec")) as fle:
         buf = fle.read()
 
     with open(f"{name}.spec", "w") as fle:
