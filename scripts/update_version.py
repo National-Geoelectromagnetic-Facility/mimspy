@@ -7,10 +7,8 @@ from shutil import move
 
 import click
 
-from src.mimspy.configs import APP_VERSION as VERSION
 
-
-def update_plist(name: str):
+def update_plist(name: str, version: str = "0.0.0") -> None:
     """Update the version number in the Info.plist file."""
     plist_lines: list[str]
     tmp_pth = "tmp.plist"
@@ -23,7 +21,7 @@ def update_plist(name: str):
         prev_line = ""
         for line in plist_lines:
             if "CFBundleShortVersionString" in prev_line:
-                tmp.write(line.replace("0.0.0", VERSION))
+                tmp.write(line.replace("0.0.0", version))
             else:
                 tmp.write(line)
 
@@ -32,21 +30,21 @@ def update_plist(name: str):
     move(tmp_pth, plist_pth)
 
 
-def update_spec(name: str):
+def update_spec(name: str, version: str = "0.0.0") -> None:
     """Update the version number in the $(app).spec file."""
     buf: str
     with open(f"{name}.spec") as fle:
         buf = fle.read()
 
     with open(f"{name}.spec", "w") as fle:
-        fle.write(re.sub(r"version='\d+.\d+.\d+'", f"version='{VERSION}'", buf))
+        fle.write(re.sub(r"version='\d+.\d+.\d+'", f"version='{version}'", buf))
 
 
 class AddVersionError(Exception):
     """Exception raised when the $(app).spec file doesn't exist."""
 
 
-def add_version(name: str):
+def add_version(name: str) -> None:
     """Add the version number to the $(app).spec file."""
     buf: str
     tail = "    version='0.0.0',\n)"
@@ -59,10 +57,10 @@ def add_version(name: str):
         fle.write(buf[:-2] + tail)
 
 
-def add_dmg(name: str) -> None:
+def add_dmg(name: str, version: str = "0.0.0") -> None:
     """Add the version number in the dmg file name."""
     dmg_pth = f"release/{name}.dmg"
-    new_pth = f"release/{name}_v{VERSION}.dmg"
+    new_pth = f"release/{name}_{version}.dmg"
     rename(dmg_pth, new_pth)
 
 

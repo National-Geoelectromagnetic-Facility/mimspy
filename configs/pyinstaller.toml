@@ -1,7 +1,7 @@
 [project]
 name = "Mimspy"
-macos_icon = "icon/NGF_logo_sqr.icns"
-windows_icon = "icon/NGF_logo_sqr.ico"
+macos_icon = "src/mimspy/icons/NGF_logo_sqr.icns"
+windows_icon = "src/mimspy/icons/NGF_logo_sqr.ico"
 entry_point = "src/app.py"
 
 [arguments]
@@ -44,7 +44,7 @@ hidden = [
 
 macos = [
 	"--onedir",
-	"--osx-entitlements-file=entitlements.plist",
+	"--osx-entitlements-file=configs/entitlements.plist",
 ]
 
 windows = [

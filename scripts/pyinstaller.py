@@ -8,16 +8,17 @@ from pathlib import Path
 import click
 import toml
 from dotenv import load_dotenv
-
 from update_version import add_version, update_spec
 
 
 def fixture(func):
     """Fixture decorator."""
 
-    def wrapper(arch: str = "x86_64"):
+    def wrapper(arch: str = "x86_64", wd: Path | None = None):
         """Read the project config and set up support."""
-        config_path = Path("pyinstaller.toml")
+        if not wd:
+            wd = Path.cwd()
+        config_path = Path(wd, "configs", "pyinstaller.toml")
         # Get the os platform
         platform = sys.platform
 

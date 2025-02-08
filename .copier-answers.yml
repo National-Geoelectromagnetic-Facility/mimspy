@@ -1,6 +1,6 @@
 # Changes here will be overwritten by Copier
 _commit: 0.0.0
-_src_path: gh:chaytus/copier-rye-application
+_src_path: gh:chaytus/copier-uv-application
 author_email: dev@chaytus.com
 author_fullname: Brady Fry
 author_organization: Chaytus Research & Engineering LLC

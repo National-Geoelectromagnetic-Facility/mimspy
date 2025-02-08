@@ -13,123 +13,143 @@ set positional-arguments
 @install:
   #!/bin/bash
   set -euxo pipefail
-  {{just_executable()}} needs rye
+  {{just_executable()}} needs uv
   echo "Installing dependencies..."
-  rye sync
+  uv sync
+
+  echo "Blocking the .venv directory from uploading to the cloud..."
+  cloud-blocker .venv
 
   echo "Installing pre-commit hooks..."
-  rye run pre-commit install --install-hooks
+  uv run pre-commit install --install-hooks
 
 # Update the lockfile (e.g. after manually editing `pyproject.toml`)
 @lock:
-  rye lock
+  uv lock
 
 # Update dependencies and update pre-commit hooks
 @update-hooks:
   echo "Updating pre-commit hooks..."
-  rye run pre-commit install-hooks
-  rye run pre-commit autoupdate
+  uv run pre-commit install-hooks
+  uv run pre-commit autoupdate
+
+# Upate the ui file
+@update-ui:
+  uv run python pyside6-uic src/mimspy/ui/main.ui -o src/mimspy/ui/main.py
+
+# Run the app
+@app:
+  uv run python src/app.py
 
 # Format code with black and isort
 @fmt:
-  rye run ruff format -- src tests
-  rye run ruff check --select=I001 --fix src tests
+  uv run ruff format -- src tests
+  uv run ruff check --select=I001 --fix src tests
 
 # Lint the project with Ruff
 @lint:
-  rye run ruff check --fix -- src tests
+  uv run ruff check --fix -- src tests
 
 # Perform static type checking with mypy
 @typecheck:
-  rye run mypy -- src tests
+  uv run mypy -- src tests
 
 # Perform static type checking with pyright
 @pyright:
-  rye run pyright
+  uv run pyright
+
+# Run all tests
+@test:
+  uv run pytest --cov=src/ --cov-report=term-missing --cov-report=html --disable-warnings
 
 # Audit dependencies with pip-audit
 @audit:
-  rye run pip-audit
-  rye run deptry -- src tests
-
-# Run all pre-release checks
-pre-release: fmt lint audit check-bump
+  uv run pip-audit
+  uv run deptry -- src tests
 
 # Run pre-commit checks
-pre-commit:
-  rye run pre-commit run
-
-# Bump the version
-@bump: check-bump
-  rye run cz bump
+@pre-commit:
+  uv run pre-commit run
 
 # Commit with conventional commits
 @commit:
-  rye run cz commit
+  uv run cz commit
 
 alias c := commit
 
-# Upate the ui file
-update-ui:
-    rye run ui
-
-# Run the app
-app:
-  rye run python src/app.py
-
-# Asseble the app
-assemble:
-  rye run assemble
-
 # Push changes to the remote repository
 # TODO: add typecheck back after testing
-push: fmt lint
+@push: fmt lint
   git push
   sleep 5
   just check-ci
 
 # Run all CI checks
 # TODO: add typecheck back after testing
-ci: fmt lint audit
+@ci: fmt lint audit
 
 # Check the CI status
-check-ci:
+@check-ci:
   @echo "Checking CI status..."
   # Get the latest run ID for ci.yml on main
   RUN_ID=$(gh run list --workflow ci.yml --branch main --limit 1 --json databaseId --jq ".[0].databaseId") \
   && echo "Watching run ID $RUN_ID..." \
   && gh run watch $RUN_ID
 
+# Check the version can be bumped without errors
+@check-bump:
+  uv run cz bump --dry-run
+
+# Run all pre-release checks
+@pre-release: fmt lint audit check-bump
+
+# Bump the version
+@bump: check-bump
+  uv run cz bump
+
 # Release a new version
 # TODO: add typecheck back after testing
-release: fmt audit lint bump push
+@release: fmt audit lint bump push
   git push --tag
   sleep 5
   just check-release
 
 # Check the release status
-check-release:
+@check-release:
   @echo "Checking release status..."
   # Get the latest run ID for ci.yml on main
   RUN_ID=$(gh run list --workflow release.yml --branch main --limit 1 --json databaseId --jq ".[0].databaseId") \
   && echo "Watching run ID $RUN_ID..." \
   && gh run watch $RUN_ID
 
-# Run all tests
-test:
-  rye run pytest --cov=src/ --cov-report=term-missing --cov-report=html --disable-warnings
+# Generate the spec file
+@spec:
+  uv run python scripts/pyinstaller.py -s
+
+# Assemble the app
+@assemble:
+  uv run python scripts/pyinstaller.py -a
+
+# Assemble file into a dmg
+@dmg:
+  uv run python scripts/pyinstaller.py -d
+
+# Generate the release change log
+# TODO: must be tied to a version number
+@release-log:
+    uv run cz changelog 0.2.0 --file-name release.md
 
 # Set default version of the documentation
 @set-default-docs-version:
-  rye run mike set-default latest
+  uv run mike set-default latest
 
 # Serve documentation locally
 serve-doc:
-  rye run mkdocs serve --config-file=docs/mkdocs.yml
+  uv run mkdocs serve --config-file=docs/mkdocs.yml
 
 # Live preview the documentation as it would be on production
 preview-docs:
-  rye run mike serve --config-file=docs/mkdocs.yml
+  uv run mike serve --config-file=docs/mkdocs.yml
 
 # Check whether the commit messages follow the conventional commit format
 check-commits:
@@ -143,12 +163,13 @@ check-commits:
     echo "No commits to check."
     exit 0
   else
-    rye run cz check --rev-range origin/main..HEAD
+    uv run cz check --rev-range origin/main..HEAD
   fi
 
-# Check the version can be bumped without errors
-@check-bump:
-  rye run cz bump --dry-run
+# Clean the build files
+clean:
+    rm -rf build
+    rm -rf dist
 
 # Assert a command is available
 [private]

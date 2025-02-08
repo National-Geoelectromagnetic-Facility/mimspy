@@ -26,19 +26,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up rye
-        uses: eifinger/setup-rye@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
 
       - name: Sync Dependencies
-        run: rye sync
+        run: uv sync
 
       - name: Make spec file
-        run: rye run spec
+        run: uv run python configs/pyinstaller.py -s
 
       - name: Build App
-        run: rye run assemble
+        run: uv run python configs/pyinstaller.py -a
 
       - name: Create zip
         run: 7z a Mimspy_${{ matrix.platform.target }}.zip .\dist\Mimspy.exe
@@ -62,13 +62,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up rye
-        uses: eifinger/setup-rye@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
 
       - name: Sync Dependencies
-        run: rye sync
+        run: uv sync
 
       - name: macOS-Install the Apple signing certificate
         env:
@@ -96,10 +96,10 @@ jobs:
         env:
           OSX_BUNDLE_IDENTIFIER: ${{ secrets.OSX_BUNDLE_IDENTIFIER }}
           OSX_CODESIGN_IDENTITY: ${{ secrets.OSX_CODESIGN_IDENTITY }}
-        run: rye run spec
+        run: uv run python configs/pyinstaller.py -s
 
       - name: Build App
-        run: rye run assemble
+        run: uv run python configs/pyinstaller.py -s
 
       - name: macOS-Notarize and Staple app
         env:
@@ -134,7 +134,7 @@ jobs:
           xcrun stapler staple "dist/Mimspy.app"
 
       - name: macOS-Create dmg
-        run: rye run dmg -p ${{ matrix.platform.target }}
+        run: uv run python configs/pyinstaller.py -d -p ${{ matrix.platform.target }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -157,16 +157,16 @@ jobs:
         id: get_version
         run: echo "tag=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
 
-      - name: Set up rye
-        uses: eifinger/setup-rye@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
 
       - name: Sync Dependencies
-        run: rye sync
+        run: uv sync
 
       - name: Generate Changelog
-        run: rye run changelog  ${{ steps.generate-changelog.outputs.tag }}
+        run: uv run changelog  ${{ steps.generate-changelog.outputs.tag }}
 
       - name: Upload changelog artifact
         uses: actions/upload-artifact@v4
@@ -181,9 +181,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: changelog
+#      - uses: actions/download-artifact@v4
+#        with:
+#          name: changelog
 
       - name: Download all artifacts
         uses: actions/download-artifact@v4
@@ -200,5 +200,7 @@ jobs:
           prerelease: false
           body_path: changelog.rst
           files: |
-            Mimspy_*.dmg
-            Mimspy_*.zip
+            Mimspy_aarch64.dmg
+            Mimspy_x86_64.dmg
+            Mimspy_aarch64.zip
+            Mimspy_x64.zip
