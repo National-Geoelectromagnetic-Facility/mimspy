@@ -93,7 +93,7 @@ package = false
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "0.7.3"
+version = "0.7.4"
 version_files = [ "src/mimspy/configs/__init__.py:^__version__" ]
 annotated_tag = true
 incremental = true
